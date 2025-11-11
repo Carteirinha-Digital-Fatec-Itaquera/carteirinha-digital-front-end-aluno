@@ -15,9 +15,9 @@ O aplicativo funcionará como uma **carteirinha digital**, permitindo o acesso r
 
 ## 👥 Equipe
 
-- **Higor Vieira da Franca**  
-- **João Vitor Moreira dos Santos**  
-- **João Victor Alexandre da Silva**  
+- **Higor Vieira da Franca**
+- **João Victor Alexandre da Silva** 
+- **João Vitor Moreira dos Santos**   
 - **Lucas José Gomes da Silva**
 
 **Supervisor:**  
@@ -130,4 +130,4 @@ Qualquer uso externo deve ser previamente autorizado pela instituição.
 
 ### 🚀 Fatec Itaquera - 2025  
 *Projeto de Prática Profissional e Extensão (PEPPE)*  
-📘 Curso: Análise e Desenvolvimento de Sistemas
+📘 Curso: Desenvolvimento de Software Multiplataforma.
