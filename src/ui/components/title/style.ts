@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { titleColor } from "../../themes/Color";
 
 export const styles = StyleSheet.create({
     container: {
@@ -11,13 +12,14 @@ export const styles = StyleSheet.create({
     title: {
         fontFamily: 'Montserrat',
         fontSize: 16,
-        color: '#333',
+        fontWeight: '600',
+        color: titleColor,
         textAlign: 'center'
     },
 
     divider: {
         height: 3,
-        backgroundColor: '#000',
+        backgroundColor: titleColor,
         width: '65%',
         marginBottom: 10
     },

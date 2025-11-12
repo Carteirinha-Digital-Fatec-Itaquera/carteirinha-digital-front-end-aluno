@@ -4,9 +4,8 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: '#006516',
         borderRadius: 35,
-        width: '48%',
-        height: 55,
-        padding: 16,
+        width: '40%',
+        padding: 12,
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
@@ -29,6 +28,7 @@ export const styles = StyleSheet.create({
     text: {
         color: '#fff',
         fontSize: 16,
+        fontWeight: '600',
         fontFamily: 'Montserrat',
         letterSpacing: 0.5
     },
