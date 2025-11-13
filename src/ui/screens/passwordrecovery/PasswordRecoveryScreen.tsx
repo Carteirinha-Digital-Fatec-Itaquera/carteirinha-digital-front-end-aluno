@@ -4,28 +4,22 @@ import { useNavigation } from '@react-navigation/native';
 import { ButtonComp } from '../../components/button/ButtonComp';
 import { TitleComp } from '../../components/title/TitleComp';
 import { InputComp } from '../../components/input/InputComp';
-import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
 import { useState } from 'react';
 import { backgroundColor } from '../../themes/Color';
-import { TextClickableComp } from '../../components/textclickable/TextClickableComp';
 import { styles } from './style';
 
-export default function LoginScreen() {
+export default function PasswordRecoveryScreen() {
   const { navigate } = useNavigation<NavigationProps>();
 
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
 
   return (
     <View style={styles.container}>
       <Image source={require("../../../assets/images/fatec_itaquera_logo.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
-        <TitleComp text="Login" size={20} />
+        <TitleComp text="Recuperação de senha" size={20} showButton={true} actionButton={() => navigate("Login")} />
         <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
-        <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
-        <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("PasswordRecovery")} alignSelf="flex-end"/>
-        <ButtonComp text="Entrar" action={() => navigate("Home")} color={backgroundColor} />
-        <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("SignUp")} />
+        <ButtonComp text="Enviar E-mail" action={() => navigate("Home")} color={backgroundColor} />
       </View>
     </View>
   );
