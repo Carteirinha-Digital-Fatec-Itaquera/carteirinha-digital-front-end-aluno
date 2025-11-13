@@ -11,8 +11,8 @@ export const styles = StyleSheet.create({
     subcontainer: {
         flex: 1,
         width: "100%",
-        borderTopStartRadius: 30,
-        borderTopEndRadius: 30,
+        borderTopStartRadius: 60,
+        borderTopEndRadius: 60,
         backgroundColor: backgroundSecondaryColor
     },
     logo: {

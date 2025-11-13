@@ -9,7 +9,7 @@ export type RootStackParamList = {
     SignUp: undefined;
 };
 
-export type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Home">;
+export type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Login">;
 
 export default function Routes() {
   return (

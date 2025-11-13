@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { InputComp } from '../../components/input/InputComp';
 import { styles } from './style';
 import { backgroundColor } from '../../themes/Color';
+import { TextClickableComp } from '../../components/textclickable/TextClickableComp';
 
 export default function SignUpScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -19,7 +20,9 @@ export default function SignUpScreen() {
       <View style={styles.subcontainer}>
         <TitleComp text="Primeiro Acesso" size={20} />
         <InputComp label="CPF" placeholder="Ex: 000.000.000-00" value={cpf} onChangeText={setCpf} />
-        <ButtonComp text="Ir para home" action={() => navigate("Home")} color={backgroundColor} />
+        <ButtonComp text="Enviar CPF" action={() => {}} color={backgroundColor} />
+
+        <TextClickableComp text="Este não é seu primeiro acesso? Clique aqui" action={() => navigate("Login")} />
       </View>
     </View>
   );

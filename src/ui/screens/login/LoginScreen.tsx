@@ -1,17 +1,32 @@
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import { NavigationProps } from '../../../routes';
 import { useNavigation } from '@react-navigation/native';
 import { ButtonComp } from '../../components/button/ButtonComp';
 import { TitleComp } from '../../components/title/TitleComp';
+import { InputComp } from '../../components/input/InputComp';
+import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
+import { useState } from 'react';
+import { backgroundColor } from '../../themes/Color';
+import { TextClickableComp } from '../../components/textclickable/TextClickableComp';
+import { styles } from './style';
 
 export default function LoginScreen() {
   const { navigate } = useNavigation<NavigationProps>();
 
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
   return (
-    <View>
-      <TitleComp text="Login" />
-      <ButtonComp text="Ir para home" action={() => navigate("Home")} color='#7fa2b6ff' />
-      <ButtonComp text="Ir para primeiro acesso" action={() => navigate("SignUp")} color='#7fa2b6ff' />
+    <View style={styles.container}>
+      <Image source={require("../../../assets/images/fatec_itaquera_logo.png")} style={styles.logo} />
+      <View style={styles.subcontainer}>
+        <TitleComp text="Login" size={20} />
+        <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
+        <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
+        <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("SignUp")} alignSelf="flex-end"/>
+        <ButtonComp text="Entrar" action={() => navigate("Home")} color={backgroundColor} />
+        <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("SignUp")} />
+      </View>
     </View>
   );
 }

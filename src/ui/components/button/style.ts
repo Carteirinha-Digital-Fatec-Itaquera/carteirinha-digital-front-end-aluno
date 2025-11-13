@@ -4,8 +4,8 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: '#006516',
         borderRadius: 35,
-        width: '40%',
         padding: 12,
+        paddingHorizontal: 20,
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',

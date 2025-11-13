@@ -13,7 +13,7 @@ type InputProps = {
 
 export const InputComp = ({label, placeholder, keyboardType = "default", value, onChangeText}: InputProps) => {
     return (
-        <View style={styles.formGroup}>
+        <View style={styles.container}>
             <Text style={styles.label}>{label}</Text>
             <TextInput
                 style={styles.inputField}

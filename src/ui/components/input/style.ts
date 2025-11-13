@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { backgroundSecondaryColor, labelColor } from "../../themes/Color";
 
 export const styles = StyleSheet.create({
-    formGroup: {
+    container: {
         paddingHorizontal: 16,
         marginTop: 16,
         marginBottom: 8
@@ -13,14 +13,14 @@ export const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 14,
         color: labelColor,
-        marginBottom: 6,
+        marginBottom: 4,
         marginLeft: 8
     },
 
     inputField: {
         borderWidth: 1,
         borderColor: labelColor,
-        borderRadius: 8,
+        borderRadius: 20,
         padding: 14,
         fontSize: 14,
         backgroundColor: backgroundSecondaryColor,
