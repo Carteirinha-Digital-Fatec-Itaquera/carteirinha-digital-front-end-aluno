@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { backgroundColor } from '../../themes/Color';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
+import { TextInfoComp } from '../../components/textinfo/TextInfoComp';
 
 import { styles } from './style';
 import { InputCodeComp } from '../../components/inputCode/InputCodeComp';
@@ -86,8 +87,15 @@ function PasswordRecoveryPart1Comp({ navigateBackButton, value, setValue, naviga
     <>
       <SpacerComp vertical={20} />
       <TitleComp text="Recuperação de senha" size={20} showButton={true} actionButton={navigateBackButton} />
-      <SpacerComp vertical={40} />
+      
+      <SpacerComp vertical={10} />
+      <TextInfoComp>
+        Insira seu e-mail institucional para enviarmos um código de segurança
+      </TextInfoComp>
+
+      <SpacerComp vertical={10} />
       <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={value} onChangeText={setValue} />
+
       <SpacerComp vertical={60} />
       <ButtonComp text="Enviar E-mail" action={() => navigateNextStepButton()} color={backgroundColor} />
     </>
@@ -99,8 +107,15 @@ function PasswordRecoveryPart2Comp({ navigateBackButton, value, setValue, naviga
     <>
       <SpacerComp vertical={20} />
       <TitleComp text="Recuperação de senha" size={20} showButton={true} actionButton={navigateBackButton} />
-      <SpacerComp vertical={40} />
+
+      <SpacerComp vertical={10} />
+      <TextInfoComp>
+        Insira o código de segurança que enviamos no seu e-mail institucional
+      </TextInfoComp>
+
+      <SpacerComp vertical={10} />
       <InputCodeComp label="Insira o código" onChangeText={setValue} />
+
       <SpacerComp vertical={60} />
       <ButtonComp text="Enviar código" action={navigateNextStepButton} color={backgroundColor} />
     </>
@@ -113,12 +128,20 @@ function PasswordRecoveryPart3Comp({ navigateBackButton, value, setValue, naviga
     <>
       <SpacerComp vertical={20} />
       <TitleComp text="Recuperação de senha" size={20} showButton={true} actionButton={navigateBackButton} />
-      <SpacerComp vertical={40} />
+
+      <SpacerComp vertical={10} />
+      <TextInfoComp>
+        Código validado com sucesso! Redefina sua senha
+      </TextInfoComp>
+
+      <SpacerComp vertical={10} />
       <InputPasswordComp label="Insira a nova senha" placeholder="Ex: ********" value={value} onChangeText={setValue} />
+
       <SpacerComp vertical={20} />
       <InputPasswordComp label="Repita a senha" placeholder="Ex: ********" value={repeatPassword} onChangeText={setRepeatPassword} />
+
       <SpacerComp vertical={60} />
-      <ButtonComp text="Enviar código" action={navigateNextStepButton} color={backgroundColor} />
+      <ButtonComp text="Redefinir" action={navigateNextStepButton} color={backgroundColor} />
     </>
   )
 }

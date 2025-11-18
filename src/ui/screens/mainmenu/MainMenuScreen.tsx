@@ -12,18 +12,18 @@ export default function MainMenuScreen() {
 
   return (
     <View style={styles.container}>
-      <Image 
-        source={require("../../../assets/images/fatec_itaquera_logo.png")} 
-        style={styles.logo} 
+      <Image
+        source={require("../../../assets/images/fatec_itaquera_logo.png")}
+        style={styles.logo}
       />
       <View style={styles.subcontainer}>
         <SpacerComp vertical={20} />
         <TitleComp text="Bem-vindo, Fulano" size={18} />
         <SpacerComp vertical={20} />
-        <ButtonComp 
-          text="DigitalStudentCard" 
-          action={() => navigate("DigitalStudentCard")} 
-          color={backgroundColor} 
+        <ButtonComp
+          text="DigitalStudentCard"
+          action={() => navigate("DigitalStudentCard")}
+          color={backgroundColor}
         />
         <SpacerComp vertical={20} />
         {/* <ButtonComp 
@@ -37,11 +37,11 @@ export default function MainMenuScreen() {
           action={() => navigate("Help")} 
           color={backgroundColor} 
         /> */}
-        
-        <ButtonComp 
-          text="Sair" 
-          action={() => navigate("Login")} 
-          color={backgroundColor} 
+
+        <ButtonComp
+          text="Sair"
+          action={() => navigate("Login")}
+          color={backgroundColor}
         />
       </View>
     </View>
