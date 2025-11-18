@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         flexDirection: 'row',
-        marginVertical: 20
     },
 
     icon: {
@@ -28,8 +27,7 @@ export const styles = StyleSheet.create({
     text: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: '600',
-        fontFamily: 'Montserrat',
+        fontFamily: 'Montserrat-Bold',
         letterSpacing: 0.5
     },
 

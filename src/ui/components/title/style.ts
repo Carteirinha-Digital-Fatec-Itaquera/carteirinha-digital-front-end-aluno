@@ -7,19 +7,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between',
-    paddingTop: 35,
-    paddingBottom: 6,
   },
 
   titleContainer: {
-    flex: 1, 
+    flex: 1,
     alignItems: 'center',
   },
 
   title: {
-    fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat-SemiBold',
     fontSize: 16,
-    fontWeight: '600',
     color: titleColor,
     textAlign: 'center'
   },
@@ -28,7 +25,6 @@ export const styles = StyleSheet.create({
     height: 3,
     backgroundColor: titleColor,
     width: '65%',
-    marginBottom: 10
   },
 
   button: {

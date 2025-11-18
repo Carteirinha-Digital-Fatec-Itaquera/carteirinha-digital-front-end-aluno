@@ -3,6 +3,7 @@ import { Text, Touchable, TouchableOpacity, View } from "react-native";
 
 import { styles } from "./style";
 import { AntDesign } from "@expo/vector-icons";
+import { Spacer } from "../spacer/Spacer";
 
 type TitleProps = {
   text: string,
@@ -23,6 +24,9 @@ export const TitleComp = ({ text, size = 14, showButton = false, actionButton = 
         <Text style={[styles.title, { fontSize: size }]}>{text}</Text>
         <View style={styles.divider} />
       </View>
+      {showButton && (
+        <Spacer horizontal={22} vertical={22} />
+      )}
     </View>
   )
 }

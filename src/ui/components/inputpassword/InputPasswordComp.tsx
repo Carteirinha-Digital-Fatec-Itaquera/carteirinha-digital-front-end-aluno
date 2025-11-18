@@ -1,8 +1,10 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+
+import { labelColor } from "../../themes/Color";
 
 import { styles } from "./style";
-import { labelColor } from "../../themes/Color";
 
 type InputPasswordProps = {
   label: string;
@@ -17,14 +19,23 @@ export const InputPasswordComp = ({ label, placeholder, value, onChangeText }: I
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
+      <View style={styles.inputField}>
         <TextInput
-          style={styles.inputField}
+          style={styles.inputText}
           placeholder={placeholder}
-          placeholderTextColor={labelColor}
           secureTextEntry={!showPassword}
           value={value}
           onChangeText={onChangeText}
         />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            {showPassword ? (
+                <AntDesign name="eye" size={25} /> 
+              ) : (
+                <AntDesign name="eye-invisible" size={25} /> 
+              )
+            } 
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

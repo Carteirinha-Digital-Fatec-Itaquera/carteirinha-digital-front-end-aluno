@@ -6,14 +6,13 @@ export const styles = StyleSheet.create({
         padding: 12,
         alignSelf: 'center',
         flexDirection: 'row',
-        marginVertical: 20
     },
 
     text: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '600',
-        fontFamily: 'Montserrat',
+        fontFamily: 'Montserrat-Medium',
         letterSpacing: 0.5
-    },
+    }
 
 }) 

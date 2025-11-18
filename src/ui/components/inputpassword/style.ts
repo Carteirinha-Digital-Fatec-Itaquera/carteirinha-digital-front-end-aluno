@@ -4,32 +4,30 @@ import { backgroundSecondaryColor, labelColor } from "../../themes/Color";
 export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    marginTop: 16,
-    marginBottom: 8,
-  },
-
-  subcontainer: {
-    display: 'flex',
-    flexDirection: 'row',
   },
 
   label: {
-    fontFamily: 'Montserrat',
-    fontWeight: '500',
+    fontFamily: 'Montserrat-Medium',
     fontSize: 14,
     color: labelColor,
     marginBottom: 4,
-    marginLeft: 8
-  },
+    marginLeft: 12,
+  }, 
 
   inputField: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: labelColor,
     borderRadius: 20,
-    padding: 14,
-    fontSize: 14,
     backgroundColor: backgroundSecondaryColor,
-    fontFamily: 'Montserrat',
-    marginTop: 4
+    paddingHorizontal: 10,
+    paddingVertical: 3
   },
-})
+
+  inputText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Montserrat-Medium',
+  }
+});
