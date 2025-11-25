@@ -1,4 +1,4 @@
-import { Image, View } from 'react-native';
+import { Image, View, Alert } from 'react-native';
 import { NavigationProps } from '../../../routes';
 import { useNavigation } from '@react-navigation/native';
 import { ButtonComp } from '../../components/button/ButtonComp';
@@ -6,6 +6,8 @@ import { TitleComp } from '../../components/title/TitleComp';
 import { backgroundColor } from '../../themes/Color';
 import { styles } from './style';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
+
+import { ButtonGrid } from '../../components/buttonGrid/ButtonGrid';
 
 export default function MainMenuScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -20,28 +22,30 @@ export default function MainMenuScreen() {
         <SpacerComp vertical={20} />
         <TitleComp text="Bem-vindo, Fulano" size={18} />
         <SpacerComp vertical={20} />
-        <ButtonComp
-          text="DigitalStudentCard"
-          action={() => navigate("DigitalStudentCard")}
-          color={backgroundColor}
+        <ButtonGrid 
+          items={[
+            { icon: "idcard", label: "Carteirinha", size: "large", onPress: () => navigate("DigitalStudentCard") },
+            { icon: "setting",    label: "Ajustes", onPress: () => Alert.alert("Config") },
+            { icon: "question-circle",    label: "Ajuda", onPress: () => Alert.alert("Ajuda?")},
+          ]}
         />
-        <SpacerComp vertical={20} />
-        {/* <ButtonComp 
-          text="Configurações" 
-          action={() => navigate("Settings")} 
-          color={backgroundColor} 
-        />
-        
-        <ButtonComp 
-          text="Ajuda" 
-          action={() => navigate("Help")} 
-          color={backgroundColor} 
-        /> */}
-
+        <SpacerComp vertical={75} />
         <ButtonComp
-          text="Sair"
-          action={() => navigate("Login")}
-          color={backgroundColor}
+        text="Sair"
+        action={() => Alert.alert(
+          'Confirme',
+          'Deseja Sair?',
+          [
+            {
+              text: 'Não',
+            },
+            {
+              text: 'Sim',
+              onPress: () => navigate("Login"),
+            },
+          ],
+        )}
+        color={backgroundColor}
         />
       </View>
     </View>
