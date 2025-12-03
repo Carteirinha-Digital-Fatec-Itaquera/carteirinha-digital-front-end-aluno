@@ -9,7 +9,7 @@ export type RootStackParamList = {
     SignUp: undefined;
     PasswordRecovery: undefined;
     MainMenu: undefined;
-    DigitalStudentCard: undefined;
+    DigitalStudentCard: { estudanteRa: string };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Login">;
