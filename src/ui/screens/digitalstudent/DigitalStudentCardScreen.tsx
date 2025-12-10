@@ -64,7 +64,7 @@ export default function DigitalStudentCardScreen({ route }: { route: RouteProp<R
           />
         </View>
         <View style={styles.infocontainer}>
-          <Text style={[styles.texto1, { textAlign: 'center', marginTop: 5, fontSize: 18 }]}>Nome do Aluno</Text>
+          <Text style={[styles.texto1, { textAlign: 'center', marginTop: 5, fontSize: 18 }]}>{estudante.name}</Text>
           <View style={styles.cut}>
             <Text style={styles.texto1}>RG: </Text><Text style={styles.texto2}>{estudante.rg}</Text>
             <Text style={styles.texto1}>CPF: </Text><Text>{estudante.cpf}</Text>
