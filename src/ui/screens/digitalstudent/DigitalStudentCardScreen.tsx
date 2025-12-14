@@ -1,29 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, Image, ActivityIndicator } from 'react-native';
-import { TitleComp } from '../../components/title/TitleComp';
-import { styles } from './style';
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { NavigationProps, RootStackParamList } from '../../../routes';
-import { SpacerComp } from '../../components/spacer/SpacerComp';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function DigitalStudentCardScreen({ route }: { route: RouteProp<RootStackParamList, 'DigitalStudentCard'> }) {
-  const { estudanteRa } = route.params;
+import { SpacerComp } from '../../components/spacer/SpacerComp';
+import { TitleComp } from '../../components/title/TitleComp';
 
-  const [estudante, setEstudante] = useState({
-    course: '',
-    period: '',
-    name: '',
-    cpf: '',
-    rg: '',
-    qrcode: '',
-    photo: '',
-    birthDate: '',
-    dueDate: ''
-  });
+import { findProfile } from "../../../api/student/findProfile";
+
+import { Student } from "../../../domains/Student";
+
+import { NavigationProps } from '../../../routes';
+
+import { styles } from './style';
+
+export default function DigitalStudentCardScreen() {
+  
+  const [student, setStudent] = useState<Student | undefined>(undefined);
+
+  useEffect(() => {
+    const loadStudent = async () => {
+      try {
+        const data = await findProfile();
+        setStudent(data);
+      } catch (error) {
+        console.error("Erro ao carregar aluno:", error);
+      }
+    };
+
+    loadStudent();
+  }, []);
+
   const { navigate } = useNavigation<NavigationProps>();
 
-  if (!estudante) return <ActivityIndicator size="large" />
+  if (!student) return <ActivityIndicator size="large" />
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,45 +44,44 @@ export default function DigitalStudentCardScreen({ route }: { route: RouteProp<R
         <View style={styles.imagecontainer}>
           <Image
             source={
-              estudante.photo && estudante.photo.length > 0
-                ? { uri: estudante.photo }
+              student.photo && student.photo.length > 0
+                ? { uri: student.photo }
                 : require("../../../assets/images/perfil_default.png")
             }
             style={styles.image}
           />
           <Image
             source={
-              estudante.qrcode && estudante.qrcode.length > 0
-                ? { uri: estudante.qrcode }
+              student.qrcode && student.qrcode.length > 0
+                ? { uri: student.qrcode }
                 : require("../../../assets/images/qrcode_default.png")
             }
             style={styles.image}
           />
         </View>
         <View style={styles.infocontainer}>
-          <Text style={[styles.texto1, { textAlign: 'center', marginTop: 5, fontSize: 18 }]}>{estudante.name}</Text>
+          <Text style={[styles.texto1, { textAlign: 'center', marginTop: 5, fontSize: 18 }]}>{student.name}</Text>
           <View style={styles.cut}>
-            <Text style={styles.texto1}>RG: </Text><Text style={styles.texto2}>{estudante.rg}</Text>
-            <Text style={styles.texto1}>CPF: </Text><Text>{estudante.cpf}</Text>
+            <Text style={styles.texto1}>RG: </Text><Text style={styles.texto2}>{student.rg}</Text>
+            <Text style={styles.texto1}>CPF: </Text><Text>{student.cpf}</Text>
           </View>
           <View style={styles.cut}>
             <Text style={styles.texto1}>NASCIMENTO: </Text>
-            <Text>{estudante.birthDate}</Text>
+            <Text>{student.birthDate}</Text>
           </View>
         </View>
         <View style={styles.infocontainer}>
-          <Text style={{ marginLeft: 10, marginTop: 5, fontSize: 18 }}>{estudante.course}</Text>
+          <Text style={{ marginLeft: 10, marginTop: 5, fontSize: 18 }}>{student.course}</Text>
           <View style={styles.cut}>
-            <Text style={styles.texto1}>PERIODO: </Text><Text style={styles.texto2}>{estudante.period}</Text>
-            <Text style={styles.texto1}>RA: </Text><Text>{estudanteRa}</Text>
+            <Text style={styles.texto1}>PERIODO: </Text><Text style={styles.texto2}>{student.period}</Text>
+            <Text style={styles.texto1}>RA: </Text><Text>{student.ra}</Text>
           </View>
           <View style={styles.cut}>
             <Text style={styles.texto1}>VALIDADE: </Text>
-            <Text>{estudante.dueDate}</Text>
+            <Text>{student.dueDate}</Text>
           </View>
         </View>
       </View>
-      {/* <Image source={require("../../../assets/images/cps_logo_cor.png")} style={styles.logo_cps} /> */}
       <Image source={require("../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png")} style={styles.logocpssp} />
     </SafeAreaView>
   );

@@ -5,7 +5,7 @@ import type { ApiError, Ok } from '../../utils/Types'
 import { GLOBAL_VAR } from '../config/globalVar'
 
 export async function sendEmail(email: Email): Promise<Ok | ApiError> {
-  const response = await fetch(`${GLOBAL_VAR.BASE_URL}/redefinirsenha/secretaria/solicitarcodigo`, {
+  const response = await fetch(`${GLOBAL_VAR.BASE_URL}/redefinirsenha/estudante/solicitarcodigo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ export async function sendEmail(email: Email): Promise<Ok | ApiError> {
       status: data.status ?? response.status.toString(),
       message: data.message ?? 'Erro inesperado',
       timestamp: data.timestamp ?? new Date().toISOString(),
-      path: data.path ?? '/autenticacoes/secretaria/logar',
+      path: data.path ?? '/autenticacoes/estudante/logar',
       errorFields: data.errorFields ?? null
     };
   }

@@ -1,13 +1,14 @@
 import { Image, View, Alert } from 'react-native';
 import { NavigationProps } from '../../../routes';
 import { useNavigation } from '@react-navigation/native';
+
 import { ButtonComp } from '../../components/button/ButtonComp';
 import { TitleComp } from '../../components/title/TitleComp';
+import { SpacerComp } from '../../components/spacer/SpacerComp';
+import { ButtonGrid } from '../../components/buttonGrid/ButtonGrid';
+
 import { backgroundColor } from '../../themes/Color';
 import { styles } from './style';
-import { SpacerComp } from '../../components/spacer/SpacerComp';
-
-import { ButtonGrid } from '../../components/buttonGrid/ButtonGrid';
 
 export default function MainMenuScreen() {
   const { navigate } = useNavigation<NavigationProps>();

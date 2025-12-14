@@ -13,7 +13,8 @@ export const styles = StyleSheet.create({
     width: "100%",
     borderTopStartRadius: 60,
     borderTopEndRadius: 60,
-    backgroundColor: backgroundSecondaryColor
+    backgroundColor: backgroundSecondaryColor,
+    justifyContent: 'space-around'
   },
   
   logo: {
