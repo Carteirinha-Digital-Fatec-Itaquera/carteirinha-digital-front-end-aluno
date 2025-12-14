@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, Image, Button, ActivityIndicator } from 'react-native';
+import React, { useState } from "react";
+import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { TitleComp } from '../../components/title/TitleComp';
 import { styles } from './style';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '../../../routes';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import api from '../../../services/api';
 
 export default function DigitalStudentCardScreen({ route }: { route: RouteProp<RootStackParamList, 'DigitalStudentCard'> }) {
   const { estudanteRa } = route.params;
@@ -23,19 +22,6 @@ export default function DigitalStudentCardScreen({ route }: { route: RouteProp<R
     dueDate: ''
   });
   const { navigate } = useNavigation<NavigationProps>();
-
-  async function carregarEstudante() {
-    try {
-      const res = await api.get(`/${estudanteRa}`);
-      setEstudante(res.data);
-    } catch (error) {
-      console.error("Erro ao buscar estudante:", error);
-    }
-  }
-
-  useEffect(() => {
-    carregarEstudante();
-  }, []);
 
   if (!estudante) return <ActivityIndicator size="large" />
 

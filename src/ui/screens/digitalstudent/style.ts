@@ -4,7 +4,7 @@ import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   subcontainer: {
     flex: 1,

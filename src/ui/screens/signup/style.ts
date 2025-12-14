@@ -13,7 +13,8 @@ export const styles = StyleSheet.create({
     width: "100%",
     borderTopStartRadius: 60,
     borderTopEndRadius: 60,
-    backgroundColor: backgroundSecondaryColor
+    backgroundColor: backgroundSecondaryColor,
+    justifyContent: 'space-around'
   },
 
   logo: {
@@ -23,6 +24,7 @@ export const styles = StyleSheet.create({
   },
 
   containertext: {
+    alignSelf: 'center',
     display: 'flex',
     flexDirection: 'row',
     margin: 20

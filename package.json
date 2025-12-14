@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.3.0",
     "@expo/vector-icons": "^15.0.3",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/native": "^7.1.19",
     "@react-navigation/native-stack": "^7.6.2",
     "expo": "~54.0.0",
@@ -21,6 +22,7 @@
     "react-native": "0.81.5",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
+    "react-native-vector-icons": "^10.3.0",
     "react-native-web": "^0.21.0"
   },
   "devDependencies": {

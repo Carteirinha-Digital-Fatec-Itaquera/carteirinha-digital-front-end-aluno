@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: backgroundColor,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   subcontainer: {
@@ -13,7 +13,9 @@ export const styles = StyleSheet.create({
     width: "100%",
     borderTopStartRadius: 60,
     borderTopEndRadius: 60,
-    backgroundColor: backgroundSecondaryColor
+    backgroundColor: backgroundSecondaryColor,
+    justifyContent: 'space-around'
+
   },
   logo: {
     margin: 10,
