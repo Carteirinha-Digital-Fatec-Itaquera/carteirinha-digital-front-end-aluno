@@ -4,6 +4,7 @@ import SignUpScreen from "../ui/screens/signup/SignUpScreen"
 import PasswordRecoveryScreen from "../ui/screens/passwordrecovery/PasswordRecoveryScreen"
 import MainMenuScreen from "../ui/screens/mainmenu/MainMenuScreen"
 import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen"
+import UploadImageScreen from "../ui/screens/uploadimage/UploadImageScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -33,12 +34,19 @@ export default function StackRoute() {
         component={MainMenuScreen}
         options={{ headerShown: false }}
       />
+      
+      <Stack.Screen
+        name="UploadImage"
+        component={UploadImageScreen}
+        options={{ headerShown: false }}
+      />
 
       <Stack.Screen
         name="DigitalStudentCard"
         component={DigitalStudentCardScreen}
         options={{ headerShown: false }}
       />
+
     </Stack.Navigator>
   )
 }
