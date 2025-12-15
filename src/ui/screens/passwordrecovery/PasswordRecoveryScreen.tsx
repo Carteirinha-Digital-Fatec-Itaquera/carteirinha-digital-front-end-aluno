@@ -24,6 +24,7 @@ import { Email } from '../../../domains/Email';
 import { ErrorField } from '../../../utils/Types';
 
 import { styles } from './style';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function PasswordRecoveryScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -64,6 +65,7 @@ export default function PasswordRecoveryScreen() {
     <View style={styles.container}>
       <Image source={require("../../../assets/images/fatec_itaquera_logo.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
+        <InternetWatcher />
         <ErrorModalComp
           visible={modalErrorVisible}
           error={message}

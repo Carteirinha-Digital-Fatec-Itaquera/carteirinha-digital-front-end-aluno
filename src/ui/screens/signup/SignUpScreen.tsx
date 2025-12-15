@@ -25,6 +25,7 @@ import { sendCode } from '../../../api/firstaccess/sendCode';
 import { sendPassword } from '../../../api/firstaccess/sendPassword';
 
 import { styles } from './style';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function SignUpScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -76,6 +77,7 @@ export default function SignUpScreen() {
     <View style={styles.container}>
       <Image source={require("../../../assets/images/fatec_itaquera_logo.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
+        <InternetWatcher />
         <ErrorModalComp
           visible={modalErrorVisible}
           error={message}

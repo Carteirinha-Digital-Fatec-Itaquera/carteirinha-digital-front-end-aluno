@@ -13,6 +13,7 @@ import { Student } from "../../../domains/Student";
 import { NavigationProps } from '../../../routes';
 
 import { styles } from './style';
+import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 
 export default function DigitalStudentCardScreen() {
   
@@ -41,6 +42,7 @@ export default function DigitalStudentCardScreen() {
       <TitleComp text="Carteirinha Digital" showButton={true} actionButton={() => navigate("MainMenu")} />
       <Image source={require("../../../assets/images/fatec_itaquera_logo_preto.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
+        <InternetWatcher />
         <View style={styles.imagecontainer}>
           <Image
             source={

@@ -9,10 +9,11 @@ type Props = {
   visible: boolean;
   error: string;
   fields?: string[];
+  buttonText?: string;
   onClose: () => void;
 };
 
-export const ErrorModalComp = ({ visible, error, fields = [], onClose }: Props) => {
+export const ErrorModalComp = ({ visible, error, buttonText = "Fechar", fields = [], onClose }: Props) => {
   return (
     <Modal
       transparent
@@ -28,7 +29,7 @@ export const ErrorModalComp = ({ visible, error, fields = [], onClose }: Props) 
             <Text key={field} style={styles.fieldText}>• {field}</Text>
           ))}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Fechar</Text>
+            <Text style={styles.closeButtonText}>{buttonText}</Text>
           </TouchableOpacity>
         </View>
       </View>

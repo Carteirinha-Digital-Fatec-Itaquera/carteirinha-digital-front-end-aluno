@@ -1,21 +1,28 @@
-import { Image, View } from 'react-native';
-import { NavigationProps } from '../../../routes';
+import { Image, View ,ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+
 import { ButtonComp } from '../../components/button/ButtonComp';
 import { TitleComp } from '../../components/title/TitleComp';
 import { InputComp } from '../../components/input/InputComp';
-import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
-import { useState } from 'react';
-import { backgroundColor } from '../../themes/Color';
-import { TextClickableComp } from '../../components/textclickable/TextClickableComp';
-import { styles } from './style';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
-import { ErrorField } from '../../../utils/Types';
-import { login } from '../../../api/auth/login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TextClickableComp } from '../../components/textclickable/TextClickableComp';
 import { ErrorModalComp } from '../../components/ErrorModal';
-import { ActivityIndicator } from 'react-native';
+import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
+
+import { backgroundColor } from '../../themes/Color';
+
+import { ErrorField } from '../../../utils/Types';
+
+import { login } from '../../../api/auth/login';
+
 import { Auth } from '../../../domains/Auth';
+
+import { NavigationProps } from '../../../routes';
+
+import { styles } from './style';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function LoginScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -32,12 +39,13 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Image source={require("../../../assets/images/fatec_itaquera_logo.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
+        <InternetWatcher />
         <SpacerComp />
         <TitleComp text="Login" size={20} />
         <SpacerComp />
         <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
         <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
-        <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("PasswordRecovery")} alignSelf="flex-end"/>
+        <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("PasswordRecovery")} alignSelf="flex-end" />
         <SpacerComp />
         <ErrorModalComp
           visible={modalErrorVisible}
