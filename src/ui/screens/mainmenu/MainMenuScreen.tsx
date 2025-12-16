@@ -62,7 +62,7 @@ export default function MainMenuScreen() {
 
           ]}
         />
-        <SpacerComp vertical={75} />
+        <SpacerComp vertical={40} />
         <ButtonComp
           text="Deslogar"
           action={() => Alert.alert(
