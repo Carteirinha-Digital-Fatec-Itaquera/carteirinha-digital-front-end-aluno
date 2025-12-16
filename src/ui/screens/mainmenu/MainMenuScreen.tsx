@@ -7,11 +7,11 @@ import { ButtonComp } from '../../components/button/ButtonComp';
 import { TitleComp } from '../../components/title/TitleComp';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { ButtonGrid } from '../../components/buttonGrid/ButtonGrid';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 import { backgroundColor } from '../../themes/Color';
 
 import { styles } from './style';
-import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function MainMenuScreen() {
   const { navigate } = useNavigation<NavigationProps>();
