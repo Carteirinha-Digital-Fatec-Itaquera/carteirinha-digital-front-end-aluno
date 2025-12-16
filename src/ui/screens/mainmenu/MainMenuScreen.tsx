@@ -38,16 +38,31 @@ export default function MainMenuScreen() {
             {
               icon: "setting",
               label: "Ajustes",
-              onPress: () => Alert.alert("Config")
+              onPress: () => Alert.alert("Em breve!")
             },
             {
               icon: "question-circle",
               label: "Ajuda",
               onPress: () => Alert.alert("Ajuda?")
             },
+            {
+              icon: "upload",
+              label: "Enviar Foto",
+              onPress:() => {navigate("UploadImage"); 
+              Alert.alert(
+                'Instruções de envio',
+                '- Utilize fundo neutro\n\n' +
+                '- Garanta foco nítido, sem sombras e reflexos\n\n' +
+                '- Centralize o rosto, mostrando toda a cabeça e o topo dos ombros\n\n' +
+                '- Mantenha os olhos abertos e visíveis\n\n' +
+                '- Expressão neutra (lábios fechados) ou sorriso discreto\n\n' +
+                '- Não utilize acessórios como chapéus, óculos escuros ou brincos grandes\n\n'                
+              )}
+            },
+
           ]}
         />
-        <SpacerComp vertical={75} />
+        <SpacerComp vertical={40} />
         <ButtonComp
           text="Deslogar"
           action={() => Alert.alert(

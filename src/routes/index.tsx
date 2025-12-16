@@ -10,6 +10,7 @@ export type RootStackParamList = {
     PasswordRecovery: undefined;
     MainMenu: undefined;
     DigitalStudentCard: undefined;
+    UploadImage: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Login">;
