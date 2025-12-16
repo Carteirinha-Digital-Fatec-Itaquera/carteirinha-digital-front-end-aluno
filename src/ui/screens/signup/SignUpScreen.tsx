@@ -11,6 +11,7 @@ import { InputCodeComp } from '../../components/inputCode/InputCodeComp';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
 import { TextInfoComp } from '../../components/textinfo/TextInfoComp';
 import { ErrorModalComp } from '../../components/ErrorModal';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 import { ErrorField } from '../../../utils/Types';
 
@@ -25,7 +26,6 @@ import { sendCode } from '../../../api/firstaccess/sendCode';
 import { sendPassword } from '../../../api/firstaccess/sendPassword';
 
 import { styles } from './style';
-import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function SignUpScreen() {
   const { navigate } = useNavigation<NavigationProps>();
