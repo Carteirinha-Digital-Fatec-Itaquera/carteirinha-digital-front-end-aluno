@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     fontSize: 16
   },
   texto2: {
-    marginRight: "24%",
+    marginRight: "20%",
     fontFamily: 'Montserrat-Medium',
     fontSize: 16
   },
