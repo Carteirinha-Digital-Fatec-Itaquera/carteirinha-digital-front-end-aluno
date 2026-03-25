@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { Text, View, Image, Alert, Pressable, TouchableOpacity, ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from "../../../routes";
 
 import { TitleComp } from "../../components/title/TitleComp";
 import { TextInfoComp } from "../../components/textinfo/TextInfoComp";
 import { SpacerComp } from "../../components/spacer/SpacerComp";
 import { ErrorModalComp } from "../../components/ErrorModal";
+import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 
 import { uploadImage } from "../../../api/student/uploadImage";
 import { ErrorField } from "../../../utils/Types";
+import { NavigationProps } from "../../../routes";
 
 import { styles } from './style';
 
@@ -90,8 +91,9 @@ export default function UploadImageScreen() {
           setModalErrorVisible(false)
         }}
       />
-      <TitleComp text="Enviar Fotografia" size={18} />
-      <SpacerComp horizontal={50} />
+      <InternetWatcher />
+      <TitleComp text="Enviar Fotografia" size={18} showButton={true} actionButton={() => navigate("MainMenu")} />
+      <SpacerComp vertical={10} />
       <View style={styles.box}>
         <Pressable onPress={imageSource}>
           <Image

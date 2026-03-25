@@ -1,8 +1,13 @@
-import React from 'react';
-import Routes from './src/routes';
-import { useFonts } from '@expo-google-fonts/montserrat';
+import React, { useEffect, useState } from 'react';
+import { AppState, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
+
+import { StatusBar } from 'expo-status-bar';
+import { useFonts } from '@expo-google-fonts/montserrat';
+
+import { backgroundColor } from './src/ui/themes/Color';
+
+import Routes from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -34,6 +39,15 @@ export default function App() {
     'Montserrat-BlackItalic': require('./src/assets/fonts/Montserrat-BlackItalic.ttf'),
   });
 
+  const [appState, setAppState] = useState(AppState.currentState);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextState => {
+      setAppState(nextState);
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -42,6 +56,10 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <StatusBar 
+          backgroundColor={backgroundColor}
+          style="light"
+        />
         <Routes />
       </SafeAreaView>
     </SafeAreaProvider>

@@ -10,6 +10,7 @@ import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { TextClickableComp } from '../../components/textclickable/TextClickableComp';
 import { ErrorModalComp } from '../../components/ErrorModal';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 import { backgroundColor } from '../../themes/Color';
 
@@ -22,7 +23,6 @@ import { Auth } from '../../../domains/Auth';
 import { NavigationProps } from '../../../routes';
 
 import { styles } from './style';
-import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function LoginScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -43,7 +43,7 @@ export default function LoginScreen() {
         <SpacerComp />
         <TitleComp text="Login" size={20} />
         <SpacerComp />
-        <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
+        <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
         <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
         <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("PasswordRecovery")} alignSelf="flex-end" />
         <SpacerComp />

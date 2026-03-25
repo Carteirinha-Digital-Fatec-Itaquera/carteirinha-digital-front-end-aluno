@@ -10,9 +10,11 @@ import { InputPasswordComp } from '../../components/inputpassword/InputPasswordC
 import { TextInfoComp } from '../../components/textinfo/TextInfoComp';
 import { InputCodeComp } from '../../components/inputCode/InputCodeComp';
 import { ErrorModalComp } from '../../components/ErrorModal';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 import { backgroundColor } from '../../themes/Color';
 import { NavigationProps } from '../../../routes';
+import { ErrorField } from '../../../utils/Types';
 
 import { sendEmail } from '../../../api/recoverypassword/sendEmail';
 import { sendCode } from '../../../api/recoverypassword/sendCode';
@@ -21,10 +23,7 @@ import { sendPassword } from '../../../api/recoverypassword/sendPassword';
 import { RecoveryPassword } from '../../../domains/RecoveryPassword';
 import { Email } from '../../../domains/Email';
 
-import { ErrorField } from '../../../utils/Types';
-
 import { styles } from './style';
-import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 export default function PasswordRecoveryScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -180,10 +179,7 @@ function PasswordRecoveryPart1Comp({ navigateBackButton, value, setValue, onLoad
         Insira seu e-mail institucional para enviarmos um código de segurança
       </TextInfoComp>
       <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={value} onChangeText={setValue} />
-      <SpacerComp />
-      <SpacerComp />
-      <SpacerComp />
-      <SpacerComp />
+      <SpacerComp vertical={50} />
       {onLoading ? (
         <ActivityIndicator
           size="large"
@@ -196,7 +192,7 @@ function PasswordRecoveryPart1Comp({ navigateBackButton, value, setValue, onLoad
           color={backgroundColor}
         />
       )}
-      <SpacerComp />
+      <SpacerComp vertical={20} />
     </>
   )
 }
@@ -210,10 +206,7 @@ function PasswordRecoveryPart2Comp({ navigateBackButton, value, setValue, onLoad
         Insira o código de segurança que enviamos no seu e-mail institucional
       </TextInfoComp>
       <InputCodeComp label="Insira o código" onChangeText={setValue} />
-      <SpacerComp />
-      <SpacerComp />
-      <SpacerComp />
-      <SpacerComp />
+      <SpacerComp vertical={50} />
       {onLoading ? (
         <ActivityIndicator
           size="large"
@@ -226,8 +219,7 @@ function PasswordRecoveryPart2Comp({ navigateBackButton, value, setValue, onLoad
           color={backgroundColor}
         />
       )}
-      <SpacerComp />
-
+      <SpacerComp vertical={20} />
     </>
   )
 }
@@ -243,10 +235,7 @@ function PasswordRecoveryPart3Comp({ navigateBackButton, value, setValue, onLoad
       </TextInfoComp>
       <InputPasswordComp label="Insira a nova senha" placeholder="Ex: ********" value={value} onChangeText={setValue} />
       <InputPasswordComp label="Repita a senha" placeholder="Ex: ********" value={repeatPassword} onChangeText={setRepeatPassword} />
-      <SpacerComp />
-      <SpacerComp />
-      <SpacerComp />
-      <SpacerComp />
+      <SpacerComp vertical={50} />
       {onLoading ? (
         <ActivityIndicator
           size="large"
@@ -265,8 +254,7 @@ function PasswordRecoveryPart3Comp({ navigateBackButton, value, setValue, onLoad
           color={backgroundColor}
         />
       )}
-      <SpacerComp />
-
+      <SpacerComp vertical={20} />
     </>
   )
 }

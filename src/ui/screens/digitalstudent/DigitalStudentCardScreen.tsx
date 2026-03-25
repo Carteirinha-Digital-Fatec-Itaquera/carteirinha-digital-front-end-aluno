@@ -3,8 +3,8 @@ import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { TitleComp } from '../../components/title/TitleComp';
+import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 
 import { findProfile } from "../../../api/student/findProfile";
 
@@ -13,7 +13,6 @@ import { Student } from "../../../domains/Student";
 import { NavigationProps } from '../../../routes';
 
 import { styles } from './style';
-import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 
 export default function DigitalStudentCardScreen() {
   
@@ -38,7 +37,6 @@ export default function DigitalStudentCardScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SpacerComp vertical={20} />
       <TitleComp text="Carteirinha Digital" showButton={true} actionButton={() => navigate("MainMenu")} />
       <Image source={require("../../../assets/images/fatec_itaquera_logo_preto.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
