@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View, Image } from "react-native";
 import { styles } from './style';
+import Badge from "../../components/validacaoqrcode/Badge";
 
 function TelaQrcode(){
     return(
@@ -10,18 +11,18 @@ function TelaQrcode(){
 
           <View style={styles.containerInformacoes}>
             <View style={styles.containerCard}>
-              <Text>Aluno</Text>
+              <Text style={styles.title}>Aluno</Text>
 
-              <View>
+              <View style={styles.containerImgInfo}>
                 <Image source={require("../../../assets/images/perfil_default.png")} style={styles.imgAluno}></Image>
-                <View>
-                  <Text>Joao Fulano</Text>
-                  <Text>Desenvolvimento de software</Text>
-                  <Text>RA: 874375327</Text>
+                <View style={styles.containerInfo}>
+                  <Text style={styles.textAluno}>Joao Fulano</Text>
+                  <Text style={styles.textCurso}>Desenvolvimento de software</Text>
+                  <Text style={styles.textRA}>RA: 874375327</Text>
                 </View>
               </View>
 
-              <View>badge</View>
+              <Badge status="Ativo" validade={new Date("2028-03-02")} />
               // os outros dois cards
 
 
