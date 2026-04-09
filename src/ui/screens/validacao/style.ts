@@ -5,14 +5,16 @@ export const styles = StyleSheet.create({
  container: {
     backgroundColor: backgroundColor,
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
  },
    logo: {
     margin: 10,
-    width: 190,
-    height: 115
+    width: 150,
+    height: 90
   },
   logoRodape: {
+    width: 200,
+    height: 70
    
   },
   imgAluno:{
@@ -32,16 +34,26 @@ export const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    rowGap: 20,
+    
   },
   containerCard: {
     width: '100%',
     backgroundColor: 'white',
     borderColor: "#C9C9C9",
     borderWidth: 1,
-    borderRadius: 5, 
-    justifyContent:'center', 
-    alignItems: 'center'
+    borderRadius: 10, 
+    justifyContent:'space-between', 
+    alignItems: 'flex-start',
+    rowGap: 15,
+    paddingBottom: 15,
+    marginTop: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 9,
+    elevation: 8,
   },
   title: {
     color: backgroundColor,
@@ -58,7 +70,6 @@ export const styles = StyleSheet.create({
     width: '100%', 
     justifyContent: "flex-start",
     alignItems: 'center',
-    marginTop: 10,
     paddingLeft: 15,
   },
   containerInfo:{
@@ -79,7 +90,9 @@ export const styles = StyleSheet.create({
     color: '#5B5B5B',
     fontWeight: '500'
 
-  }
-
-
+  },
+  
+  
 })
+
+
