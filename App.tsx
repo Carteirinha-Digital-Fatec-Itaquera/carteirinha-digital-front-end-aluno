@@ -67,7 +67,9 @@ export default function App() {
     //   </SafeAreaView>
     // </SafeAreaProvider>
 
+    <SafeAreaView>
        <TelaQrcode/>
+       </SafeAreaView>
 
   );
 }

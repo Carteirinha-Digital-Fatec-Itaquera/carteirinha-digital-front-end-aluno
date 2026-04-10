@@ -1,5 +1,6 @@
-import { StyleSheet } from "react-native"
+import { Animated, StyleSheet } from "react-native"
 import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
+
 
 export const styles = StyleSheet.create({
  container: {
@@ -18,7 +19,7 @@ export const styles = StyleSheet.create({
    
   },
   imgAluno:{
-    width: 50,
+    width: 80,
     height: 80,
 
   },
@@ -54,6 +55,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 9,
     elevation: 8,
+
   },
   title: {
     color: backgroundColor,
@@ -71,18 +73,23 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: 'center',
     paddingLeft: 15,
-  },
-  containerInfo:{
-    marginLeft: 30,
 
   },
+  containerInfo:{
+    marginLeft: 30
+  },
+  containerNome:{
+    width: '85%',
+  },
+
   textRA:{
     marginTop: 10,
     fontWeight: '700'
   },
   textAluno:{
     fontSize: 20,
-    fontWeight: '600'
+    fontWeight: '600',
+    
 
   },
   textCurso: {

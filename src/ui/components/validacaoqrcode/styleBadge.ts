@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
 
     },
       textInativa: {
-        color:'red',
+        color:'#ca0909',
         fontSize: 14,
         fontWeight: '600'
 
@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
         width: 8,
         height: 8,
         borderRadius: 50,
-        backgroundColor: 'red',
+        backgroundColor: '#ca0909',
         top: 1
     }
 

@@ -20,7 +20,9 @@ function TelaQrcode(){
               <View style={styles.containerImgInfo}>
                 <Image source={require("../../../assets/images/perfil_default.png")} style={styles.imgAluno}></Image>
                 <View style={styles.containerInfo}>
+                  <View style={styles.containerNome}>
                   <Text style={styles.textAluno}>Joao Fulano</Text>
+                  </View>
                   <Text style={styles.textCurso}>Desenvolvimento de software</Text>
                   <Text style={styles.textRA}>RA: 874375327</Text>
                 </View>

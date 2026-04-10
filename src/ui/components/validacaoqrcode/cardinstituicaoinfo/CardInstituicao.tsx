@@ -15,7 +15,8 @@ function CardInfoInstituicao(){
                             </View>
                         <View style={styles.containerTuplas}>
                             <Text style={styles.textTuplas}>Endereço</Text>
-                            <Text style={styles.textTuplasResult}>Av. Miguel Ignácio Curi, 360 - Vila Carmosina - Itaquera</Text>
+                            <View style={styles.containerEndereco}><Text style={styles.textTuplasResult}>Av. Miguel Ignácio Curi, 360 - Vila Carmosina - Itaquera</Text></View>
+                            
                             </View>
                         <View style={styles.containerTuplas}>
                             <Text style={styles.textTuplas}>Telefone</Text>

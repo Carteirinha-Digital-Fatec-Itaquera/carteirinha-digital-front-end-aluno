@@ -38,7 +38,15 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingRight: 15,
-    paddingBottom: 10
+    paddingBottom: 10,
+  
+
+  },
+  containerEndereco:{
+    width: '80%',
+    justifyContent: 'center', 
+    alignItems: 'center',
+    top: 5
 
   },
   textTuplas:{
@@ -53,7 +61,6 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     top: 10,
-    textAlign: 'right'
-
+    textAlign: 'right',
   }
 })
