@@ -1,24 +1,14 @@
-import type { ApiError, Ok } from '../../utils/Types'
-
-import { GLOBAL_VAR } from '../config/globalVar'
+import type { ApiError, Ok } from '../../utils/Types';
+import { apiClient, buildApiError } from '../config/apiClient';
 
 export async function sendCode(email: string, code: string): Promise<Ok | ApiError> {
-  const response = await fetch(`${GLOBAL_VAR.BASE_URL}/redefinirsenha/estudante/validartoken/${email}/${code}`, {
+  const path = `/redefinirsenha/estudante/validartoken/${email}/${code}`;
+
+  const response = await apiClient(path, {
     method: 'GET',
-  })
+  });
 
-  if (!response.ok) {
-    const data = await response.json()
+  if (!response.ok) return buildApiError(response, path);
 
-    return {
-      code: data.code ?? 'UNKNOWN_ERROR',
-      status: data.status ?? response.status.toString(),
-      message: data.message ?? 'Erro inesperado',
-      timestamp: data.timestamp ?? new Date().toISOString(),
-      path: data.path ?? `/redefinirsenha/estudante/validartoken/${email}/${code}`,
-      errorFields: data.errorFields ?? null
-    };
-  }
-
-  return { ok: '' }
+  return { ok: '' };
 }

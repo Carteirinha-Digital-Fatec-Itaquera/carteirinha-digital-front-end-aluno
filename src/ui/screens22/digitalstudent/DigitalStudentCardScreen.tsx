@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TitleComp } from '../../components/title/TitleComp';
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
-import { ErrorModalComp } from "../../components/ErrorModal";
 
 import { findProfile } from "../../../api/student/findProfile";
 
@@ -14,45 +13,30 @@ import { Student } from "../../../domains/Student";
 import { NavigationProps } from '../../../routes';
 
 import { styles } from './style';
-import QRCode from "react-native-qrcode-svg";
 
 export default function DigitalStudentCardScreen() {
-  const { navigate } = useNavigation<NavigationProps>();
-
+  
   const [student, setStudent] = useState<Student | undefined>(undefined);
-  const [message, setMessage] = useState("");
-  const [modalErrorVisible, setModalErrorVisible] = useState(false);
-
 
   useEffect(() => {
     const loadStudent = async () => {
-      const result = await findProfile();
-
-      if ('code' in result) {
-        setMessage(result.message);
-        setModalErrorVisible(true);
-      } else {
-        setStudent(result);
+      try {
+        const data = await findProfile();
+        setStudent(data);
+      } catch (error) {
+        console.error("Erro ao carregar aluno:", error);
       }
     };
 
     loadStudent();
   }, []);
 
-  if (!student) return <ActivityIndicator size="large" />;
+  const { navigate } = useNavigation<NavigationProps>();
+
+  if (!student) return <ActivityIndicator size="large" />
 
   return (
     <SafeAreaView style={styles.container}>
-      <ErrorModalComp
-        visible={modalErrorVisible}
-        error={message}
-        fields={[]}
-        onClose={() => {
-          setMessage("");
-          setModalErrorVisible(false);
-          navigate("MainMenu");
-        }}
-      />
       <TitleComp text="Carteirinha Digital" showButton={true} actionButton={() => navigate("MainMenu")} />
       <Image source={require("../../../assets/images/fatec_itaquera_logo_preto.png")} style={styles.logo} />
       <View style={styles.subcontainer}>
@@ -66,9 +50,13 @@ export default function DigitalStudentCardScreen() {
             }
             style={styles.image}
           />
-          <QRCode
-            value="https://meusite.com"
-            size={200}
+          <Image
+            source={
+              student.qrcode && student.qrcode.length > 0
+                ? { uri: student.qrcode }
+                : require("../../../assets/images/qrcode_default.png")
+            }
+            style={styles.image}
           />
         </View>
         <View style={styles.infocontainer}>

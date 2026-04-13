@@ -1,30 +1,14 @@
-import type { Email } from '../../domains/Email'
-
-import type { ApiError, Ok } from '../../utils/Types'
-
-import { GLOBAL_VAR } from '../config/globalVar'
+import type { Email } from '../../domains/Email';
+import type { ApiError, Ok } from '../../utils/Types';
+import { apiClient, buildApiError } from '../config/apiClient';
 
 export async function sendEmail(email: Email): Promise<Ok | ApiError> {
-  const response = await fetch(`${GLOBAL_VAR.BASE_URL}/redefinirsenha/estudante/solicitarcodigo`, {
+  const response = await apiClient('/redefinirsenha/estudante/solicitarcodigo', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(email)
-  })
+    body: email,
+  });
 
-  if (!response.ok) {
-    const data = await response.json()
+  if (!response.ok) return buildApiError(response, '/redefinirsenha/estudante/solicitarcodigo');
 
-    return {
-      code: data.code ?? 'UNKNOWN_ERROR',
-      status: data.status ?? response.status.toString(),
-      message: data.message ?? 'Erro inesperado',
-      timestamp: data.timestamp ?? new Date().toISOString(),
-      path: data.path ?? '/autenticacoes/estudante/logar',
-      errorFields: data.errorFields ?? null
-    };
-  }
-
-  return { ok: '' }
+  return { ok: '' };
 }

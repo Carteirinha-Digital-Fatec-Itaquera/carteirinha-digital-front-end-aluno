@@ -25,26 +25,39 @@ import { Email } from '../../../domains/Email';
 
 import { styles } from './style';
 
-type Step = 1 | 2 | 3;
-
 export default function PasswordRecoveryScreen() {
   const { navigate } = useNavigation<NavigationProps>();
 
-  const [step, setStep] = useState<Step>(1);
+  const [email, setEmail] = useState("")
+  const [code, setCode] = useState("")
+  const [password, setPassword] = useState("")
 
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [password, setPassword] = useState("");
 
-  const [message, setMessage] = useState("");
-  const [errorFields, setErrorFields] = useState<ErrorField[]>();
-  const [modalErrorVisible, setModalErrorVisible] = useState(false);
-  const [onLoading, setOnLoading] = useState(false);
+  const [message, setMessage] = useState("")
+  const [errorFields, setErrorFields] = useState<ErrorField[]>()
+  const [modalErrorVisible, setModalErrorVisible] = useState(false)
+  const [onLoading, setOnLoading] = useState(false)
 
-  function showError(message: string, fields?: ErrorField[] | null) {
-    setMessage(message);
-    setErrorFields(fields ?? []);
-    setModalErrorVisible(true);
+  const [part1, setPart1] = useState(true)
+  const [part2, setPart2] = useState(false)
+  const [part3, setPart3] = useState(false)
+
+  function goToPart1() {
+    setPart1(true)
+    setPart2(false)
+    setPart3(false)
+  }
+
+  function goToPart2() {
+    setPart1(false)
+    setPart2(true)
+    setPart3(false)
+  }
+
+  function goToPart3() {
+    setPart1(false)
+    setPart2(false)
+    setPart3(true)
   }
 
   return (
@@ -55,71 +68,81 @@ export default function PasswordRecoveryScreen() {
         <ErrorModalComp
           visible={modalErrorVisible}
           error={message}
-          fields={errorFields?.map((val: ErrorField) => val.description) ?? []}
+          fields={errorFields?.map((val: ErrorField) => { return val.description }) ?? []}
           onClose={() => {
-            setMessage("");
-            setErrorFields([]);
-            setModalErrorVisible(false);
+            setMessage("")
+            setErrorFields([])
+            setModalErrorVisible(false)
           }}
         />
-
-        {step === 1 && (
+        {part1 && (
           <PasswordRecoveryPart1Comp
             navigateBackButton={() => navigate("Login")}
             navigateNextStepButton={async () => {
-              setOnLoading(true);
-              const result = await sendEmail(new Email({ email }));
+              setOnLoading(true)
+              const emailToSend = new Email({ email })
+              const result = await sendEmail(emailToSend)
               if ('ok' in result) {
-                setStep(2);
+                goToPart2()
               } else {
-                showError(result.message, result.errorFields);
+                setMessage(result.message)
+                setErrorFields(result.errorFields ?? [])
+                setModalErrorVisible(true)
               }
-              setOnLoading(false);
-            }}
+              setOnLoading(false)
+            }
+            }
             value={email}
             setValue={setEmail}
             onLoading={onLoading}
           />
         )}
-
-        {step === 2 && (
+        {part2 && (
           <PasswordRecoveryPart2Comp
-            navigateBackButton={() => setStep(1)}
+            navigateBackButton={() => { goToPart1() }}
             navigateNextStepButton={async () => {
-              setOnLoading(true);
-              const result = await sendCode(email, code);
+              setOnLoading(true)
+              const result = await sendCode(email ?? "", code)
               if ('ok' in result) {
-                setStep(3);
+                goToPart3()
               } else {
-                showError(result.message, result.errorFields);
+                setMessage(result.message)
+                setErrorFields(result.errorFields ?? [])
+                setModalErrorVisible(true)
               }
-              setOnLoading(false);
+              setOnLoading(false)
             }}
             value={code}
             setValue={setCode}
             onLoading={onLoading}
           />
         )}
-
-        {step === 3 && (
+        {part3 && (
           <PasswordRecoveryPart3Comp
-            navigateBackButton={() => setStep(2)}
+            navigateBackButton={() => { goToPart2() }}
             navigateNextStepButton={async (passwordEquals: boolean) => {
-              setOnLoading(true);
+              setOnLoading(true)
 
               if (!passwordEquals) {
-                showError("As senhas não são iguais.");
-                setOnLoading(false);
-                return;
+                setMessage("As senhas não são iguais.")
+                setModalErrorVisible(true)
+                setOnLoading(false)
+                return
               }
-
-              const result = await sendPassword(new RecoveryPassword({ email, code, newPassword: password }));
+              const recovery = new RecoveryPassword({
+                email: email ?? "",
+                code: code ?? "",
+                newPassword: password
+              })
+              const result = await sendPassword(recovery)
               if ('ok' in result) {
-                navigate('Login');
+                navigate('Login')
               } else {
-                showError(result.message, result.errorFields);
+                setMessage(result.message)
+                setErrorFields(result.errorFields ?? [])
+                setModalErrorVisible(true)
               }
-              setOnLoading(false);
+              setOnLoading(false)
             }}
             value={password}
             setValue={setPassword}
@@ -132,20 +155,20 @@ export default function PasswordRecoveryScreen() {
 }
 
 type PasswordRecoveryProps = {
-  navigateBackButton: () => void;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  onLoading: boolean;
-  navigateNextStepButton: () => void;
-};
+  navigateBackButton: () => void,
+  value: string,
+  setValue: Dispatch<SetStateAction<string>>,
+  onLoading: boolean,
+  navigateNextStepButton: () => void,
+}
 
 type PasswordRecoveryNextStepBooleanProps = {
-  navigateBackButton: () => void;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  onLoading: boolean;
-  navigateNextStepButton: (value: boolean) => void;
-};
+  navigateBackButton: () => void,
+  value: string,
+  setValue: Dispatch<SetStateAction<string>>,
+  onLoading: boolean,
+  navigateNextStepButton: (value: boolean) => void,
+}
 
 function PasswordRecoveryPart1Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: PasswordRecoveryProps) {
   return (
@@ -158,13 +181,20 @@ function PasswordRecoveryPart1Comp({ navigateBackButton, value, setValue, onLoad
       <InputComp label="E-mail institucional" placeholder="Ex: fulano@fatec.sp.gov.br" value={value} onChangeText={setValue} />
       <SpacerComp vertical={50} />
       {onLoading ? (
-        <ActivityIndicator size="large" style={{ transform: [{ scale: 1.5 }] }} />
+        <ActivityIndicator
+          size="large"
+          style={{ transform: [{ scale: 1.5 }] }}
+        />
       ) : (
-        <ButtonComp text="Enviar E-mail" action={navigateNextStepButton} color={backgroundColor} />
+        <ButtonComp
+          text="Enviar E-mail"
+          action={() => navigateNextStepButton()}
+          color={backgroundColor}
+        />
       )}
       <SpacerComp vertical={20} />
     </>
-  );
+  )
 }
 
 function PasswordRecoveryPart2Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: PasswordRecoveryProps) {
@@ -178,17 +208,24 @@ function PasswordRecoveryPart2Comp({ navigateBackButton, value, setValue, onLoad
       <InputCodeComp label="Insira o código" onChangeText={setValue} />
       <SpacerComp vertical={50} />
       {onLoading ? (
-        <ActivityIndicator size="large" style={{ transform: [{ scale: 1.5 }] }} />
+        <ActivityIndicator
+          size="large"
+          style={{ transform: [{ scale: 1.5 }] }}
+        />
       ) : (
-        <ButtonComp text="Enviar código" action={navigateNextStepButton} color={backgroundColor} />
+        <ButtonComp
+          text="Enviar código"
+          action={() => navigateNextStepButton()}
+          color={backgroundColor}
+        />
       )}
       <SpacerComp vertical={20} />
     </>
-  );
+  )
 }
 
 function PasswordRecoveryPart3Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: PasswordRecoveryNextStepBooleanProps) {
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("")
   return (
     <>
       <SpacerComp />
@@ -200,15 +237,26 @@ function PasswordRecoveryPart3Comp({ navigateBackButton, value, setValue, onLoad
       <InputPasswordComp label="Repita a senha" placeholder="Ex: ********" value={repeatPassword} onChangeText={setRepeatPassword} />
       <SpacerComp vertical={50} />
       {onLoading ? (
-        <ActivityIndicator size="large" style={{ transform: [{ scale: 1.5 }] }} />
+        <ActivityIndicator
+          size="large"
+          style={{ transform: [{ scale: 1.5 }] }}
+        />
       ) : (
         <ButtonComp
           text="Redefinir"
-          action={() => navigateNextStepButton(value === repeatPassword)}
+          action={() => {
+            let passwordEquals = false
+            if (value === repeatPassword) {
+              passwordEquals = true
+            }
+            navigateNextStepButton(passwordEquals)
+          }}
           color={backgroundColor}
         />
       )}
       <SpacerComp vertical={20} />
     </>
-  );
+  )
 }
+
+

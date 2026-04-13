@@ -27,27 +27,50 @@ import { sendPassword } from '../../../api/firstaccess/sendPassword';
 
 import { styles } from './style';
 
-type Step = 1 | 2 | 3 | 4;
-
 export default function SignUpScreen() {
   const { navigate } = useNavigation<NavigationProps>();
 
-  const [step, setStep] = useState<Step>(1);
+  const [cpf, setCpf] = useState("")
+  const [email, setEmail] = useState("faluno@fatec.sp.gov.br")
+  const [code, setCode] = useState("")
+  const [password, setPassword] = useState("")
 
-  const [cpf, setCpf] = useState("");
-  const [email, setEmail] = useState("faluno@fatec.sp.gov.br");
-  const [code, setCode] = useState("");
-  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("")
+  const [errorFields, setErrorFields] = useState<ErrorField[]>()
+  const [modalErrorVisible, setModalErrorVisible] = useState(false)
+  const [onLoading, setOnLoading] = useState(false)
 
-  const [message, setMessage] = useState("");
-  const [errorFields, setErrorFields] = useState<ErrorField[]>();
-  const [modalErrorVisible, setModalErrorVisible] = useState(false);
-  const [onLoading, setOnLoading] = useState(false);
+  const [part1, setPart1] = useState(true)
+  const [part2, setPart2] = useState(false)
+  const [part3, setPart3] = useState(false)
+  const [part4, setPart4] = useState(false)
 
-  function showError(message: string, fields?: ErrorField[] | null) {
-    setMessage(message);
-    setErrorFields(fields ?? []);
-    setModalErrorVisible(true);
+  function goToPart1() {
+    setPart1(true)
+    setPart2(false)
+    setPart3(false)
+    setPart4(false)
+  }
+
+  function goToPart2() {
+    setPart1(false)
+    setPart2(true)
+    setPart3(false)
+    setPart4(false)
+  }
+
+  function goToPart3() {
+    setPart1(false)
+    setPart2(false)
+    setPart3(true)
+    setPart4(false)
+  }
+
+  function goToPart4() {
+    setPart1(false)
+    setPart2(false)
+    setPart3(false)
+    setPart4(true)
   }
 
   return (
@@ -58,85 +81,102 @@ export default function SignUpScreen() {
         <ErrorModalComp
           visible={modalErrorVisible}
           error={message}
-          fields={errorFields?.map((val: ErrorField) => val.description) ?? []}
+          fields={errorFields?.map((val: ErrorField) => { return val.description }) ?? []}
           onClose={() => {
-            setMessage("");
-            setErrorFields([]);
-            setModalErrorVisible(false);
+            setMessage("")
+            setErrorFields([])
+            setModalErrorVisible(false)
           }}
         />
 
-        {step === 1 && (
+        {part1 && (
           <SignUpPart1Comp
             navigateBackButton={() => navigate("Login")}
             navigateNextStepButton={async () => {
-              setOnLoading(true);
-              const result = await sendCpf(new FirstAccess({ cpf, code: null, password: null }));
-              if ('email' in result) {
-                if (result.email !== "") {
-                  setEmail(result.email);
-                  setStep(2);
+                setOnLoading(true)
+                const cpfToSend = new FirstAccess({ cpf: cpf, code: null, password: null })
+                const result = await sendCpf(cpfToSend)
+                if ('email' in result) {
+                  if (result.email != "") {
+                    setEmail(result.email)
+                    goToPart2()
+                  }
+                } else {
+                  setMessage(result.message)
+                  setErrorFields(result.errorFields ?? [])
+                  setModalErrorVisible(true)
                 }
-              } else {
-                showError(result.message, result.errorFields);
+                setOnLoading(false)
               }
-              setOnLoading(false);
-            }}
+            }
             value={cpf}
             setValue={setCpf}
             onLoading={onLoading}
           />
         )}
 
-        {step === 2 && (
+        {part2 && (
           <SignUpPart2Comp
-            navigateBackButton={() => setStep(1)}
-            navigateNextStepButton={() => setStep(3)}
+            navigateBackButton={() => goToPart1()}
+            navigateNextStepButton={() => { goToPart3() }}
             value={email}
             setValue={setEmail}
             onLoading={onLoading}
           />
         )}
 
-        {step === 3 && (
+        {part3 && (
           <SignUpPart3Comp
-            navigateBackButton={() => setStep(2)}
+            navigateBackButton={() => goToPart2()}
             navigateNextStepButton={async () => {
-              setOnLoading(true);
-              const result = await sendCode(new FirstAccess({ cpf, code, password: null }));
-              if ('ok' in result) {
-                setStep(4);
-              } else {
-                showError(result.message, result.errorFields);
+                setOnLoading(true)
+                const firstAccess = new FirstAccess({ cpf: cpf, code: code, password: null })
+                const result = await sendCode(firstAccess)
+                if ('ok' in result) {
+                  goToPart4()
+                } else {
+                  setMessage(result.message)
+                  setErrorFields(result.errorFields ?? [])
+                  setModalErrorVisible(true)
+                }
+                setOnLoading(false)
               }
-              setOnLoading(false);
-            }}
+            }
             value={code}
             setValue={setCode}
             onLoading={onLoading}
           />
         )}
 
-        {step === 4 && (
+        {part4 && (
           <SignUpPart4Comp
-            navigateBackButton={() => setStep(3)}
+            navigateBackButton={() => goToPart3()}
             navigateNextStepButton={async (passwordEquals: boolean) => {
-              setOnLoading(true);
+              setOnLoading(true)
 
               if (!passwordEquals) {
-                showError("As senhas não são iguais.");
-                setOnLoading(false);
-                return;
+                setMessage("As senhas não são iguais.")
+                setModalErrorVisible(true)
+                setOnLoading(false)
+                return
               }
 
-              const result = await sendPassword(new FirstAccess({ cpf, code, password }));
+              const recovery = new FirstAccess({
+                cpf: cpf,
+                code: code,
+                password: password
+              })
+              const result = await sendPassword(recovery)
               if ('ok' in result) {
-                navigate("Login");
+                navigate("Login")
               } else {
-                showError(result.message, result.errorFields);
+                setMessage(result.message)
+                setErrorFields(result.errorFields ?? [])
+                setModalErrorVisible(true)
               }
-              setOnLoading(false);
-            }}
+              setOnLoading(false)
+            }
+            }
             value={password}
             setValue={setPassword}
             onLoading={onLoading}
@@ -148,20 +188,20 @@ export default function SignUpScreen() {
 }
 
 type SignupCompProps = {
-  navigateBackButton: () => void;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  onLoading: boolean;
-  navigateNextStepButton: () => void;
-};
+  navigateBackButton: () => void,
+  value: string,
+  setValue: Dispatch<SetStateAction<string>>,
+  onLoading: boolean,
+  navigateNextStepButton: () => void,
+}
 
 type SignupCompNextStepBooleanProps = {
-  navigateBackButton: () => void;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  onLoading: boolean;
-  navigateNextStepButton: (x: boolean) => void;
-};
+  navigateBackButton: () => void,
+  value: string,
+  setValue: Dispatch<SetStateAction<string>>,
+  onLoading: boolean,
+  navigateNextStepButton: (x: boolean) => void,
+}
 
 function SignUpPart1Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: SignupCompProps) {
   return (
@@ -170,13 +210,20 @@ function SignUpPart1Comp({ navigateBackButton, value, setValue, onLoading, navig
       <InputComp label="CPF" placeholder="Ex: 000.000.000-00" value={value} onChangeText={setValue} />
       <SpacerComp />
       {onLoading ? (
-        <ActivityIndicator size="large" style={{ transform: [{ scale: 1.5 }] }} />
+        <ActivityIndicator
+          size="large"
+          style={{ transform: [{ scale: 1.5 }] }}
+        />
       ) : (
-        <ButtonComp text="Enviar CPF" action={navigateNextStepButton} color={backgroundColor} />
+          <ButtonComp
+            text="Enviar CPF"
+            action={() => navigateNextStepButton()}
+            color={backgroundColor}
+          />
       )}
       <TextClickableComp text="Este não é seu primeiro acesso? Clique aqui" action={navigateBackButton} />
     </>
-  );
+  )
 }
 
 function SignUpPart2Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: SignupCompProps) {
@@ -194,9 +241,13 @@ function SignUpPart2Comp({ navigateBackButton, value, setValue, onLoading, navig
       <SpacerComp />
       <SpacerComp />
       <SpacerComp />
-      <ButtonComp text="Prosseguir" action={navigateNextStepButton} color={backgroundColor} />
+      <ButtonComp
+        text="Prosseguir"
+        action={() => navigateNextStepButton()}
+        color={backgroundColor}
+      />
     </>
-  );
+  )
 }
 
 function SignUpPart3Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: SignupCompProps) {
@@ -212,16 +263,23 @@ function SignUpPart3Comp({ navigateBackButton, value, setValue, onLoading, navig
       <SpacerComp />
       <SpacerComp />
       {onLoading ? (
-        <ActivityIndicator size="large" style={{ transform: [{ scale: 1.5 }] }} />
+        <ActivityIndicator
+          size="large"
+          style={{ transform: [{ scale: 1.5 }] }}
+        />
       ) : (
-        <ButtonComp text="Enviar código" action={navigateNextStepButton} color={backgroundColor} />
+          <ButtonComp
+            text="Enviar código"
+            action={() => navigateNextStepButton()}
+            color={backgroundColor}
+        />
       )}
     </>
-  );
+  )
 }
 
 function SignUpPart4Comp({ navigateBackButton, value, setValue, onLoading, navigateNextStepButton }: SignupCompNextStepBooleanProps) {
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("")
   return (
     <>
       <SpacerComp />
@@ -236,14 +294,23 @@ function SignUpPart4Comp({ navigateBackButton, value, setValue, onLoading, navig
       <SpacerComp />
       <SpacerComp />
       {onLoading ? (
-        <ActivityIndicator size="large" style={{ transform: [{ scale: 1.5 }] }} />
+        <ActivityIndicator
+          size="large"
+          style={{ transform: [{ scale: 1.5 }] }}
+        />
       ) : (
         <ButtonComp
           text="Definir senha"
-          action={() => navigateNextStepButton(value === repeatPassword)}
+          action={() => {
+            let passwordEquals = false
+            if (value === repeatPassword) {
+              passwordEquals = true
+            }
+            navigateNextStepButton(passwordEquals)
+          }}
           color={backgroundColor}
         />
       )}
     </>
-  );
+  )
 }

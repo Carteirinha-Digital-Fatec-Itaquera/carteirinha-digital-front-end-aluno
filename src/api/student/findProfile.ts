@@ -1,20 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { Student } from "../../domains/Student";
+import type { Student } from '../../domains/Student';
+import type { ApiError } from '../../utils/Types';
+import { apiClient, buildApiError } from '../config/apiClient';
 
-import { GLOBAL_VAR } from "../config/globalVar"
-
-export async function findProfile(): Promise<Student | undefined> {
-  const token = await AsyncStorage.getItem('token')
-  const response = await fetch(`${GLOBAL_VAR.BASE_URL}/estudantes/buscar-carteirinha`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
+export async function findProfile(): Promise<Student | ApiError> {
+  const response = await apiClient('/estudantes/encontrar-por-ra/:ra', {
     method: 'GET',
-  })
+    authenticated: true,
+  });
 
-  if (!response.ok) {
-    console.error(`Algo errado no response: ${response.status}`);
-  }
+  if (!response.ok) return buildApiError(response, '/estudantes/encontrar-por-ra/:ra');
 
   const data = await response.json();
   return data;

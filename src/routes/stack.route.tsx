@@ -46,6 +46,7 @@ export default function StackRoute() {
         component={DigitalStudentCardScreen}
         options={{ headerShown: false }}
       />
+      
 
     </Stack.Navigator>
   )

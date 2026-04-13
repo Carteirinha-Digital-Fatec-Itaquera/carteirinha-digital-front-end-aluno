@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AppState, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import TelaQrcode from './src/ui/screens/validacao/TelaQrcode'
+import TelaQrcode from './src/ui/screens22/validacao/TelaQrcode'
 // patch relative src\ui\screens\telaQrcode\TelaQrcode.tsx
 
 
@@ -57,19 +57,17 @@ export default function App() {
   }
 
   return (
-    // <SafeAreaProvider>
-    //   <SafeAreaView style={styles.container}>
-    //     <StatusBar 
-    //       backgroundColor={backgroundColor}
-    //       style="light"
-    //     />
-    //     <Routes />
-    //   </SafeAreaView>
-    // </SafeAreaProvider>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <StatusBar 
+          backgroundColor={backgroundColor}
+          style="light"
+        />
+        <Routes />
+      </SafeAreaView>
+    </SafeAreaProvider>
 
-    <SafeAreaView>
-       <TelaQrcode/>
-       </SafeAreaView>
+  
 
   );
 }

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Image, View, Alert } from 'react-native';
 import { NavigationProps } from '../../../routes';
 import { useNavigation } from '@react-navigation/native';
@@ -10,27 +9,12 @@ import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { ButtonGrid } from '../../components/buttonGrid/ButtonGrid';
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
-import { findProfile } from '../../../api/student/findProfile';
-
 import { backgroundColor } from '../../themes/Color';
 
 import { styles } from './style';
 
 export default function MainMenuScreen() {
   const { navigate } = useNavigation<NavigationProps>();
-
-  const [studentName, setStudentName] = useState("");
-
-  useEffect(() => {
-    const loadName = async () => {
-      const result = await findProfile();
-      if (!('code' in result)) {
-        setStudentName(result.name);
-      }
-    };
-
-    loadName();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -41,7 +25,7 @@ export default function MainMenuScreen() {
       <View style={styles.subcontainer}>
         <InternetWatcher />
         <SpacerComp vertical={20} />
-        <TitleComp text={studentName ? `Bem-vindo, ${studentName.split(' ')[0]}` : "Bem-vindo!"} size={18} />
+        <TitleComp text="Bem-vindo, Fulano" size={18} />
         <SpacerComp vertical={20} />
         <ButtonGrid
           items={[
@@ -64,19 +48,18 @@ export default function MainMenuScreen() {
             {
               icon: "upload",
               label: "Enviar Foto",
-              onPress: () => {
-                navigate("UploadImage");
-                Alert.alert(
-                  'Instruções de envio',
-                  '- Utilize fundo neutro\n\n' +
-                  '- Garanta foco nítido, sem sombras e reflexos\n\n' +
-                  '- Centralize o rosto, mostrando toda a cabeça e o topo dos ombros\n\n' +
-                  '- Mantenha os olhos abertos e visíveis\n\n' +
-                  '- Expressão neutra (lábios fechados) ou sorriso discreto\n\n' +
-                  '- Não utilize acessórios como chapéus, óculos escuros ou brincos grandes\n\n'
-                );
-              }
+              onPress:() => {navigate("UploadImage"); 
+              Alert.alert(
+                'Instruções de envio',
+                '- Utilize fundo neutro\n\n' +
+                '- Garanta foco nítido, sem sombras e reflexos\n\n' +
+                '- Centralize o rosto, mostrando toda a cabeça e o topo dos ombros\n\n' +
+                '- Mantenha os olhos abertos e visíveis\n\n' +
+                '- Expressão neutra (lábios fechados) ou sorriso discreto\n\n' +
+                '- Não utilize acessórios como chapéus, óculos escuros ou brincos grandes\n\n'                
+              )}
             },
+
           ]}
         />
         <SpacerComp vertical={40} />
@@ -86,12 +69,14 @@ export default function MainMenuScreen() {
             'Atenção',
             'Tem certeza que deseja sair?',
             [
-              { text: 'Não' },
+              {
+                text: 'Não',
+              },
               {
                 text: 'Sim',
                 onPress: async () => {
-                  await AsyncStorage.removeItem('token');
-                  navigate("Login");
+                  await AsyncStorage.removeItem('token')
+                  navigate("Login")
                 },
               },
             ],
