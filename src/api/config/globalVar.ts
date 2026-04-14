@@ -1,4 +1,4 @@
-const ADDRESS = "192.168.15.35";
+const ADDRESS = "localhost";
 const PORT = "3000";
 
 export const GLOBAL_VAR = {

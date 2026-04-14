@@ -23,6 +23,7 @@ import { Auth } from '../../../domains/Auth';
 import { NavigationProps } from '../../../routes';
 
 import { styles } from './style';
+import CardInfoInstituicao from '../../components/validacaoqrcode/cardinstituicaoinfo/CardInstituicao';
 
 export default function LoginScreen() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -68,7 +69,9 @@ export default function LoginScreen() {
             action={async () => {
               setOnLoading(true)
               const auth = new Auth({ email, password })
+              console.log(`primeiro passo: \n${auth.email}\n${auth.password}`)
               const result = await login(auth)
+              console.log(result)
               if ('token' in result) {
                 await AsyncStorage.setItem("token", result.token)
                 navigate('MainMenu')

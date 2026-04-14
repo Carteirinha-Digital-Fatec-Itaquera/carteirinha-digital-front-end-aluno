@@ -38,6 +38,7 @@ export async function apiClient(
   path: string,
   { method = 'GET', body, authenticated = false, multipart = false }: RequestOptions = {}
 ): Promise<Response> {
+  try {
   const headers: Record<string, string> = {};
 
   if (authenticated) {
@@ -48,10 +49,24 @@ export async function apiClient(
   if (body && !multipart) {
     headers['Content-Type'] = 'application/json';
   }
+  console.log(`${GLOBAL_VAR.BASE_URL}\n ${path}`)
 
+  
   return fetch(`${GLOBAL_VAR.BASE_URL}${path}`, {
     method,
     headers,
     body: multipart ? (body as any) : body ? JSON.stringify(body) : undefined,
   });
+
+  } catch (error) {
+    // 🔥 Aqui resolve seu "Failed to fetch"
+    throw {
+      code: 'NETWORK_ERROR',
+      status: '0',
+      message: 'Não foi possível conectar ao servidor',
+      timestamp: new Date().toISOString(),
+      path,
+      errorFields: null,
+    } as ApiError;
+  }
 }
