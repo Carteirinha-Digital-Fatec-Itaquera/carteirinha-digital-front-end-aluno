@@ -7,13 +7,23 @@ export type RootStackParamList = {
     Home: undefined;
     Login: undefined;
     SignUp: undefined;
-    PasswordRecovery: undefined;
+    // PasswordRecovery: undefined;
+    PasswordRecovery: {
+      firstLogin?: boolean;
+      email?: string;
+    };
     MainMenu: undefined;
     DigitalStudentCard: undefined;
     UploadImage: undefined;
 };
 
-export type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Login">;
+// export type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Login">;
+
+//    A
+//    | Comentado acima por erro na passagem de valores entre views Login-> LOginScreen -> PasswordRecoveryScreeen
+
+export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
 
 export default function Routes() {
   return (

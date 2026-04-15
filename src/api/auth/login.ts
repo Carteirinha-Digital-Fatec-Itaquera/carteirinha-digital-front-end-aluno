@@ -26,7 +26,7 @@ export async function login(auth: Auth): Promise<Token | ApiError> {
     console.log(`\n ${data.message}\n ${data.mustChangePassword},  \n${data.token}`)
     
     const token = data.token ?? data.accessToken;
-
+    const isFirstLogin  = data.mustChangePassword 
       if (!token) {
         return {
           code: 'INVALID_RESPONSE',
@@ -38,7 +38,7 @@ export async function login(auth: Auth): Promise<Token | ApiError> {
         };
       }
 
-    return {token};
+    return {token, isFirstLogin};
   } catch (error: any) {
     return error;
   }

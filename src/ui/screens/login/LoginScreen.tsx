@@ -25,8 +25,13 @@ import { NavigationProps } from '../../../routes';
 import { styles } from './style';
 import CardInfoInstituicao from '../../components/validacaoqrcode/cardinstituicaoinfo/CardInstituicao';
 
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../routes';
+
 export default function LoginScreen() {
-  const { navigate } = useNavigation<NavigationProps>();
+  // const { navigate } = useNavigation<NavigationProps>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -46,7 +51,7 @@ export default function LoginScreen() {
         <SpacerComp />
         <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
         <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
-        <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("PasswordRecovery")} alignSelf="flex-end" />
+        <TextClickableComp text="Esqueceu a sua senha?" action={() => navigation.navigate('PasswordRecovery',{})} alignSelf="flex-end" />
         <SpacerComp />
         <ErrorModalComp
           visible={modalErrorVisible}
@@ -70,12 +75,25 @@ export default function LoginScreen() {
               setOnLoading(true)
               const auth = new Auth({ email, password })
               console.log(`primeiro passo: \n${auth.email}\n${auth.password}`)
-              const result = await login(auth)
-              console.log(result)
-              if ('token' in result) {
+              
+              const result:any = await login(auth)
+              console.log(`\n\n${result}\n\isFirstLogin ?: ${result.isFirstLogin }`)
+
+              if('token' in result){
+                console.log(`É O PRIMEIRO LOGIN DO CABEÇA?: ${result.isFirstLogin }`)
+                
                 await AsyncStorage.setItem("token", result.token)
-                navigate('MainMenu')
-              } else {
+                
+                if (result.isFirstLogin ) {
+                  navigation.navigate('PasswordRecovery', {
+                    firstLogin: true,
+                    email
+                  })
+                } else {
+                  navigation.navigate('MainMenu')
+                }
+              }
+              else {
                 setMessage(result.message)
                 setErrorFields(result.errorFields ?? [])
                 setModalErrorVisible(true)
@@ -85,7 +103,7 @@ export default function LoginScreen() {
             color={backgroundColor}
           />
         )}
-        <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("SignUp")} />
+        <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigation.navigate("SignUp")} />
         <SpacerComp />
         <Image source={require("../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png")} style={styles.logocps} />
       </View>

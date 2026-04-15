@@ -1,5 +1,6 @@
 export type Token = {
   token: string,
+  isFirstLogin?:boolean
 }
 
 export type ApiError = {
