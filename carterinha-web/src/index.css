@@ -1,8 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #BA1A1A; /* Garante que o fundo base seja o seu vermelho */
+  font-family: 'Roboto', sans-serif; 
+  
+  -webkit-font-smoothing: antialiased;
+}
 :root {
+
+  width: 100%;
+  max-width: 100%; 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
-  --border: #e5e4e7;
+  /* --border: #e5e4e7; */
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
   --accent-bg: rgba(170, 59, 255, 0.1);

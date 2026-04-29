@@ -20,7 +20,9 @@
 .text {
   color: #fff;
   font-size: 16px;
-  font-family: 'Montserrat';
+  font-family: 'Roboto', sans-serif; 
+  
+  /* -webkit-font-smoothing: antialiased; */
   letter-spacing: 0.5px;
   font-weight: bold;
 }

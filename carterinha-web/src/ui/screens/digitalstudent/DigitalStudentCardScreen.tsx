@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TitleComp } from '../../components/title/TitleComp';
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
-import { ErrorModalComp } from "../../components/ErrorModal";
+import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
 
 import { findProfile } from "../../../api/student/findProfile";
 

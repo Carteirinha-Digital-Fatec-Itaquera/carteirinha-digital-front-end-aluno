@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { TitleComp } from "../../components/title/TitleComp";
 import { TextInfoComp } from "../../components/textinfo/TextInfoComp";
 import { SpacerComp } from "../../components/spacer/SpacerComp";
-import { ErrorModalComp } from "../../components/ErrorModal";
+import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 
 import { uploadImage } from "../../../api/student/uploadImage";

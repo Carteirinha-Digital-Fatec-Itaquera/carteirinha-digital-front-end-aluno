@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  padding: 12px;
+  flex-direction: row;
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.container:hover {
+  text-decoration: underline; 
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif; 
+  letter-spacing: 0.5px;
+}
+/* import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    padding: 12,
+    alignSelf: 'center',
+    flexDirection: 'row',
+  },
+
+  text: {
+    fontSize: 14,
+    fontWeight: '600',
+    fontFamily: 'Montserrat-Medium',
+    letterSpacing: 0.5
+  }
+})  */
