@@ -1,0 +1,143 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5; /* Fundo cinza claro para o desktop */
+}
+
+.redHeader {
+  width: 100%;
+  max-width: 500px;
+  height: 180px;
+  background-color: #BA1A1A;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+
+.logo {
+  width: 150px;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Deixa a logo branca para contrastar com fundo vermelho */
+}
+
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  max-width: 500px; /* Mantém com cara de App no Desktop */
+  background-color: #FFFFFF;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  padding: 0 20px 40px 20px;
+  margin-top: -40px; /* Puxa o contêiner branco pra cima do vermelho */
+  box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.avatarWrapper {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #fff;
+  padding: 4px;
+  margin-top: -50px; /* Faz a foto flutuar na divisão das cores */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: 15px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.welcomeText {
+  font-size: 22px;
+  font-weight: bold;
+  color: #08060d;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 100%;
+}
+
+.menuCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinhamento Figma */
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1px solid #BA1A1A; /* Borda vermelha fina Figma */
+  border-radius: 12px;
+  padding: 20px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: #08060d;
+}
+
+.fullWidth {
+  grid-column: span 2;
+}
+
+.menuCard:hover {
+  background-color: #fff5f5;
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 10px rgba(186, 26, 26, 0.1);
+}
+
+.menuCard p {
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.icon {
+  font-size: 24px;
+  color: #BA1A1A;
+}
+
+.logoutButton {
+  margin-top: 40px;
+  background: transparent;
+  border: none;
+  color: #BA1A1A;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* import { StyleSheet } from "react-native";
+import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor,
+    alignItems: 'center'
+  },
+
+  subcontainer: {
+    flex: 1,
+    width: "100%",
+    borderTopStartRadius: 60,
+    borderTopEndRadius: 60,
+    backgroundColor: backgroundSecondaryColor
+  },
+  logo: {
+    margin: 10,
+    width: 190,
+    height: 115
+  }
+}) */

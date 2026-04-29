@@ -72,9 +72,18 @@ export default function LoginScreen() {
               const auth = new Auth({ email, password });
               try {
                 const result = await login(auth);
+                
                 if ('token' in result) {
+                  // 1. Salva o token independente de qual tela vai
                   localStorage.setItem("token", result.token);
-                  navigate('/MainMenu');
+                  
+                  // 2. Faz a bifurcação baseada no primeiro acesso!
+                  if (result.mustChangePassword) {
+                    navigate('/first-access'); // 👈 Vai para a tela de trocar senha
+                  } else {
+                    navigate('/MainMenu'); // 👈 Vai para o sistema normal
+                  }
+                  
                 } else {
                   setMessage(result.message);
                   setErrorFields(result.errorFields ?? []);

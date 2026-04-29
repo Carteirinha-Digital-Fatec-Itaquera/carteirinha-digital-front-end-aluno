@@ -1,33 +1,31 @@
 import type { ApiError, Ok } from '../../utils/Types';
 import { apiClient, buildApiError } from '../config/apiClient';
-
-export async function uploadImage(image: string | null): Promise<Ok | ApiError> {
+export async function uploadImage(image: File | null, ra: string): Promise<Ok | ApiError> {
   if (!image) {
     return {
       code: 'IMAGE_NOT_FOUND',
       status: '404',
       message: 'Você precisa enviar uma imagem.',
       timestamp: new Date().toISOString(),
-      path: '/estudantes/enviar-imagem',
+      path: '/estudantes/upload-foto', // 👈 Rota atualizada
       errorFields: null,
     };
   }
 
   const formData = new FormData();
-  formData.append('file', {
-    uri: image,
-    name: 'image.jpg',
-    type: 'image/jpeg',
-  } as any);
+  
+  formData.append('file', image);
+  
+  formData.append('ra', ra);
 
-  const response = await apiClient('/estudantes/enviar-imagem', {
-    method: 'PATCH',
+  const response = await apiClient('/estudantes/upload-foto', {
+    method: 'POST', 
     body: formData as any,
     authenticated: true,
     multipart: true,
   });
 
-  if (!response.ok) return buildApiError(response, '/estudantes/enviar-imagem');
+  if (!response.ok) return buildApiError(response, '/estudantes/upload-foto');
 
   return { ok: '' };
 }

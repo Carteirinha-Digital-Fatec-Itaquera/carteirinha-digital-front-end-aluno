@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+
+
+/* import { StyleSheet } from "react-native";
 import { backgroundColor, backgroundSecondaryColor, labelColor } from "../../themes/Color";
 
 export const styles = StyleSheet.create({
@@ -45,4 +47,4 @@ export const styles = StyleSheet.create({
     color: labelColor,
     textAlign: 'justify',
   }
-})
+}) */
