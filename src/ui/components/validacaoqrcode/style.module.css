@@ -1,4 +1,58 @@
-import { StyleSheet } from "react-native"
+.containerBadgeAtiva, .containerBadgeInativa {
+  width: 150px;
+  height: 35px;
+  padding: 0 10px;
+  border-radius: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-left: 15px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+}
+
+/* Estilos específicos para Ativa */
+.containerBadgeAtiva {
+  background-color: #b6ebc3;
+  border-color: #70B882;
+  box-shadow: 2px 2px 7px rgba(15, 176, 69, 0.3);
+}
+
+.pontoAtiva {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #1e8629;
+}
+
+.textAtiva {
+  color: #1e9947;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Estilos específicos para Inativa */
+.containerBadgeInativa {
+  background-color: #fdc7c7;
+  border-color: #ff0000;
+  box-shadow: 2px 2px 7px rgba(235, 72, 72, 0.3);
+}
+
+.pontoInativa {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ca0909;
+}
+
+.textInativa {
+  color: #ca0909;
+  font-size: 14px;
+  font-weight: 600;
+}
+/* import { StyleSheet } from "react-native"
 import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
 
 
@@ -71,4 +125,4 @@ export const styles = StyleSheet.create({
         top: 1
     }
 
-})
+}) */

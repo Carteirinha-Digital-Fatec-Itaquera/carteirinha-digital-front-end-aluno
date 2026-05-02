@@ -1,4 +1,3 @@
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { ApiError } from '../../utils/Types';
 import { GLOBAL_VAR } from './globalVar';
 

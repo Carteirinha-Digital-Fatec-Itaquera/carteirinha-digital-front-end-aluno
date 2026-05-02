@@ -1,54 +1,51 @@
-import React from "react";
-import { Text, View, Image, ScrollView } from "react-native";
-import { styles } from './style';
+import styles from './style.module.css'
 import Badge from "../../components/validacaoqrcode/Badge";
-import CardMatricula from "../../components/validacaoqrcode/cardmatriculainfo/CardMatricula";
-import CardInfoInstituicao from "../../components/validacaoqrcode/cardinstituicaoinfo/CardInstituicao";
 
-function TelaQrcode(){
-    return(
-      <>
-      <ScrollView>
-      <View style={styles.container}>
-          <Image source={require("../../../assets/images/fatec_itaquera_logo.png")} style={styles.logo}/>
+import CardInfoInstituicao from '../../components/validacaoqrcode/cardinstituicaoinfo/CardInstituicao';
+import CardMatriculaInfo from '../../components/validacaoqrcode/cardmatriculainfo/CardMatricula';
 
+
+import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
+import perfilDefault from "../../../assets/images/perfil_default.png";
+import logoGoverno from "../../../assets/images/logos_cps_governo_com_slogan.png";
+
+export default function TelaQrcode() {
+  const dataValidade = new Date("2029-03-02");
+
+  return (
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <img src={logoFatec} className={styles.logo} alt="Logo Fatec Itaquera" />
+      </header>
+
+      <main className={styles.containerInformacoes}>
         
-          <View style={styles.containerInformacoes}>
-            <View style={styles.containerCard}>
-              <Text style={styles.title}>Aluno</Text>
+        <section className={styles.containerCard}>
+          <h2 className={styles.title}>Aluno</h2>
 
-              <View style={styles.containerImgInfo}>
-                <Image source={require("../../../assets/images/perfil_default.png")} style={styles.imgAluno}></Image>
-                <View style={styles.containerInfo}>
-                  <View style={styles.containerNome}>
-                  <Text style={styles.textAluno}>Joao Fulano</Text>
-                  </View>
-                  <Text style={styles.textCurso}>Desenvolvimento de software</Text>
-                  <Text style={styles.textRA}>RA: 874375327</Text>
-                </View>
-              </View>
+          <div className={styles.containerImgInfo}>
+            <img src={perfilDefault} className={styles.imgAluno} alt="Foto do Aluno" />
+            
+            <div className={styles.containerInfo}>
+              <div className={styles.containerNome}>
+                <h1 className={styles.textAluno}>Joao Fulano</h1>
+              </div>
+              <p className={styles.textCurso}>Desenvolvimento de software</p>
+              <p className={styles.textRA}>RA: 874375327</p>
+            </div>
+          </div>
 
-              <Badge status="Ativo" validade={new Date("2029-03-02")} />
-            </View>
-            <CardMatricula status="Ativo" validade={new Date("2029-03-02")}/>
+          <Badge status="Ativo" validade={dataValidade} />
+        </section>
 
-            <CardInfoInstituicao/>
+        <CardMatriculaInfo status="Ativo" validade={dataValidade} />
+        <CardInfoInstituicao />
 
-          </View>
-          
+      </main>
 
-           <View style={styles.containerRodape}>
-          <Image source={require("../../../assets/images/logos_cps_governo_com_slogan.png")} style={styles.logoRodape}/>
-          </View>
-          
-
-      </View>
-      </ScrollView>
-
-      </>
-        
-
-      
-    )
+      <footer className={styles.containerRodape}>
+        <img src={logoGoverno} className={styles.logoRodape} alt="Logos CPS e Governo de SP" />
+      </footer>
+    </div>
+  );
 }
-export default TelaQrcode;

@@ -8,7 +8,7 @@ import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStuden
 import UploadImageScreen from "../ui/screens/uploadimage/UploadImageScreen";
 import ResetPasswordScreen from "../ui/screens/passwordrecovery/ResetPasswordScreen";
 import HelpScreen from "../ui/screens/help/HelpScreen";
-
+import TelaQrcode from "../ui/screens/validacao/TelaQrcode";
 
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
 const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
@@ -33,6 +33,7 @@ export default function AppRoutes() {
         <Route path="/PasswordRecovery" element={<PasswordRecoveryScreen />} />
         <Route path="/first-access" element={<FirstAccessScreen />} />
         
+        <Route path="/TelaQrcode" element={<TelaQrcode />} />
         <Route path="/MainMenu" element={<MainMenuScreen />} />
         <Route path="/DigitalStudentCard" element={<DigitalStudentCardScreen />} />
         <Route path="/ResetPasswordScreen" element={<ResetPasswordScreen />} />

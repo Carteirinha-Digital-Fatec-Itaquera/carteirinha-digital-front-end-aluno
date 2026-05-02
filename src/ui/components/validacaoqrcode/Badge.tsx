@@ -1,21 +1,19 @@
-import React, { useState } from "react";
-import { Text, View, Image } from "react-native";
-import { styles } from './styleBadge';
+import styles from './style.module.css';
 
-export interface Props{
-    status: string,
-    validade: Date
-
+export interface Props {
+  status: string;
+  validade: Date;
 }
 
-function Badge({status, validade}: Props ){
-const [matricula, setMatricula] = useState<string | undefined>()
-    return(
-        <View style={status === 'Ativo' && validade > new Date() ? styles.containerBadgeAtiva : styles.containerBadgeInativa}>
+export default function Badge({ status, validade }: Props) {
+  const isAtiva = status === 'Ativo' && validade > new Date();
 
-        <View style={status === 'Ativo' && validade > new Date() ? styles.pontoAtiva : styles.pontoInativa}></View>
-        <Text style={status === 'Ativo' && validade > new Date() ? styles.textAtiva : styles.textInativa}>Matrícula {status === 'Ativo' && validade > new Date() ? 'Ativa' : 'Inativa'}</Text>
-        </View>
-    )
+  return (
+    <div className={isAtiva ? styles.containerBadgeAtiva : styles.containerBadgeInativa}>
+      <div className={isAtiva ? styles.pontoAtiva : styles.pontoInativa} />
+      <span className={isAtiva ? styles.textAtiva : styles.textInativa}>
+        Matrícula {isAtiva ? 'Ativa' : 'Inativa'}
+      </span>
+    </div>
+  );
 }
-export default Badge
