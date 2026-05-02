@@ -1,50 +1,101 @@
-import styles from './style.module.css'
+import { useEffect, useState } from "react";
+import styles from './style.module.css';
+
 import Badge from "../../components/validacaoqrcode/Badge";
+import CardInfoInstituicao from "../../components/validacaoqrcode/cardinstituicaoinfo/CardInstituicao";
+import CardMatriculaInfo from "../../components/validacaoqrcode/cardmatriculainfo/CardMatricula";
 
-import CardInfoInstituicao from '../../components/validacaoqrcode/cardinstituicaoinfo/CardInstituicao';
-import CardMatriculaInfo from '../../components/validacaoqrcode/cardmatriculainfo/CardMatricula';
 
+import { findProfile } from "../../../api/student/findProfile";
+import { Student } from "../../../domains/Student"; 
 
-import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 import perfilDefault from "../../../assets/images/perfil_default.png";
 import logoGoverno from "../../../assets/images/logos_cps_governo_com_slogan.png";
+import { GLOBAL_VAR } from "../../../api/config/globalVar";
+
 
 export default function TelaQrcode() {
-  const dataValidade = new Date("2029-03-02");
+  const [student, setStudent] = useState<Student | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+  async function loadData() {
+    const result = await findProfile();
+    console.log(result)
+    if (result && 'ra' in result) {
+      setStudent(new Student(result as any)); 
+    } else {
+      console.error("Erro ou perfil não encontrado:", result);
+    }
+    setLoading(false);
+  }
+  loadData();
+}, []);
+
+  if (loading) return <div className={styles.loading}>Carregando...</div>;
+  if (!student) return <div className={styles.loading}>Perfil não encontrado.</div>;
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <img src={logoFatec} className={styles.logo} alt="Logo Fatec Itaquera" />
+      {/* Cabeçalho conforme image_b2f873.png */}
+      <header className={styles.redHeader}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.fatecTitle}>Fatec</h1>
+          <p className={styles.fatecSub}>Itaquera</p>
+          <p className={styles.fatecUnit}>Prof. Miguel Reale</p>
+        </div>
       </header>
 
-      <main className={styles.containerInformacoes}>
-        
-        <section className={styles.containerCard}>
-          <h2 className={styles.title}>Aluno</h2>
-
-          <div className={styles.containerImgInfo}>
-            <img src={perfilDefault} className={styles.imgAluno} alt="Foto do Aluno" />
-            
-            <div className={styles.containerInfo}>
-              <div className={styles.containerNome}>
-                <h1 className={styles.textAluno}>Joao Fulano</h1>
-              </div>
-              <p className={styles.textCurso}>Desenvolvimento de software</p>
-              <p className={styles.textRA}>RA: 874375327</p>
+      <main className={styles.mainContent}>
+        <section className={styles.card}>
+          <h3 className={styles.cardHeaderTitle}>Aluno</h3>
+          <div className={styles.studentInfoSection}>
+            {/* <img 
+              src={student.photo || perfilDefault} 
+              className={styles.avatar} 
+              alt="Foto do Aluno" 
+            /> */}
+            <img 
+              src={
+                student?.photo && student?.photoStatus === 'APPROVED' 
+                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  : perfilDefault
+              } 
+              className={styles.avatar} 
+              alt="Perfil" 
+              onError={(e) => {
+                e.currentTarget.src = perfilDefault; 
+              }}
+            />
+            <div className={styles.studentDetails}>
+              <h2 className={styles.studentName}>{student.name}</h2>
+              <p className={styles.studentCourse}>{student.course}</p>
+              <p className={styles.studentRa}>RA: {student.ra}</p>
             </div>
           </div>
-
-          <Badge status="Ativo" validade={dataValidade} />
+          <div className={styles.badgeWrapper}>
+            <Badge status={student.status} validade={new Date(student.dueDate)} />
+          </div>
         </section>
 
-        <CardMatriculaInfo status="Ativo" validade={dataValidade} />
+        {/* Card Matrícula mapeado do student.ts */}
+        <CardMatriculaInfo 
+          period={student.period}
+          admission={student.admission}
+          dueDate={student.dueDate}
+          status={student.status}
+        />
+
+        {/* Informações Institucionais Fixas */}
         <CardInfoInstituicao />
 
+        <p className={styles.timestamp}>
+          Verificado em {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+        </p>
       </main>
 
-      <footer className={styles.containerRodape}>
-        <img src={logoGoverno} className={styles.logoRodape} alt="Logos CPS e Governo de SP" />
+      <footer className={styles.redFooter}>
+        <img src={logoGoverno} className={styles.govLogo} alt="Governo SP" />
       </footer>
     </div>
   );

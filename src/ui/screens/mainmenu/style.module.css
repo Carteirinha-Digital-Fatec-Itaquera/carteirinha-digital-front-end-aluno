@@ -5,11 +5,10 @@
   background-color: #f0f2f5;
 }
 
-/* Agora ele permite que tudo dentro dele ocupe 100% da tela do monitor */
 .mobileWrapper {
   width: 100%;
   max-width: 100%; 
-  background-color: #f0f2f5; /* Fundo base da página inteira */
+  background-color: #f0f2f5; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,10 +16,9 @@
   min-height: 100vh;
 }
 
-/* O Vermelho agora vai de ponta a ponta na tela do PC! */
 .redHeader {
   width: 100%;
-  height: 280px; /* Maior no PC para dar destaque */
+  height: 280px; 
   background-color: #BA1A1A;
   display: flex;
   justify-content: center;
@@ -29,25 +27,25 @@
 }
 
 .logo {
+  /* margin-bottom: 5%; */
   width: 200px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
 
-/* Onde ficam os botões: Vira um "Card" gigante flutuante no Desktop */
 .subcontainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 90%;
-  max-width: 900px; /* Mantém os botões organizados no meio da tela */
+  max-width: 900px; 
   background-color: #FFFFFF;
   border-radius: 30px; /* Bordas arredondadas em todos os cantos no PC */
   padding: 0 50px 50px 50px;
-  margin-top: -120px; /* Puxa o card para cima da faixa vermelha */
+  margin-top: -50px; /* Puxa o card para cima da faixa vermelha */
   position: relative;
   box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08); /* Sombra 3D elegante */
-  margin-bottom: 50px; /* Dá um respiro antes do final da página */
+  margin-bottom: 50px; 
 }
 
 .avatarWrapper {
@@ -145,10 +143,6 @@
   opacity: 0.7;
 }
 
-/* =========================================
-   MÁGICA DO MOBILE (Telas menores que 768px)
-   Aqui ele volta a ser 100% estilo Aplicativo Nativo
-   ========================================= */
 @media (max-width: 768px) {
   .redHeader {
     height: 200px;
@@ -160,7 +154,7 @@
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 20px 40px 20px;
-    margin-top: -60px;
+    margin-top: 10px;
     margin-bottom: 0;
     min-height: calc(100vh - 140px); /* Preenche até o rodapé */
     box-shadow: none;

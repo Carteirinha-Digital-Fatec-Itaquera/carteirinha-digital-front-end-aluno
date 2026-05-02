@@ -1,12 +1,14 @@
 import styles from './style.module.css';
 
-export interface Props {
+interface CardProps {
+  period: string;   
+  admission: string;
+  dueDate: string;  
   status: string;
-  validade: Date;
 }
 
-export default function CardMatriculaInfo({ status, validade }: Props) {
-  const isAtivo = status === 'Ativo' && validade > new Date();
+export default function CardMatriculaInfo({ period, admission, dueDate, status }: CardProps) {
+  const isAtivo = status === 'ATIVO' && new Date(dueDate) > new Date();
 
   return (
     <div className={styles.containerCard}>
@@ -14,18 +16,18 @@ export default function CardMatriculaInfo({ status, validade }: Props) {
       
       <div className={styles.containerTuplas}>
         <span className={styles.textTuplas}>Período</span>
-        <span className={styles.textTuplasResult}>Tarde</span>
+        <span className={styles.textTuplasResult}>{period}</span>
       </div>
 
       <div className={styles.containerTuplas}>
-        <span className={styles.textTuplas}>Semestres</span>
-        <span className={styles.textTuplasResult}>1º/2026</span>
+        <span className={styles.textTuplas}>Semestre de Ingresso</span>
+        <span className={styles.textTuplasResult}>{admission}</span>
       </div>
 
       <div className={styles.containerTuplas}>
         <span className={styles.textTuplas}>Validade da carteirinha</span>
         <span className={isAtivo ? styles.textTuplasDataAtiva : styles.textTuplasDataInativa}>
-          03/09/2026
+          {new Date(dueDate).toLocaleDateString('pt-BR')}
         </span>
       </div>
 

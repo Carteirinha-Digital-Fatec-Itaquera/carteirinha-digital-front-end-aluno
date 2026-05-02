@@ -35,7 +35,6 @@ export default function MainMenuScreen() {
 
   return (
     <div className={styles.container}>
-      {/* Container simulador de celular para Desktop */}
       <div className={styles.mobileWrapper}>
         <InternetWatcher />
         

@@ -1,230 +1,125 @@
 .container {
-  background-color: #BA1A1A; 
+  background-color: #BA1A1A; /* Fundo vermelho da Fatec */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  font-family: sans-serif;
 }
 
-.header {
+.redHeader {
   width: 100%;
-  padding: 10px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.logo {
-  width: 150px;
-  height: auto;
-  object-fit: contain;
-}
-
-.containerInformacoes {
-  background-color: #e7e7e7;
-  padding: 20px 15px;
-  width: 100%;
-  max-width: 800px; 
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  height: 180px; /* Altura fixa para o topo */
+  background-color: #BA1A1A;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  flex-grow: 1; 
+  justify-content: center;
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 
-.containerCard {
-  width: 100%;
-  background-color: white;
-  border: 1px solid #C9C9C9;
-  border-radius: 10px;
+.fatecTitle {
+  color: white;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.fatecSub {
+  color: white;
+  font-size: 18px;
+  margin: 0;
+}
+
+/* O segredo está aqui: limitar o tamanho da área branca */
+.mainContent {
+  width: 90%;
+  max-width: 450px; /* Tamanho de uma tela de celular */
+  background-color: #f5f5f5; /* Cinza clarinho de fundo dos cards */
+  margin-top: -40px; /* Faz o efeito de sobrepor o topo vermelho */
+  border-radius: 20px 20px 0 0;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding-bottom: 20px;
-  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
+  padding: 20px 15px;
+  box-sizing: border-box;
 }
 
-.title {
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 100%;
+}
+
+.cardHeaderTitle {
   color: #BA1A1A;
   font-size: 16px;
-  font-weight: 600;
-  width: 100%;
+  font-weight: bold;
   padding: 10px 15px;
-  border-bottom: 1px solid #C9C9C9;
+  border-bottom: 1px solid #eee;
   margin: 0;
 }
 
-.containerImgInfo {
+.studentInfoSection {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: flex-start;
+  padding: 15px;
+  gap: 15px;
   align-items: center;
-  padding: 0 15px;
-  gap: 20px;
 }
 
-.imgAluno {
-  width: 80px;
-  height: 80px;
+/* FIX DA IMAGEM GIGANTE */
+.avatar {
+  width: 90px;   /* Tamanho fixo */
+  height: 90px;  /* Tamanho fixo */
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: cover; /* Garante que a imagem não distorça */
+  background-color: #eee;
+  flex-shrink: 0; /* Impede a imagem de espremer */
 }
 
-.containerInfo {
+.studentDetails {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
-.textAluno {
-  font-size: 20px;
-  font-weight: 600;
+.studentName {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
   color: #000;
-  margin: 0;
 }
 
-.textCurso {
-  font-size: 16px;
-  color: #5B5B5B;
-  font-weight: 500;
-  margin: 5px 0;
-}
-
-.textRA {
+.studentCourse, .studentRa {
   font-size: 14px;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
+  color: #666;
+  margin: 2px 0;
 }
 
-.containerRodape {
+.badgeWrapper {
+  padding: 0 15px 15px;
+}
+
+.timestamp {
+  text-align: center;
+  color: #fff; /* Texto branco sobre o fundo vermelho */
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+.redFooter {
   width: 100%;
-  background-color: #e7e7e7;
   padding: 20px 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  background-color: #BA1A1A;
 }
 
-.logoRodape {
-  width: 200px;
-  height: auto;
-  object-fit: contain;
+.govLogo {
+  height: 50px;
+  filter: brightness(0) invert(1); /* Deixa os logos brancos */
 }
-
-@media (min-width: 769px) {
-  .containerInformacoes {
-    margin-top: 20px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-  }
-}
-
-
-/* import { Animated, StyleSheet } from "react-native"
-import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
-
-
-export const styles = StyleSheet.create({
- container: {
-    backgroundColor: backgroundColor,
-    flex: 1,
-    justifyContent: 'space-between',
- },
-   logo: {
-    margin: 10,
-    width: 150,
-    height: 90
-  },
-  logoRodape: {
-    width: 200,
-    height: 70
-   
-  },
-  imgAluno:{
-    width: 80,
-    height: 80,
-
-  },
-  containerRodape:{
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  containerInformacoes: {
-    backgroundColor: '#e7e7e7ff',
-    padding: 15,
-    width: '100%',
-    flex: 1,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    rowGap: 20,
-    
-  },
-  containerCard: {
-    width: '100%',
-    backgroundColor: 'white',
-    borderColor: "#C9C9C9",
-    borderWidth: 1,
-    borderRadius: 10, 
-    justifyContent:'space-between', 
-    alignItems: 'flex-start',
-    rowGap: 15,
-    paddingBottom: 15,
-    marginTop: 25,
-    shadowColor: '#000',
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 9,
-    elevation: 8,
-
-  },
-  title: {
-    color: backgroundColor,
-    fontSize: 16,
-    fontWeight: '600',
-    width: '100%',
-    padding: 5,
-    paddingLeft: 15,
-    borderBottomColor: "#C9C9C9",
-    borderBottomWidth: 1
-  },
-  containerImgInfo:{
-    flexDirection: 'row',
-    width: '100%', 
-    justifyContent: "flex-start",
-    alignItems: 'center',
-    paddingLeft: 15,
-
-  },
-  containerInfo:{
-    marginLeft: 30
-  },
-  containerNome:{
-    width: '85%',
-  },
-
-  textRA:{
-    marginTop: 10,
-    fontWeight: '700'
-  },
-  textAluno:{
-    fontSize: 20,
-    fontWeight: '600',
-    
-
-  },
-  textCurso: {
-    fontSize: 16,
-    color: '#5B5B5B',
-    fontWeight: '500'
-
-  },
-  
-  
-})
-
- */

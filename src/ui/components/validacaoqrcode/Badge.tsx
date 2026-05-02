@@ -6,7 +6,7 @@ export interface Props {
 }
 
 export default function Badge({ status, validade }: Props) {
-  const isAtiva = status === 'Ativo' && validade > new Date();
+  const isAtiva = status === 'ATIVO' && validade > new Date();
 
   return (
     <div className={isAtiva ? styles.containerBadgeAtiva : styles.containerBadgeInativa}>
