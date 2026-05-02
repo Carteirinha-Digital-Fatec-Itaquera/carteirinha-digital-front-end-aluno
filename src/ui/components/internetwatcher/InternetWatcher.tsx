@@ -1,18 +1,20 @@
-import NetInfo from "@react-native-community/netinfo";
 import { useEffect, useState } from "react";
-import { ErrorModalComp } from "../ErrorModal";
+import { ErrorModalComp } from "../ErrorModal/ErrorModalComp";
 
 export function InternetWatcher() {
-  const [offline, setOffline] = useState(false);
-  const [checking, setChecking] = useState(false);
+  const [offline, setOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      const connected = state.isConnected && state.isInternetReachable;
-      setOffline(!connected);
-    });
+    const handleOffline = () => setOffline(true);
+    const handleOnline = () => setOffline(false);
 
-    return () => unsubscribe();
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
   }, []);
 
   return (
@@ -20,14 +22,10 @@ export function InternetWatcher() {
       visible={offline}
       error="Você está sem internet!"
       buttonText="Tentar novamente"
-      onClose={async () => {
-        setChecking(true);
-
-        const state = await NetInfo.fetch();
-        const connected = state.isConnected && state.isInternetReachable;
-
-        setOffline(!connected);
-        setChecking(false);
+      onClose={() => {
+        if (navigator.onLine) {
+          setOffline(false);
+        }
       }}
     />
   );

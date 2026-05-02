@@ -10,7 +10,7 @@ import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { InputCodeComp } from '../../components/inputCode/InputCodeComp';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
 import { TextInfoComp } from '../../components/textinfo/TextInfoComp';
-import { ErrorModalComp } from '../../components/ErrorModal';
+import { ErrorModalComp } from '../../components/ErrorModal/ErrorModalComp';
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
 import { ErrorField } from '../../../utils/Types';

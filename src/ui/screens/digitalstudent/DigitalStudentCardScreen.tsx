@@ -1,100 +1,131 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, Image, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from "qrcode.react";
+// import {Qrdcode}
 
-import { TitleComp } from '../../components/title/TitleComp';
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
-import { ErrorModalComp } from "../../components/ErrorModal";
+import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
+
+import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
+import logoCps from "../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png";
+import perfilDefault from "../../../assets/images/perfil_default.png";
 
 import { findProfile } from "../../../api/student/findProfile";
-
-import { Student } from "../../../domains/Student";
-
-import { NavigationProps } from '../../../routes';
-
-import { styles } from './style';
-import QRCode from "react-native-qrcode-svg";
+import type { Student } from "../../../domains/Student";
+import { GLOBAL_VAR } from "../../../api/config/globalVar";
+import styles from './style.module.css';
+import { ArrowLeft } from "lucide-react"; // 👈 Ícone profissional de voltar
 
 export default function DigitalStudentCardScreen() {
-  const { navigate } = useNavigation<NavigationProps>();
+  const navigate = useNavigate();
 
   const [student, setStudent] = useState<Student | undefined>(undefined);
   const [message, setMessage] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
 
-
   useEffect(() => {
     const loadStudent = async () => {
       const result = await findProfile();
-
-      if ('code' in result) {
+      if (result && 'code' in result) {
         setMessage(result.message);
         setModalErrorVisible(true);
       } else {
-        setStudent(result);
+        setStudent(result as Student);
       }
     };
-
     loadStudent();
   }, []);
 
-  if (!student) return <ActivityIndicator size="large" />;
+  if (!student) {
+    return <div className={styles.loadingContainer}>Carregando...</div>;
+  }
+
+  const studentStatus = student.status || "Em curso"; 
+  
+  const getStatusColor = (status: string) => {
+    const s = status.toLowerCase();
+    if (s.includes("curso") || s.includes("ativo") || s.includes("concluido")) return "#2ecc71";
+    if (s.includes("trancado")) return "#f39c12"; 
+    if (s.includes("desistente")) return "#e74c3c";
+    return "#BA1A1A"; 
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <div className={styles.container}>
       <ErrorModalComp
         visible={modalErrorVisible}
         error={message}
         fields={[]}
         onClose={() => {
-          setMessage("");
           setModalErrorVisible(false);
-          navigate("MainMenu");
+          navigate("/MainMenu");
         }}
       />
-      <TitleComp text="Carteirinha Digital" showButton={true} actionButton={() => navigate("MainMenu")} />
-      <Image source={require("../../../assets/images/fatec_itaquera_logo_preto.png")} style={styles.logo} />
-      <View style={styles.subcontainer}>
-        <InternetWatcher />
-        <View style={styles.imagecontainer}>
-          <Image
-            source={
-              student.photo && student.photo.length > 0
-                ? { uri: student.photo }
-                : require("../../../assets/images/perfil_default.png")
-            }
-            style={styles.image}
-          />
-          <QRCode
-            value="https://meusite.com"
-            size={200}
-          />
-        </View>
-        <View style={styles.infocontainer}>
-          <Text style={[styles.texto1, { textAlign: 'center', marginTop: 5, fontSize: 18 }]}>{student.name}</Text>
-          <View style={styles.cut}>
-            <Text style={styles.texto1}>RG: </Text><Text style={styles.texto2}>{student.rg}</Text>
-            <Text style={styles.texto1}>CPF: </Text><Text>{student.cpf}</Text>
-          </View>
-          <View style={styles.cut}>
-            <Text style={styles.texto1}>NASCIMENTO: </Text>
-            <Text>{student.birthDate}</Text>
-          </View>
-        </View>
-        <View style={styles.infocontainer}>
-          <Text style={{ marginLeft: 10, marginTop: 5, fontSize: 18 }}>{student.course}</Text>
-          <View style={styles.cut}>
-            <Text style={styles.texto1}>PERIODO: </Text><Text style={styles.texto2}>{student.period}</Text>
-            <Text style={styles.texto1}>RA: </Text><Text>{student.ra}</Text>
-          </View>
-          <View style={styles.cut}>
-            <Text style={styles.texto1}>VALIDADE: </Text>
-            <Text>{student.dueDate}</Text>
-          </View>
-        </View>
-      </View>
-      <Image source={require("../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png")} style={styles.logocpssp} />
-    </SafeAreaView>
+
+      {/* O appWrapper já atua como o limitador Mobile */}
+      <div className={styles.appWrapper}>
+        <div className={styles.header}>
+          <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
+             <ArrowLeft size={28} color="#000" strokeWidth={2} />
+          </button>
+          <img src={logoFatecPreto} className={styles.logoTop} alt="Logo Fatec" />
+        </div>
+        
+        <div className={styles.cardContainer}>
+          <InternetWatcher />
+          
+          <div className={styles.topSection}>
+            <img 
+              src={
+                student?.photo && student?.photoStatus === 'APPROVED' 
+                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  : perfilDefault
+              } 
+              className={styles.profileImage} 
+              alt="Foto do Aluno" 
+              onError={(e) => {
+                e.currentTarget.src = perfilDefault; 
+              }}
+            />
+            <div className={styles.qrWrapper}>
+              <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
+            </div>
+          </div>
+
+          <div className={styles.infoSection}>
+            <h2 className={styles.studentName}>{student.name}</h2>
+            
+            <div className={styles.row}>
+              <div className={styles.statusContainer}>
+                <strong>STATUS:</strong> 
+                <span 
+                  className={styles.statusPill} 
+                  style={{ backgroundColor: getStatusColor(studentStatus) }}
+                >
+                  {studentStatus.toUpperCase()}
+                </span>
+              </div>
+              <p><strong>CPF:</strong> {student.cpf}</p>
+            </div>
+            <div className={styles.row}>
+              <p><strong>NASCIMENTO:</strong> {student.birthDate}</p>
+            </div>
+          </div>
+
+          <div className={styles.infoSection}>
+            <h3 className={styles.courseName}>Curso: {student.course}</h3>
+            
+            <div className={styles.row}>
+              <p><strong>RA:</strong> {student.ra}</p>
+            </div>
+            <div className={styles.row}>
+              <p><strong>VALIDADE:</strong> {student.dueDate}</p>
+            </div>
+          </div>
+          
+          <img src={logoCps} className={styles.logoCps} alt="Logo CPS" />
+        </div>
+      </div>
+    </div>
   );
 }
