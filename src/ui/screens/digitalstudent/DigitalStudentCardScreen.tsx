@@ -14,7 +14,7 @@ import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
 import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import styles from './style.module.css';
-import { ArrowLeft } from "lucide-react"; // 👈 Ícone profissional de voltar
+import { ArrowLeft } from "lucide-react"; 
 
 export default function DigitalStudentCardScreen() {
   const navigate = useNavigate();
@@ -41,7 +41,11 @@ export default function DigitalStudentCardScreen() {
   }
 
   const studentStatus = student.status || "Em curso"; 
-  
+
+  // const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
+  const validationUrl = `http://192.168.1.106:5173/valida/${student?.qrcode || ''}`;
+
+
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
     if (s.includes("curso") || s.includes("ativo") || s.includes("concluido")) return "#2ecc71";
@@ -62,7 +66,6 @@ export default function DigitalStudentCardScreen() {
         }}
       />
 
-      {/* O appWrapper já atua como o limitador Mobile */}
       <div className={styles.appWrapper}>
         <div className={styles.header}>
           <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
@@ -87,9 +90,13 @@ export default function DigitalStudentCardScreen() {
                 e.currentTarget.src = perfilDefault; 
               }}
             />
-            <div className={styles.qrWrapper}>
+
+          <div className={styles.qrWrapper}>
+            <QRCodeSVG value={validationUrl} size={110} includeMargin={true} />
+          </div>
+            {/* <div className={styles.qrWrapper}>
               <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
-            </div>
+            </div> */}
           </div>
 
           <div className={styles.infoSection}>

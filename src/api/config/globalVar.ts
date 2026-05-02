@@ -4,4 +4,5 @@
 export const GLOBAL_VAR = {
   // BASE_URL: `http://${ADDRESS}:${PORT}`,
   BASE_URL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  // BASE_URL: import.meta.env.VITE_API_URL || "http://:3000",
 }

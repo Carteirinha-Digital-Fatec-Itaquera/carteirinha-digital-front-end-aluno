@@ -33,7 +33,10 @@ export default function AppRoutes() {
         <Route path="/PasswordRecovery" element={<PasswordRecoveryScreen />} />
         <Route path="/first-access" element={<FirstAccessScreen />} />
         
-        <Route path="/TelaQrcode" element={<TelaQrcode />} />
+        {/* <Route path="/TelaQrcode" element={<TelaQrcode />} /> */}
+
+        <Route path="/valida/:qrcodeToken" element={<TelaQrcode />} />
+
         <Route path="/MainMenu" element={<MainMenuScreen />} />
         <Route path="/DigitalStudentCard" element={<DigitalStudentCardScreen />} />
         <Route path="/ResetPasswordScreen" element={<ResetPasswordScreen />} />

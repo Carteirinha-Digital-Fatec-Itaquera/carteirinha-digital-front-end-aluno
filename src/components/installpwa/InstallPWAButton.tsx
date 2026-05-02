@@ -1,10 +1,10 @@
 // import React, 
 import { useEffect, useState } from 'react';
-import { Download, X } from 'lucide-react'; // Adicionei o 'X' para poder fechar o aviso
+import { Download, X } from 'lucide-react'; 
 
 export const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isVisible, setIsVisible] = useState(true); // Controle para o usuário poder esconder o botão
+  const [isVisible, setIsVisible] = useState(true); 
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
