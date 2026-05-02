@@ -68,7 +68,7 @@ export default function MainMenuScreen() {
               <p>Carteirinha</p>
             </button>
             
-            <button className={styles.menuCard} onClick={() => alert("Em breve!")}>
+            <button className={styles.menuCard} onClick={() => navigate('/config')}>
               <Settings className={styles.icon} strokeWidth={1.5} />
               <p>Configurações</p>
             </button>
