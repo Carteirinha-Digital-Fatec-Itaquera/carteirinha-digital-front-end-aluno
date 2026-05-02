@@ -6,6 +6,8 @@ import PasswordRecoveryScreen from "../ui/screens/passwordrecovery/PasswordRecov
 import FirstAccessScreen from "../ui/screens/passwordrecovery/FirstAccessScreen";
 import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
 import UploadImageScreen from "../ui/screens/uploadimage/UploadImageScreen";
+import ResetPasswordScreen from "../ui/screens/passwordrecovery/ResetPasswordScreen";
+import HelpScreen from "../ui/screens/help/HelpScreen";
 
 
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
@@ -20,19 +22,22 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginScreen />} />
+
+
         
         <Route path="/home" element={<Home />} />
         
-        {/* 2. CHAMA O COMPONENTE VERDADEIRO AQUI */}
-        <Route path="/login" element={<LoginScreen />} />
-        
+        <Route path="/Help" element={<HelpScreen />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/password-recovery" element={<PasswordRecoveryScreen />} />
+        <Route path="/PasswordRecovery" element={<PasswordRecoveryScreen />} />
         <Route path="/first-access" element={<FirstAccessScreen />} />
         
         <Route path="/MainMenu" element={<MainMenuScreen />} />
-        <Route path="/student-card" element={<DigitalStudentCardScreen />} />
-        <Route path="/upload-image" element={<UploadImage />} />
+        <Route path="/DigitalStudentCard" element={<DigitalStudentCardScreen />} />
+        <Route path="/ResetPasswordScreen" element={<ResetPasswordScreen />} />
+
+        <Route path="/UploadImage" element={<UploadImageScreen />} />
       </Routes>
     </BrowserRouter>
   );

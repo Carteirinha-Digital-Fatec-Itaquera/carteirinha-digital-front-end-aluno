@@ -1,3 +1,5 @@
+export type PhotoStatusType = 'PENDING' | 'APPROVED' | 'REJECTED' | 'NULL' | '';
+
 export class Student {
     id: string;
     ra: string;
@@ -13,7 +15,7 @@ export class Student {
     dueDate: string;
     photo: string;
     qrcode: string;
-
+    photoStatus: PhotoStatusType
     constructor(props: {
         id?: string;
         ra?: string;
@@ -28,6 +30,7 @@ export class Student {
         birthDate?: string;
         dueDate?: string;
         photo?: string;
+        photoStatus?: PhotoStatusType;
         qrcode?: string;
     }) {
         this.id = props.id ?? "";
@@ -44,5 +47,6 @@ export class Student {
         this.dueDate = props.dueDate ?? "";
         this.photo = props.photo ?? "";
         this.qrcode = props.qrcode ?? "";
+        this.photoStatus = props.photoStatus ?? "";
     }
 }

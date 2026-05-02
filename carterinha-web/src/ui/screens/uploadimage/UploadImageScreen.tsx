@@ -22,7 +22,6 @@ export default function UploadImageScreen() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   
-  // 👇 Estado para guardar o RA do aluno logado
   const [studentRa, setStudentRa] = useState<string>(""); 
   
   const [message, setMessage] = useState("");
@@ -32,7 +31,6 @@ export default function UploadImageScreen() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 👇 Dispara quando a tela carrega para pegar o RA do aluno
   useEffect(() => {
     const fetchStudentData = async () => {
       const result = await findProfile();

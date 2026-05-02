@@ -1,53 +1,64 @@
 .container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
   min-height: 100vh;
-  background-color: #f5f5f5; /* Fundo cinza claro para o desktop */
+  background-color: #f0f2f5;
 }
 
+/* Agora ele permite que tudo dentro dele ocupe 100% da tela do monitor */
+.mobileWrapper {
+  width: 100%;
+  max-width: 100%; 
+  background-color: #f0f2f5; /* Fundo base da página inteira */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* O Vermelho agora vai de ponta a ponta na tela do PC! */
 .redHeader {
   width: 100%;
-  max-width: 500px;
-  height: 180px;
+  height: 280px; /* Maior no PC para dar destaque */
   background-color: #BA1A1A;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 20px;
+  padding-top: 45px;
 }
 
 .logo {
-  width: 150px;
+  width: 200px;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* Deixa a logo branca para contrastar com fundo vermelho */
+  filter: brightness(0) invert(1);
 }
 
+/* Onde ficam os botões: Vira um "Card" gigante flutuante no Desktop */
 .subcontainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
-  width: 100%;
-  max-width: 500px; /* Mantém com cara de App no Desktop */
+  width: 90%;
+  max-width: 900px; /* Mantém os botões organizados no meio da tela */
   background-color: #FFFFFF;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  padding: 0 20px 40px 20px;
-  margin-top: -40px; /* Puxa o contêiner branco pra cima do vermelho */
-  box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 30px; /* Bordas arredondadas em todos os cantos no PC */
+  padding: 0 50px 50px 50px;
+  margin-top: -120px; /* Puxa o card para cima da faixa vermelha */
   position: relative;
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08); /* Sombra 3D elegante */
+  margin-bottom: 50px; /* Dá um respiro antes do final da página */
 }
 
 .avatarWrapper {
-  width: 100px;
-  height: 100px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   background-color: #fff;
-  padding: 4px;
-  margin-top: -50px; /* Faz a foto flutuar na divisão das cores */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-  margin-bottom: 15px;
+  padding: 6px;
+  margin-top: -65px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.12);
+  margin-bottom: 25px;
 }
 
 .avatar {
@@ -58,57 +69,68 @@
 }
 
 .welcomeText {
-  font-size: 22px;
-  font-weight: bold;
-  color: #08060d;
-  margin-bottom: 30px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 40px;
   text-align: center;
 }
 
 .gridContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 25px; 
   width: 100%;
 }
 
 .menuCard {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Alinhamento Figma */
+  align-items: flex-start;
   justify-content: center;
   background-color: #FFFFFF;
-  border: 1px solid #BA1A1A; /* Borda vermelha fina Figma */
-  border-radius: 12px;
-  padding: 20px 15px;
+  border: 1.5px solid #eaeaea; 
+  border-radius: 16px;
+  padding: 24px 20px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  color: #08060d;
+  color: #1a1a1a;
 }
 
 .fullWidth {
   grid-column: span 2;
+  flex-direction: row; 
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.fullWidth p {
+  margin-top: 0 !important;
+  font-size: 18px !important;
 }
 
 .menuCard:hover {
-  background-color: #fff5f5;
-  transform: translateY(-2px);
-  box-shadow: 0px 4px 10px rgba(186, 26, 26, 0.1);
+  background-color: #fafafa;
+  transform: translateY(-3px); 
+  border-color: #BA1A1A;
+  box-shadow: 0px 8px 15px rgba(186, 26, 26, 0.08);
 }
 
 .menuCard p {
   margin-top: 15px;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .icon {
-  font-size: 24px;
-  color: #BA1A1A;
+  width: 32px;
+  height: 32px;
+  color: #1a1a1a;
 }
 
 .logoutButton {
-  margin-top: 40px;
+  margin-top: 50px;
   background: transparent;
   border: none;
   color: #BA1A1A;
@@ -116,6 +138,47 @@
   font-weight: bold;
   text-decoration: underline;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logoutButton:hover {
+  opacity: 0.7;
+}
+
+/* =========================================
+   MÁGICA DO MOBILE (Telas menores que 768px)
+   Aqui ele volta a ser 100% estilo Aplicativo Nativo
+   ========================================= */
+@media (max-width: 768px) {
+  .redHeader {
+    height: 200px;
+  }
+  .subcontainer {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0; /* Tira borda redonda inferior no celular */
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 0 20px 40px 20px;
+    margin-top: -60px;
+    margin-bottom: 0;
+    min-height: calc(100vh - 140px); /* Preenche até o rodapé */
+    box-shadow: none;
+  }
+  .avatarWrapper {
+    width: 110px;
+    height: 110px;
+    margin-top: -55px;
+  }
+  .fullWidth {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 0;
+  }
+  .fullWidth p {
+    margin-top: 15px !important;
+    font-size: 16px !important;
+  }
 }
 
 /* import { StyleSheet } from "react-native";

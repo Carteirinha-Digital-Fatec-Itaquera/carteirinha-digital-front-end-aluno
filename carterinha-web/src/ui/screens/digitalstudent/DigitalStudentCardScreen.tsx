@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from "qrcode.react";
+// import {Qrdcode}
 
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
@@ -11,8 +12,9 @@ import perfilDefault from "../../../assets/images/perfil_default.png";
 
 import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
-
+import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import styles from './style.module.css';
+import { ArrowLeft } from "lucide-react"; // 👈 Ícone profissional de voltar
 
 export default function DigitalStudentCardScreen() {
   const navigate = useNavigate();
@@ -38,16 +40,14 @@ export default function DigitalStudentCardScreen() {
     return <div className={styles.loadingContainer}>Carregando...</div>;
   }
 
-  // Fallback de segurança caso a API não retorne status
   const studentStatus = student.status || "Em curso"; 
   
-  // Define a cor da "Pílula" de status baseada no valor
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
-    if (s.includes("curso") || s.includes("ativo") || s.includes("concluido")) return "#2ecc71"; // Verde
-    if (s.includes("trancado")) return "#f39c12"; // Laranja
-    if (s.includes("desistente")) return "#e74c3c"; // Vermelho
-    return "#BA1A1A"; // Padrão
+    if (s.includes("curso") || s.includes("ativo") || s.includes("concluido")) return "#2ecc71";
+    if (s.includes("trancado")) return "#f39c12"; 
+    if (s.includes("desistente")) return "#e74c3c";
+    return "#BA1A1A"; 
   };
 
   return (
@@ -62,10 +62,11 @@ export default function DigitalStudentCardScreen() {
         }}
       />
 
+      {/* O appWrapper já atua como o limitador Mobile */}
       <div className={styles.appWrapper}>
         <div className={styles.header}>
           <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
-             &#8592; {/* Ícone de Seta */}
+             <ArrowLeft size={28} color="#000" strokeWidth={2} />
           </button>
           <img src={logoFatecPreto} className={styles.logoTop} alt="Logo Fatec" />
         </div>
@@ -75,9 +76,16 @@ export default function DigitalStudentCardScreen() {
           
           <div className={styles.topSection}>
             <img 
-              src={student.photo && student.photo.length > 0 ? student.photo : perfilDefault} 
+              src={
+                student?.photo && student?.photoStatus === 'APPROVED' 
+                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  : perfilDefault
+              } 
               className={styles.profileImage} 
               alt="Foto do Aluno" 
+              onError={(e) => {
+                e.currentTarget.src = perfilDefault; 
+              }}
             />
             <div className={styles.qrWrapper}>
               <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
@@ -88,7 +96,6 @@ export default function DigitalStudentCardScreen() {
             <h2 className={styles.studentName}>{student.name}</h2>
             
             <div className={styles.row}>
-              {/* Onde antes era RG, agora é o Status em formato de "pill" */}
               <div className={styles.statusContainer}>
                 <strong>STATUS:</strong> 
                 <span 
@@ -106,10 +113,9 @@ export default function DigitalStudentCardScreen() {
           </div>
 
           <div className={styles.infoSection}>
-            <h3 className={styles.courseName}>{student.course}</h3>
+            <h3 className={styles.courseName}>Curso: {student.course}</h3>
             
             <div className={styles.row}>
-              <p><strong>PERÍODO:</strong> {student.period}</p>
               <p><strong>RA:</strong> {student.ra}</p>
             </div>
             <div className={styles.row}>

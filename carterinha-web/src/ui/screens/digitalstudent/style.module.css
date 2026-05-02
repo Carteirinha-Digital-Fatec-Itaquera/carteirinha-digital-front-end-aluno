@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f0f2f5;
 }
 
 .loadingContainer {
@@ -15,15 +15,15 @@
   font-weight: bold;
 }
 
+/* Cobre a tela toda no Desktop */
 .appWrapper {
   width: 100%;
-  max-width: 500px;
-  background-color: #FFFFFF;
+  max-width: 100%; 
+  background-color: #f0f2f5; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 20px;
-  box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
+  padding-bottom: 40px;
   min-height: 100vh;
 }
 
@@ -32,16 +32,24 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 20px 20px 10px 20px;
+  max-width: 900px; /* Mantém os itens alinhados com o Card central */
+  padding: 30px 20px 10px 20px;
 }
 
 .backButton {
   background: transparent;
   border: none;
-  font-size: 28px;
-  color: #000;
   cursor: pointer;
-  padding: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -10px;
+  transition: transform 0.2s;
+}
+
+.backButton:hover {
+  transform: translateX(-5px);
 }
 
 .logoTop {
@@ -49,14 +57,18 @@
   object-fit: contain;
 }
 
+/* O Card da Carteirinha vira um quadro branco chique no Desktop */
 .cardContainer {
   display: flex;
   flex-direction: column;
   width: 90%;
-  background-color: #e5e5e5; /* Fundo cinza das bordas do card Figma v3 */
-  border-radius: 20px;
-  padding: 20px;
+  max-width: 900px; /* Igual a largura do Menu Principal */
+  background-color: #FFFFFF;
+  border: 1px solid #eaeaea;
+  border-radius: 30px;
+  padding: 40px;
   margin-top: 10px;
+  box-shadow: 0px 15px 35px rgba(0,0,0,0.08); /* Sombra 3D */
 }
 
 .topSection {
@@ -64,62 +76,69 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  gap: 20px;
 }
 
 .profileImage {
-  width: 45%;
+  width: 48%; 
   aspect-ratio: 3/4;
   object-fit: cover;
-  border-radius: 12px;
-  background-color: #000; /* Fundo preto padrao como no figma */
+  border-radius: 16px;
+  background-color: #000;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
 .qrWrapper {
-  width: 45%;
+  width: 48%;
   aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #fff;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 16px;
+  padding: 15px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
 }
 
+/* Detalhes internos cinza claro no PC */
 .infoSection {
-  background-color: #FFFFFF; /* Caixas de texto brancas */
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 12px;
+  background-color: #f8f9fa; 
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 15px;
+  border: 1px solid #eaeaea;
 }
 
 .studentName {
   text-align: center;
-  margin-bottom: 15px;
-  font-size: 16px;
-  font-weight: 800;
-  color: #08060d;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #1a1a1a;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .courseName {
-  margin-bottom: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #08060d;
+  margin-bottom: 15px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a1a;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .row p {
   margin: 0;
-  font-size: 12px;
-  color: #333;
+  font-size: 13px;
+  color: #555;
 }
 
 .row strong {
@@ -127,27 +146,49 @@
   font-weight: 800;
 }
 
-/* Novo layout para o STATUS substituindo o RG */
 .statusContainer {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .statusPill {
   color: #FFFFFF;
-  padding: 3px 10px;
-  border-radius: 15px;
-  font-weight: bold;
-  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.5px;
 }
 
 .logoCps {
   width: 100%;
-  height: 40px;
+  height: 45px;
   object-fit: contain;
-  margin-top: 15px;
+  margin-top: 25px;
+  opacity: 0.9;
+}
+
+/* ====== MODO CELULAR ====== */
+@media (max-width: 768px) {
+  .appWrapper {
+    background-color: #FFFFFF; /* Fundo branco geral no mobile */
+  }
+  .cardContainer {
+    width: 92%;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #e5e5e5; /* Volta a ser aquele cinza do Figma no mobile */
+    box-shadow: none; 
+  }
+  .infoSection {
+    background-color: #FFFFFF; /* Caixas voltam a ser brancas no Mobile */
+  }
+  .studentName {
+    font-size: 16px;
+  }
 }
 
 /* import { StyleSheet } from "react-native";
