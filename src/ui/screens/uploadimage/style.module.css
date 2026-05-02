@@ -1,0 +1,137 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #FFFFFF; /* backgroundSecondaryColor */
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  color: #BA1A1A;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.box {
+  width: 306px;
+  height: 406px;
+  border: 4px solid #000;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Mostra a mãozinha do mouse no desktop */
+  overflow: hidden; /* Garante que a imagem não vaze das bordas */
+  transition: transform 0.2s ease;
+}
+
+.box:hover {
+  transform: scale(1.02); /* Efeito tátil suave para o PC */
+}
+
+.placeholderImage {
+  width: 150px; /* Ajuste o tamanho conforme o seu ícone */
+  height: auto;
+  opacity: 0.6;
+  object-fit: contain;
+}
+
+.userImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Preenche a caixa bonitinho sem achatar a foto do aluno */
+}
+
+.button {
+  background-color: #BA1A1A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 35px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease;
+  min-width: 180px;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* import { StyleSheet } from "react-native";
+import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: backgroundSecondaryColor,
+    gap: 10
+  },
+  box: {
+    width: 306,
+    height: 406,
+    borderWidth: 4,
+    borderColor: "#000", 
+    borderRadius: 0, 
+    padding: 0,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+    placeholderImage: {
+    width: 500,
+    height: 500,
+    resizeMode: "center",
+    opacity: 1,   
+  },
+    userImage: {
+    width: 300,
+    height: 400,
+    opacity: 1,
+  },
+  button: {
+    backgroundColor: backgroundColor,
+    borderRadius: 35,
+    padding: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    flexDirection: 'row',
+  },
+  buttonText: {
+    color: backgroundSecondaryColor,
+    fontSize: 16,
+    fontFamily: 'Montserrat-Bold',
+    letterSpacing: 0.5
+  }
+}) */

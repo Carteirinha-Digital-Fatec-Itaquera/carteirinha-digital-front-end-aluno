@@ -1,0 +1,200 @@
+.container {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.mobileWrapper {
+  width: 100%;
+  max-width: 100%; 
+  background-color: #f0f2f5; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+}
+
+.redHeader {
+  width: 100%;
+  height: 280px; 
+  background-color: #BA1A1A;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 45px;
+}
+
+.logo {
+  /* margin-bottom: 5%; */
+  width: 200px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 900px; 
+  background-color: #FFFFFF;
+  border-radius: 30px; /* Bordas arredondadas em todos os cantos no PC */
+  padding: 0 50px 50px 50px;
+  margin-top: -50px; /* Puxa o card para cima da faixa vermelha */
+  position: relative;
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08); /* Sombra 3D elegante */
+  margin-bottom: 50px; 
+}
+
+.avatarWrapper {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background-color: #fff;
+  padding: 6px;
+  margin-top: -65px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.12);
+  margin-bottom: 25px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.welcomeText {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px; 
+  width: 100%;
+}
+
+.menuCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1.5px solid #eaeaea; 
+  border-radius: 16px;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: #1a1a1a;
+}
+
+.fullWidth {
+  grid-column: span 2;
+  flex-direction: row; 
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.fullWidth p {
+  margin-top: 0 !important;
+  font-size: 18px !important;
+}
+
+.menuCard:hover {
+  background-color: #fafafa;
+  transform: translateY(-3px); 
+  border-color: #BA1A1A;
+  box-shadow: 0px 8px 15px rgba(186, 26, 26, 0.08);
+}
+
+.menuCard p {
+  margin-top: 15px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  color: #1a1a1a;
+}
+
+.logoutButton {
+  margin-top: 50px;
+  background: transparent;
+  border: none;
+  color: #BA1A1A;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logoutButton:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .redHeader {
+    height: 200px;
+  }
+  .subcontainer {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0; /* Tira borda redonda inferior no celular */
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 0 20px 40px 20px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    min-height: calc(100vh - 140px); /* Preenche até o rodapé */
+    box-shadow: none;
+  }
+  .avatarWrapper {
+    width: 110px;
+    height: 110px;
+    margin-top: -55px;
+  }
+  .fullWidth {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 0;
+  }
+  .fullWidth p {
+    margin-top: 15px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* import { StyleSheet } from "react-native";
+import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor,
+    alignItems: 'center'
+  },
+
+  subcontainer: {
+    flex: 1,
+    width: "100%",
+    borderTopStartRadius: 60,
+    borderTopEndRadius: 60,
+    backgroundColor: backgroundSecondaryColor
+  },
+  logo: {
+    margin: 10,
+    width: 190,
+    height: 115
+  }
+}) */

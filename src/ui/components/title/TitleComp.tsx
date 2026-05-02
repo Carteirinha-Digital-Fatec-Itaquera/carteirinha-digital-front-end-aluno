@@ -1,9 +1,7 @@
-import React from "react";
-import { Text, Touchable, TouchableOpacity, View } from "react-native";
-
-import { styles } from "./style";
-import { AntDesign } from "@expo/vector-icons";
+// import React from "react";
+import { ArrowLeft } from "lucide-react"; // Substitui o AntDesign
 import { SpacerComp } from "../spacer/SpacerComp";
+import styles from "./style.module.css";
 
 type TitleProps = {
   text: string,
@@ -14,19 +12,24 @@ type TitleProps = {
 
 export const TitleComp = ({ text, size = 14, showButton = false, actionButton = () => { } }: TitleProps) => {
   return (
-    <View style={styles.container}>
+    <div className={styles.container}>
       {showButton && (
-        <TouchableOpacity style={styles.button} onPress={actionButton}>
-          <AntDesign name="arrow-left" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
+        <button className={styles.button} onClick={actionButton}>
+          <ArrowLeft size={20} color="#FFFFFF" />
+        </button>
       )}
-      <View style={styles.titleContainer}>
-        <Text style={[styles.title, { fontSize: size }]}>{text}</Text>
-        <View style={styles.divider} />
-      </View>
+      
+      <div className={styles.titleContainer}>
+        {/* Usamos o CSS Module, mas sobrescrevemos o tamanho da fonte dinamicamente */}
+        <span className={styles.title} style={{ fontSize: `${size}px` }}>
+          {text}
+        </span>
+        <div className={styles.divider} />
+      </div>
+
       {showButton && (
         <SpacerComp horizontal={22} vertical={22} />
       )}
-    </View>
+    </div>
   )
 }

@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px; 
+}
+
+.label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333333; 
+  margin-left: 12px;
+  margin-bottom: 4px;
+}
+
+.inputField {
+  border: 1px solid #333333; /* colors.border */
+  border-radius: 20px;
+  padding: 14px;
+  font-size: 14px;
+  background-color: #FFFFFF; 
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  outline: none; 
+}
+
+.inputField::placeholder {
+  color: #999999;
+}
+
+/* import { StyleSheet } from "react-native";
+import { backgroundSecondaryColor, labelColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+
+  label: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    color: labelColor,
+    marginLeft: 12,
+    marginBottom: 4
+  },
+
+  inputField: {
+    borderWidth: 1,
+    borderColor: labelColor,
+    borderRadius: 20,
+    padding: 14,
+    fontSize: 14,
+    backgroundColor: backgroundSecondaryColor,
+    fontFamily: 'Montserrat-Medium',
+  },
+}) */

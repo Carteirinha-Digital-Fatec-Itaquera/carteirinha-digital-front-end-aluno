@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { ApiError } from '../../utils/Types';
 import { GLOBAL_VAR } from './globalVar';
 
@@ -42,9 +41,13 @@ export async function apiClient(
   const headers: Record<string, string> = {};
 
   if (authenticated) {
-    const token = await AsyncStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
+  // if (authenticated) {
+  //   const token = await AsyncStorage.getItem('token');
+  //   if (token) headers['Authorization'] = `Bearer ${token}`;
+  // }
 
   if (body && !multipart) {
     headers['Content-Type'] = 'application/json';
@@ -59,7 +62,6 @@ export async function apiClient(
   });
 
   } catch (error) {
-    // 🔥 Aqui resolve seu "Failed to fetch"
     throw {
       code: 'NETWORK_ERROR',
       status: '0',

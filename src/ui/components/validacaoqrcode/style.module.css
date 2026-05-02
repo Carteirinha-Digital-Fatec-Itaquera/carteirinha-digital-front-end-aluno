@@ -1,0 +1,128 @@
+.containerBadgeAtiva, .containerBadgeInativa {
+  width: 150px;
+  height: 35px;
+  padding: 0 10px;
+  border-radius: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-left: 15px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+}
+
+/* Estilos específicos para Ativa */
+.containerBadgeAtiva {
+  background-color: #b6ebc3;
+  border-color: #70B882;
+  box-shadow: 2px 2px 7px rgba(15, 176, 69, 0.3);
+}
+
+.pontoAtiva {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #1e8629;
+}
+
+.textAtiva {
+  color: #1e9947;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Estilos específicos para Inativa */
+.containerBadgeInativa {
+  background-color: #fdc7c7;
+  border-color: #ff0000;
+  box-shadow: 2px 2px 7px rgba(235, 72, 72, 0.3);
+}
+
+.pontoInativa {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ca0909;
+}
+
+.textInativa {
+  color: #ca0909;
+  font-size: 14px;
+  font-weight: 600;
+}
+/* import { StyleSheet } from "react-native"
+import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
+
+
+export const styles = StyleSheet.create({
+    containerBadgeAtiva: {
+        backgroundColor: '#b6ebc3ff',
+        width: 150,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderColor: '#70B882',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 35,
+        borderRadius: 50,
+        flexDirection: 'row',
+        columnGap: 10,
+        marginLeft: 15,
+        shadowColor: '#0fb045ff',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 7,
+        elevation: 8,
+
+    },
+    containerBadgeInativa:{
+        backgroundColor: '#fdc7c7ff',
+        width: 150,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderColor: 'red',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 35,
+        borderRadius: 50,
+        flexDirection: 'row', 
+        columnGap: 10,
+        marginLeft: 15,
+        shadowColor: '#eb4848ff',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 7,
+        elevation: 8,
+    },
+    textAtiva: {
+        color:'#1e9947ff',
+        fontSize: 14,
+        fontWeight: '600'
+
+    },
+      textInativa: {
+        color:'#ca0909',
+        fontSize: 14,
+        fontWeight: '600'
+
+    },
+    pontoAtiva: {
+        width: 8,
+        height: 8,
+        borderRadius: 50,
+        backgroundColor: '#1e8629ff',
+        top:1
+    },
+    pontoInativa: {
+        width: 8,
+        height: 8,
+        borderRadius: 50,
+        backgroundColor: '#ca0909',
+        top: 1
+    }
+
+}) */

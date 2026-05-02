@@ -1,0 +1,255 @@
+
+.container {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.appWrapper {
+  width: 100%;
+  max-width: 100%;
+  background-color: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.redHeader {
+  width: 100%;
+  height: 280px;
+  background-color: #BA1A1A;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 45px;
+}
+
+.logo {
+  width: 200px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 600px; /* Mais fino que o menu para inputs não ficarem gigantes */
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  padding: 40px 50px;
+  margin-top: -120px;
+  position: relative;
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08);
+  margin-bottom: 50px;
+}
+
+.mainTitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #555;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: -10px;
+  padding: 0;
+}
+
+.backButton:hover {
+  color: #BA1A1A;
+}
+
+.infoText {
+  color: #555;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.successText {
+  color: #2ecc71;
+  font-size: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.emailBox {
+  background-color: #f8f9fa;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.emailBox strong {
+  color: #1a1a1a;
+}
+
+.emailBox span {
+  color: #BA1A1A;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-left: 5px;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  border: 1.5px solid #eaeaea;
+  border-radius: 12px;
+  font-size: 16px;
+  background-color: #fcfcfc;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #BA1A1A;
+  background-color: #fff;
+  box-shadow: 0px 0px 0px 3px rgba(186, 26, 26, 0.1);
+}
+
+.primaryButton {
+  width: 100%;
+  padding: 18px;
+  background-color: #BA1A1A;
+  color: #FFF;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: 10px;
+}
+
+.primaryButton:disabled {
+  background-color: #d17b7b;
+  cursor: not-allowed;
+}
+
+.primaryButton:active {
+  transform: translateY(2px);
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: #000;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====== MODO CELULAR ====== */
+@media (max-width: 768px) {
+  .redHeader {
+    height: 200px;
+  }
+  .subcontainer {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 30px 20px 40px 20px;
+    margin-top: -60px;
+    margin-bottom: 0;
+    min-height: calc(100vh - 140px);
+    box-shadow: none;
+  }
+}
+/* import { StyleSheet } from "react-native";
+import { backgroundColor, backgroundSecondaryColor, labelColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor,
+    alignItems: 'center'
+  },
+
+  subcontainer: {
+    flex: 1,
+    width: "100%",
+    borderTopStartRadius: 60,
+    borderTopEndRadius: 60,
+    backgroundColor: backgroundSecondaryColor,
+    justifyContent: 'space-around'
+  },
+
+  logo: {
+    margin: 10,
+    width: 190,
+    height: 115
+  },
+
+  containertext: {
+    alignSelf: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    margin: 20
+  },
+
+  textLabel: {
+    alignSelf: "center",
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
+    color: labelColor,
+    textAlign: 'justify',
+  },
+
+  textValue: {
+    alignSelf: "center",
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 18,
+    color: labelColor,
+    textAlign: 'justify',
+  }
+}) */

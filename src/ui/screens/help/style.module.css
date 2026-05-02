@@ -1,0 +1,134 @@
+.container {
+  display: flex;
+  justify-content: center;
+  /* height: 100%; */
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.appWrapper {
+  width: 100%;
+  max-width: 700px;
+  background-color: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  padding: 30px 20px 10px 20px;
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -10px;
+  transition: transform 0.2s;
+}
+
+.backButton:hover {
+  transform: translateX(-5px);
+}
+
+.logoTop {
+  height: 45px;
+  object-fit: contain;
+}
+
+.contentContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  padding: 20px;
+}
+
+/* O fundo cinza da sua imagem */
+.helpCard {
+  background-color: #cccccc; 
+  border: 1px solid #b5b5b5;
+  border-radius: 16px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 380px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.mainIcon {
+  color: #000;
+  margin-bottom: 30px;
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 15px;
+  align-self: flex-start;
+  width: 100%;
+}
+
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #000;
+  font-weight: 500;
+}
+
+.emailText {
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.icon {
+  flex-shrink: 0; 
+}
+
+@media (max-width: 768px) {
+  .appWrapper {
+    background-color: #FFFFFF;
+  }
+  .contentContainer {
+    align-items: flex-start; 
+    padding-top: 40px;
+  }
+}

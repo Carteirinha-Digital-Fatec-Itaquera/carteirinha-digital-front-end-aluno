@@ -1,104 +1,98 @@
 import { useEffect, useState } from 'react';
-import { Image, View, Alert } from 'react-native';
-import { NavigationProps } from '../../../routes';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigate } from 'react-router-dom';
 
-import { ButtonComp } from '../../components/button/ButtonComp';
-import { TitleComp } from '../../components/title/TitleComp';
-import { SpacerComp } from '../../components/spacer/SpacerComp';
-import { ButtonGrid } from '../../components/buttonGrid/ButtonGrid';
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
+import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
+import perfilDefault from "../../../assets/images/perfil_default.png";
 import { findProfile } from '../../../api/student/findProfile';
+import type { Student } from '../../../domains/Student';
+import { GLOBAL_VAR } from '../../../api/config/globalVar';
+import { IdCard, Settings, HelpCircle, Camera } from 'lucide-react'; 
 
-import { backgroundColor } from '../../themes/Color';
-
-import { styles } from './style';
-
+import styles from './style.module.css';
 export default function MainMenuScreen() {
-  const { navigate } = useNavigation<NavigationProps>();
-
-  const [studentName, setStudentName] = useState("");
+  const navigate = useNavigate();
+  const [student, setStudent] = useState<Student | null>(null);
 
   useEffect(() => {
-    const loadName = async () => {
+    const loadProfile = async () => {
       const result = await findProfile();
-      if (!('code' in result)) {
-        setStudentName(result.name);
+      if (result && !('code' in result)) {
+        setStudent(result as Student);
       }
     };
-
-    loadName();
+    loadProfile();
   }, []);
 
+  const handleLogout = () => {
+    const confirm = window.confirm("Tem certeza que deseja sair?");
+    if (confirm) {
+      localStorage.removeItem('token');
+      navigate("/login");
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../../../assets/images/fatec_itaquera_logo.png")}
-        style={styles.logo}
-      />
-      <View style={styles.subcontainer}>
+    <div className={styles.container}>
+      <div className={styles.mobileWrapper}>
         <InternetWatcher />
-        <SpacerComp vertical={20} />
-        <TitleComp text={studentName ? `Bem-vindo, ${studentName.split(' ')[0]}` : "Bem-vindo!"} size={18} />
-        <SpacerComp vertical={20} />
-        <ButtonGrid
-          items={[
-            {
-              icon: "idcard",
-              label: "Carteirinha",
-              size: "large",
-              onPress: () => navigate("DigitalStudentCard")
-            },
-            {
-              icon: "setting",
-              label: "Ajustes",
-              onPress: () => Alert.alert("Em breve!")
-            },
-            {
-              icon: "question-circle",
-              label: "Ajuda",
-              onPress: () => Alert.alert("Ajuda?")
-            },
-            {
-              icon: "upload",
-              label: "Enviar Foto",
-              onPress: () => {
-                navigate("UploadImage");
-                Alert.alert(
-                  'Instruções de envio',
-                  '- Utilize fundo neutro\n\n' +
-                  '- Garanta foco nítido, sem sombras e reflexos\n\n' +
-                  '- Centralize o rosto, mostrando toda a cabeça e o topo dos ombros\n\n' +
-                  '- Mantenha os olhos abertos e visíveis\n\n' +
-                  '- Expressão neutra (lábios fechados) ou sorriso discreto\n\n' +
-                  '- Não utilize acessórios como chapéus, óculos escuros ou brincos grandes\n\n'
-                );
-              }
-            },
-          ]}
-        />
-        <SpacerComp vertical={40} />
-        <ButtonComp
-          text="Deslogar"
-          action={() => Alert.alert(
-            'Atenção',
-            'Tem certeza que deseja sair?',
-            [
-              { text: 'Não' },
-              {
-                text: 'Sim',
-                onPress: async () => {
-                  await AsyncStorage.removeItem('token');
-                  navigate("Login");
-                },
-              },
-            ],
-          )}
-          color={backgroundColor}
-        />
-      </View>
-    </View>
+        
+        <div className={styles.redHeader}>
+          <img src={logoFatec} className={styles.logo} alt="Logo Fatec" />
+        </div>
+        
+        <div className={styles.subcontainer}>
+          <div className={styles.avatarWrapper}>
+            <img 
+              src={
+                student?.photo && student?.photoStatus === 'APPROVED' 
+                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  : perfilDefault
+              } 
+              className={styles.avatar} 
+              alt="Perfil" 
+              onError={(e) => {
+                e.currentTarget.src = perfilDefault; 
+              }}
+            />
+          </div>
+
+          <h1 className={styles.welcomeText}>
+            Bem-vindo(a), {student?.name ? student.name.split(' ')[0] : "Aluno"}
+          </h1>
+
+          <div className={styles.gridContainer}>
+            <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => navigate("/DigitalStudentCard")}>
+              <IdCard className={styles.icon} strokeWidth={1.5} />
+              <p>Carteirinha</p>
+            </button>
+            
+            <button className={styles.menuCard} onClick={() => navigate('/config')}>
+              <Settings className={styles.icon} strokeWidth={1.5} />
+              <p>Configurações</p>
+            </button>
+            
+            {/* <button className={styles.menuCard} onClick={() => alert("Central de Ajuda")}> */}
+            <button className={styles.menuCard} onClick={() => navigate("/Help")}>
+              <HelpCircle className={styles.icon} strokeWidth={1.5} />
+              <p>Ajuda</p>
+            </button>
+            
+            <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => {
+              alert("Instruções: Fundo neutro, rosto centralizado, sem óculos escuros.");
+              navigate("/UploadImage");
+            }}>
+              <Camera className={styles.icon} strokeWidth={1.5} />
+              <p>Enviar Foto</p>
+            </button>
+          </div>
+
+          <button className={styles.logoutButton} onClick={handleLogout}>
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
