@@ -12,10 +12,10 @@ import TelaQrcode from "../ui/screens/validacao/TelaQrcode";
 
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
 const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
-const PasswordRecovery = () => <div style={{ padding: 20 }}>Tela PasswordRecovery</div>;
-const MainMenu = () => <div style={{ padding: 20 }}>Tela MainMenu</div>;
-const DigitalStudentCard = () => <div style={{ padding: 20 }}>Tela Carteirinha Digital</div>;
-const UploadImage = () => <div style={{ padding: 20 }}>Tela Upload Image</div>;
+// const PasswordRecovery = () => <div style={{ padding: 20 }}>Tela PasswordRecovery</div>;
+// const MainMenu = () => <div style={{ padding: 20 }}>Tela MainMenu</div>;
+// const DigitalStudentCard = () => <div style={{ padding: 20 }}>Tela Carteirinha Digital</div>;
+// const UploadImage = () => <div style={{ padding: 20 }}>Tela Upload Image</div>;
 
 export default function AppRoutes() {
   return (

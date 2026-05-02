@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { ArrowLeft } from "lucide-react"; // Substitui o AntDesign
 import { SpacerComp } from "../spacer/SpacerComp";
 import styles from "./style.module.css";

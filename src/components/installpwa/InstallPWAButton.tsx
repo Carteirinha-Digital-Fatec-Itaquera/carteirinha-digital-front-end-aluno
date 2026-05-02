@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+// import React, 
+import { useEffect, useState } from 'react';
 import { Download, X } from 'lucide-react'; // Adicionei o 'X' para poder fechar o aviso
 
 export const InstallPWAButton = () => {

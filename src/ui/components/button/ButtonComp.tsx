@@ -1,4 +1,4 @@
-import React from "react"
+// import React from "react"
 import style from "./style.module.css"
 type ButtonProps = {
   text: string,

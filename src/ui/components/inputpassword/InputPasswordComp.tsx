@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// import React from 'react'; 
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react"
 import { Eye, EyeOff } from "lucide-react"; 
 import styles from "./style.module.css"; // Puxa do novo CSS

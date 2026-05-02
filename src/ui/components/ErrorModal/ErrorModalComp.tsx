@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { AlertCircle } from 'lucide-react'; // Substitui o MaterialIcons
 import styles from './style.module.css';
 
