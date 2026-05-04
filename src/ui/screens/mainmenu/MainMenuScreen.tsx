@@ -47,7 +47,8 @@ export default function MainMenuScreen() {
             <img 
               src={
                 student?.photo && student?.photoStatus === 'APPROVED' 
-                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  // ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  ?student.photo
                   : perfilDefault
               } 
               className={styles.avatar} 
