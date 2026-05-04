@@ -20,7 +20,7 @@ export async function uploadImage(image: File | null, ra: string): Promise<Ok | 
   
   // formData.append('ra', ra);
 
-  const response = await apiClient(`/estudantes/upload-foto${ra}`, {
+  const response = await apiClient(`/estudantes/upload-foto/${ra}`, {
     method: 'POST', 
     body: formData as any,
     authenticated: true,
