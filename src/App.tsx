@@ -6,6 +6,8 @@ import { InstallPWAButton } from './components/installpwa/InstallPWAButton';
 import { registerSW } from 'virtual:pwa-register';
 import { useEffect } from 'react';
 registerSW({ immediate: true });
+
+
 function App() {
   useEffect(() => {
     const savedPrimary = localStorage.getItem('theme-primary');
