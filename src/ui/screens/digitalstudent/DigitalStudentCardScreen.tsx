@@ -42,9 +42,12 @@ export default function DigitalStudentCardScreen() {
 
   const studentStatus = student.status || "Em curso"; 
 
-  // const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
-  const validationUrl = `http://localhost:5173/valida/${student?.qrcode || 'local'}`;
-  console.log(validationUrl)
+  // const validationUrl = `http://localhost:5173/valida/${student?.qrcode || 'local'}`;
+
+
+  const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
+
+  console.log("Link do QR Code:", validationUrl);
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
