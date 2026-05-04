@@ -12,7 +12,7 @@ import perfilDefault from "../../../assets/images/perfil_default.png";
 
 import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
-import { GLOBAL_VAR } from "../../../api/config/globalVar";
+// import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import styles from './style.module.css';
 import { ArrowLeft } from "lucide-react"; 
 
