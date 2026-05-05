@@ -7,7 +7,7 @@ import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 import perfilDefault from "../../../assets/images/perfil_default.png";
 import { findProfile } from '../../../api/student/findProfile';
 import type { Student } from '../../../domains/Student';
-import { GLOBAL_VAR } from '../../../api/config/globalVar';
+// import { GLOBAL_VAR } from '../../../api/config/globalVar';
 import { IdCard, Settings, HelpCircle, Camera } from 'lucide-react'; 
 
 import styles from './style.module.css';
@@ -47,7 +47,8 @@ export default function MainMenuScreen() {
             <img 
               src={
                 student?.photo && student?.photoStatus === 'APPROVED' 
-                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  // ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  ?student.photo
                   : perfilDefault
               } 
               className={styles.avatar} 

@@ -10,6 +10,9 @@ import ResetPasswordScreen from "../ui/screens/passwordrecovery/ResetPasswordScr
 import HelpScreen from "../ui/screens/help/HelpScreen";
 import TelaQrcode from "../ui/screens/validacao/TelaQrcode";
 import ConfigScreen from "../ui/screens/config/ConfigScreen";
+
+
+
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
 const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 // const PasswordRecovery = () => <div style={{ padding: 20 }}>Tela PasswordRecovery</div>;
@@ -40,7 +43,7 @@ export default function AppRoutes() {
 
         <Route path="/MainMenu" element={<MainMenuScreen />} />
         <Route path="/DigitalStudentCard" element={<DigitalStudentCardScreen />} />
-        <Route path="/ResetPasswordScreen" element={<ResetPasswordScreen />} />
+        <Route path="/reset-password" element={<ResetPasswordScreen />} />
 
         <Route path="/UploadImage" element={<UploadImageScreen />} />
       </Routes>

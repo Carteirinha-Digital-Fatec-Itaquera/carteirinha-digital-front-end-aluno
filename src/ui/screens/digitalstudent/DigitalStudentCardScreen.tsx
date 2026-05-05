@@ -12,7 +12,7 @@ import perfilDefault from "../../../assets/images/perfil_default.png";
 
 import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
-import { GLOBAL_VAR } from "../../../api/config/globalVar";
+// import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import styles from './style.module.css';
 import { ArrowLeft } from "lucide-react"; 
 
@@ -42,9 +42,12 @@ export default function DigitalStudentCardScreen() {
 
   const studentStatus = student.status || "Em curso"; 
 
-  // const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
-  const validationUrl = `http://localhost:5173/valida/${student?.qrcode || 'local'}`;
-  console.log(validationUrl)
+  // const validationUrl = `http://localhost:5173/valida/${student?.qrcode || 'local'}`;
+
+
+  const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
+
+  console.log("Link do QR Code:", validationUrl);
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
@@ -81,7 +84,8 @@ export default function DigitalStudentCardScreen() {
             <img 
               src={
                 student?.photo && student?.photoStatus === 'APPROVED' 
-                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  // ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  ? student.photo
                   : perfilDefault
               } 
               className={styles.profileImage} 
