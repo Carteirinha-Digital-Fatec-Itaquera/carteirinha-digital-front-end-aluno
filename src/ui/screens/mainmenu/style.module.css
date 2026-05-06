@@ -146,7 +146,11 @@
 @media (max-width: 768px) {
   .redHeader {
     height: 200px;
+    background-color: var(--primary-color, #BA1A1A); 
   }
+  /* .redHeader {
+    height: 200px;
+  } */
   .subcontainer {
     width: 100%;
     max-width: 100%;
