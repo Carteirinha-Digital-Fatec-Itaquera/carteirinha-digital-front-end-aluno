@@ -30,6 +30,7 @@ export default function TelaQrcode() {
         
         if (response.ok) {
           const result = await response.json();
+          console.log(result)
           setStudent(new Student(result)); 
         } else {
           const errorData = await response.json();
