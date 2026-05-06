@@ -51,9 +51,9 @@ export default function DigitalStudentCardScreen() {
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
-    if (s.includes("curso") || s.includes("ativo") || s.includes("concluido")) return "#2ecc71";
+    if (s.includes("curso") || s.includes("ativo") || s.includes("em curso")|| s.includes("concluido"))return "#2ecc71";
     if (s.includes("trancado")) return "#f39c12"; 
-    if (s.includes("desistente")) return "#e74c3c";
+    if (s.includes("desistente") ) return "#e74c3c";
     return "#BA1A1A"; 
   };
 
