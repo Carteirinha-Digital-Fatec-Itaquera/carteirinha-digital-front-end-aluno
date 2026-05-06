@@ -42,3 +42,37 @@
   border-radius: 50%;
   border: 2px solid #eee;
 }
+
+
+
+
+/* Limpa o estilo padrão do botão de voltar */
+.backButton {
+  background: transparent;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.backButton:active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 0 20px;
+  color: #333;
+}
+
+.sectionHeader h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}

@@ -1,7 +1,6 @@
 import type { ApiError, Ok } from '../../utils/Types';
 import { apiClient, buildApiError } from '../config/apiClient';
 
-
 export async function uploadImage(image: File | null, ra: string): Promise<Ok | ApiError> {
   if (!image) {
     return {
@@ -15,12 +14,10 @@ export async function uploadImage(image: File | null, ra: string): Promise<Ok | 
   }
 
   const formData = new FormData();
-  
-  formData.append('file', image);
-  
-  // formData.append('ra', ra);
+  formData.append('file', image); // Deve ser 'file' para bater com o FileInterceptor
+  formData.append('ra', ra);      // O colega definiu que o RA vem no Body
 
-  const response = await apiClient(`/estudantes/upload-foto/${ra}`, {
+  const response = await apiClient('/estudantes/upload-foto', { // Rota limpa, sem o /:ra
     method: 'POST', 
     body: formData as any,
     authenticated: true,
