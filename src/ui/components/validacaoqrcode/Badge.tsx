@@ -12,7 +12,8 @@ export default function Badge({ status, validade }: Props) {
     <div className={isAtiva ? styles.containerBadgeAtiva : styles.containerBadgeInativa}>
       <div className={isAtiva ? styles.pontoAtiva : styles.pontoInativa} />
       <span className={isAtiva ? styles.textAtiva : styles.textInativa}>
-        Matrícula {isAtiva ? 'Ativa' : 'Inativa'}
+        {/* Matrícula {isAtiva ? 'Ativa' : 'Inativa'} */}
+        Matrícula {isAtiva ? 'Em curso' : 'Desistente'}
       </span>
     </div>
   );
