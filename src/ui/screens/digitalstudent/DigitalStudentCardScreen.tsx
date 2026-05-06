@@ -6,9 +6,13 @@ import { QRCodeSVG } from "qrcode.react";
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
 
-import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
-import logoCps from "../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png";
-import perfilDefault from "../../../assets/images/perfil_default.png";
+
+// import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
+const logoFatecPreto = '/fatec_itaquera_logo_preto.png'
+// import logoCps from "../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png";
+const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png'
+// import perfilDefault from "../../../assets/images/perfil_default.png";
+const perfilDefault = '/images/perfil_default.png'
 
 import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
@@ -19,22 +23,61 @@ import { ArrowLeft } from "lucide-react";
 export default function DigitalStudentCardScreen() {
   const navigate = useNavigate();
 
+  const cacheImageForOffline = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        localStorage.setItem('@Carteirinha:photoOffline', reader.result as string);
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error("Erro ao salvar imagem para uso offline", error);
+    }
+  };
+
   const [student, setStudent] = useState<Student | undefined>(undefined);
   const [message, setMessage] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
 
   useEffect(() => {
-    const loadStudent = async () => {
+  const loadStudent = async () => {
+    const cachedData = localStorage.getItem('@Carteirinha:profile');
+    if (cachedData) {
+      setStudent(JSON.parse(cachedData));
+    }
+    if (navigator.onLine) {
       const result = await findProfile();
-      if (result && 'code' in result) {
-        setMessage(result.message);
-        setModalErrorVisible(true);
-      } else {
-        setStudent(result as Student);
+      
+      if (result && !('code' in result)) {
+        const freshStudent = result as Student;
+        setStudent(freshStudent);
+        setMessage('erro ao procurar imagem')
+        localStorage.setItem('@Carteirinha:profile', JSON.stringify(freshStudent));
+        
+        if (freshStudent.photo && freshStudent.photoStatus === 'APPROVED') {
+          cacheImageForOffline(freshStudent.photo);
+        }
       }
-    };
-    loadStudent();
-  }, []);
+    }
+  };
+
+  loadStudent();
+}, []);
+  // useEffect(() => {
+  //   const loadStudent = async () => {
+  //     const result = await findProfile();
+  //     if (result && 'code' in result) {
+  //       setMessage(result.message);
+  //       setModalErrorVisible(true);
+  //     } else {
+  //       setStudent(result as Student);
+  //     }
+  //   };
+  //   loadStudent();
+  // }, []);
 
   if (!student) {
     return <div className={styles.loadingContainer}>Carregando...</div>;
@@ -56,6 +99,10 @@ export default function DigitalStudentCardScreen() {
     if (s.includes("desistente")) return "#e74c3c";
     return "#BA1A1A"; 
   };
+
+
+  
+
 
   return (
     <div className={styles.container}>
