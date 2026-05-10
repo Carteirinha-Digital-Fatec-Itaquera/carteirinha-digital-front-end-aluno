@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, HelpCircle, Phone, MessageCircle, Mail } from 'lucide-react';
 
-import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
+// import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
+const logoFatecPreto = '/fatec_itaquera_logo_preto.png'
 import styles from './style.module.css';
 
 export default function HelpScreen() {
