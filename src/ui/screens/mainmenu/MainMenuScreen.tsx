@@ -3,8 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
-import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
-import perfilDefault from "../../../assets/images/perfil_default.png";
+// import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
+const logoFatec = '/fatec_itaquera_logo.png'
+
+// import perfilDefault from "../../../assets/images/perfil_default.png";
+const perfilDefault = "/perfil_default.png"
+
 import { findProfile } from '../../../api/student/findProfile';
 import type { Student } from '../../../domains/Student';
 // import { GLOBAL_VAR } from '../../../api/config/globalVar';
@@ -17,11 +21,26 @@ export default function MainMenuScreen() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      const result = await findProfile();
-      if (result && !('code' in result)) {
-        setStudent(result as Student);
+      const cachedData = localStorage.getItem('@Carteirinha:profile');
+      if (cachedData) {
+        setStudent(JSON.parse(cachedData));
+      }
+
+      if (navigator.onLine) {
+        const result = await findProfile();
+        if (result && !('code' in result)) {
+          const freshData = result as Student;
+          setStudent(freshData);
+          localStorage.setItem('@Carteirinha:profile', JSON.stringify(freshData));
+        }
       }
     };
+
+    //   const result = await findProfile();
+    //   if (result && !('code' in result)) {
+    //     setStudent(result as Student);
+    //   }
+    // };
     loadProfile();
   }, []);
 
@@ -46,11 +65,15 @@ export default function MainMenuScreen() {
           <div className={styles.avatarWrapper}>
             <img 
               src={
-                student?.photo && student?.photoStatus === 'APPROVED' 
-                  // ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
-                  ?student.photo
-                  : perfilDefault
-              } 
+                navigator.onLine 
+                  ? (student?.photo && student?.photoStatus === 'APPROVED' ? student.photo : perfilDefault)
+                  : (localStorage.getItem('@Carteirinha:photoOffline') || perfilDefault)
+              }
+              // src={
+              //   student?.photo && student?.photoStatus === 'APPROVED' 
+              //     ?student.photo
+              //     : perfilDefault
+              // } 
               className={styles.avatar} 
               alt="Perfil" 
               onError={(e) => {
