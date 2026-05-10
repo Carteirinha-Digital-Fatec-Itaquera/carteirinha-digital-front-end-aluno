@@ -75,14 +75,16 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
+  align-items: stretch;
   margin-bottom: 25px;
   gap: 20px;
 }
 
 .profileImage {
   width: 48%; 
-  aspect-ratio: 3/4;
+  aspect-ratio: 1 / 1;
+  /* aspect-ratio: 3/4; */
   object-fit: cover;
   border-radius: 16px;
   background-color: #000;
@@ -91,7 +93,8 @@
 
 .qrWrapper {
   width: 48%;
-  aspect-ratio: 1;
+  /* aspect-ratio: 1; */
+  aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,6 +178,9 @@
 @media (max-width: 768px) {
   .appWrapper {
     background-color: #FFFFFF; /* Fundo branco geral no mobile */
+  }
+  .profileImage{
+    max-height: none;
   }
   .cardContainer {
     width: 92%;
