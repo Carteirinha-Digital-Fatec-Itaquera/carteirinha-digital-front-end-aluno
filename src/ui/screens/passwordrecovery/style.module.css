@@ -1,0 +1,118 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #BA1A1A;
+}
+
+.logo {
+  margin: 20px 10px;
+  width: 190px;
+  height: 115px;
+  object-fit: contain;
+}
+
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
+  background-color: #FFFFFF;
+  border-top-left-radius: 60px;
+  border-top-right-radius: 60px;
+  padding: 40px 10%;
+  box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.infoText {
+  text-align: center;
+  color: #6b6375;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 10px 0 20px 0;
+}
+
+.loading {
+  font-size: 18px;
+  color: #BA1A1A;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+}
+
+.button {
+  background-color: #BA1A1A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 35px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease;
+  width: 100%;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.linkButton {
+  background: transparent;
+  border: none;
+  color: #BA1A1A;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  text-decoration: underline;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* import { StyleSheet } from "react-native";
+import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor,
+    alignItems: 'center'
+  },
+
+  subcontainer: {
+    flex: 1,
+    width: "100%",
+    borderTopStartRadius: 60,
+    borderTopEndRadius: 60,
+    backgroundColor: backgroundSecondaryColor,
+    justifyContent: 'space-around'
+  },
+  
+  logo: {
+    margin: 10,
+    width: 190,
+    height: 115
+  }
+}) */

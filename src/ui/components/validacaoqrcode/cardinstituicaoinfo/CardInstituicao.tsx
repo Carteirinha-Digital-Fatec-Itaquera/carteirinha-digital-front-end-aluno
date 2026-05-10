@@ -1,29 +1,35 @@
-import { Text, View } from "react-native";
-import { styles } from './stylesCard'
+// import styles from './style.module.css';
 
-function CardInfoInstituicao(){
-    return(
-        <View style={styles.containerCardInstituicao}>
-                        <Text style={styles.titleInstituicao}>Instituição</Text>
-                        <View style={styles.containerTuplas}>
-                            <Text style={styles.textTuplas}>Faculdade</Text>
-                            <Text style={styles.textTuplasResult}>Fatec Itaquera Prof. Miguel Reale</Text>
-                            </View>
-                        <View style={styles.containerTuplas}>
-                            <Text style={styles.textTuplas}>Diretor</Text>
-                            <Text style={styles.textTuplasResult}>Luis Carlos Barbosa de Oliveira</Text>
-                            </View>
-                        <View style={styles.containerTuplas}>
-                            <Text style={styles.textTuplas}>Endereço</Text>
-                            <View style={styles.containerEndereco}><Text style={styles.textTuplasResult}>Av. Miguel Ignácio Curi, 360 - Vila Carmosina - Itaquera</Text></View>
-                            
-                            </View>
-                        <View style={styles.containerTuplas}>
-                            <Text style={styles.textTuplas}>Telefone</Text>
-                            <Text style={styles.textTuplasResult}>{`(11) 2056-4347 / 2056-4245`}</Text>
-                            </View>
-                        
-                    </View>
-    )
+import styles from './style.module.css'
+
+export default function CardInfoInstituicao() {
+  return (
+    <div className={styles.containerCardInstituicao}>
+      <h2 className={styles.titleInstituicao}>Instituição</h2>
+      
+      <div className={styles.containerTuplas}>
+        <span className={styles.textTuplas}>Faculdade</span>
+        <span className={styles.textTuplasResult}>Fatec Itaquera Prof. Miguel Reale</span>
+      </div>
+
+      <div className={styles.containerTuplas}>
+        <span className={styles.textTuplas}>Diretor</span>
+        <span className={styles.textTuplasResult}>Luis Carlos Barbosa de Oliveira</span>
+      </div>
+
+      <div className={styles.containerTuplas}>
+        <span className={styles.textTuplas}>Endereço</span>
+        <div className={styles.containerEndereco}>
+          <span className={styles.textTuplasResult}>
+            Av. Miguel Ignácio Curi, 360 - Vila Carmosina - Itaquera
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.containerTuplas}>
+        <span className={styles.textTuplas}>Telefone</span>
+        <span className={styles.textTuplasResult}>(11) 2056-4347 / 2056-4245</span>
+      </div>
+    </div>
+  );
 }
-export default CardInfoInstituicao

@@ -1,0 +1,88 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Na web, alignContent vira alignItems para linha única */
+  justify-content: space-between;
+}
+
+.titleContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600; /* Montserrat-SemiBold */
+  /* O font-size virá dinâmico no HTML */
+  color: #333333; /* titleColor */
+  text-align: center;
+  margin-bottom: 4px; /* Para não grudar no divider */
+}
+
+.divider {
+  height: 3px;
+  background-color: #333333;
+  width: 65%;
+}
+
+.button {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #BA1A1A; /* backgroundColor */
+  border-top-right-radius: 20px; /* borderTopEndRadius na web */
+  border-bottom-right-radius: 20px;
+  align-self: flex-start;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+
+/* import { StyleSheet } from "react-native";
+import { backgroundColor, titleColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+
+  titleContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+
+  title: {
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 16,
+    color: titleColor,
+    textAlign: 'center'
+  },
+
+  divider: {
+    height: 3,
+    backgroundColor: titleColor,
+    width: '65%',
+  },
+
+  button: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: backgroundColor,
+    borderTopEndRadius: 20,
+    borderBottomEndRadius: 20,
+    alignSelf: 'flex-start',
+  }
+
+}) */

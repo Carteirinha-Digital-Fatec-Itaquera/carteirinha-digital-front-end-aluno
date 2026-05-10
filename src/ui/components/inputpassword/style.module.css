@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+
+.label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500; 
+  font-size: 14px;
+  color: #333333; 
+  margin-bottom: 4px;
+  margin-left: 12px;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid #333333; 
+  border-radius: 20px;
+  background-color: #FFFFFF; 
+  padding: 3px 10px; 
+}
+
+.inputText {
+  flex: 1;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500; 
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.inputText::placeholder {
+    color: #999999;
+}
+
+
+/* import { StyleSheet } from "react-native";
+import { backgroundSecondaryColor, labelColor } from "../../themes/Color";
+
+export const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+
+  label: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    color: labelColor,
+    marginBottom: 4,
+    marginLeft: 12,
+  }, 
+
+  inputField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: labelColor,
+    borderRadius: 20,
+    backgroundColor: backgroundSecondaryColor,
+    paddingHorizontal: 10,
+    paddingVertical: 3
+  },
+
+  inputText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Montserrat-Medium',
+  }
+}); */

@@ -1,8 +1,8 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-
-import { styles } from "./style";
+// import React from 'react'; 
+import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react"
+import { Eye, EyeOff } from "lucide-react"; 
+import styles from "./style.module.css"; // Puxa do novo CSS
 
 type InputPasswordProps = {
   label: string;
@@ -12,28 +12,26 @@ type InputPasswordProps = {
 };
 
 export const InputPasswordComp = ({ label, placeholder, value, onChangeText }: InputPasswordProps) => {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputField}>
-        <TextInput
-          style={styles.inputText}
+    <div className={styles.container}>
+      <label className={styles.label}>{label}</label>
+      <div className={styles.inputField}>
+        <input
+          className={styles.inputText}
           placeholder={placeholder}
-          secureTextEntry={!showPassword}
+          type={showPassword ? "text" : "password"}
           value={value}
-          onChangeText={onChangeText}
+          onChange={(e) => onChangeText(e.target.value)}
         />
-        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            {showPassword ? (
-                <AntDesign name="eye" size={25} /> 
-              ) : (
-                <AntDesign name="eye-invisible" size={25} /> 
-              )
-            } 
-        </TouchableOpacity>
-      </View>
-    </View>
+        <button 
+          onClick={() => setShowPassword(!showPassword)}
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+        </button>
+      </div>
+    </div>
   );
 };

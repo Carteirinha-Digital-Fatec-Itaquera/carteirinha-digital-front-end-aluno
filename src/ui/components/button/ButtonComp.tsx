@@ -1,18 +1,18 @@
-import React from "react"
-import { Text, TouchableOpacity } from "react-native"
-
-import { styles } from "./style"
-
+// import React from "react"
+import style from "./style.module.css"
 type ButtonProps = {
   text: string,
-  color: string,
+  color?: string,
   action: () => void,
 }
 
 export const ButtonComp = ({ text, color, action }: ButtonProps) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={action}>
-      <Text style={styles.text}>{text}</Text>
-    </TouchableOpacity>
+    <button 
+      className={style.button} 
+      style={color ? {backgroundColor: color} : undefined}
+      onClick={action}>
+      <span className={style.text}>{text}</span>
+    </button>
   )
 }

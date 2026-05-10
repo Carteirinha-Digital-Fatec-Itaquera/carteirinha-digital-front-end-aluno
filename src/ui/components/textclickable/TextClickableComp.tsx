@@ -1,20 +1,25 @@
-import React from "react"
-import { FlexAlignType, Text, TouchableOpacity } from "react-native"
-
-import { styles } from "./style"
-import { labelColor } from "../../themes/Color"
+import styles from "./style.module.css";
 
 type TextClickableProps = {
   text: string,
   fontColor?: string,
   action: () => void,
-  alignSelf?: FlexAlignType
+  alignSelf?: string 
 }
 
-export const TextClickableComp = ({ text, fontColor = labelColor, action, alignSelf = "center" }: TextClickableProps) => {
+export const TextClickableComp = ({ text, fontColor = "#333333", action, alignSelf = "center" }: TextClickableProps) => {
   return (
-    <TouchableOpacity style={[styles.container, { alignSelf: alignSelf }]} onPress={action}>
-      <Text style={[styles.text, { color: fontColor }]}>{text}</Text>
-    </TouchableOpacity>
+    <button 
+      className={styles.container}
+      onClick={action}
+      style={{ alignSelf: alignSelf }} /* Passamos apenas o que é dinâmico */
+    >
+      <span 
+        className={styles.text} 
+        style={{ color: fontColor }} /* A cor do texto também é dinâmica */
+      >
+        {text}
+      </span>
+    </button>
   )
 }

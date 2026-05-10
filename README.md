@@ -1,133 +1,73 @@
-# 📱 IMPLANTAÇÃO DA CARTEIRINHA DIGITAL (APP FATEC ITAQUERA)
+# React + TypeScript + Vite
 
-### Projeto de Prática Profissional e Extensão (PEPPE) - 2° Semestre de 2025
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## 📑 Descrição Geral
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-O projeto **IMPLANTAÇÃO DA CARTEIRINHA DIGITAL (APP FATEC ITAQUERA)** visa desenvolver e implantar um aplicativo móvel oficial para a **Fatec Itaquera**, destinado aos alunos, com o objetivo de complementar os sistemas existentes através de uma solução móvel prática e acessível.
+## React Compiler
 
-Embora a Fatec já possua sistemas centralizados como o **SIGA** para gestão acadêmica, **não existe uma solução móvel específica para a carteirinha estudantil**.  
-O aplicativo funcionará como uma **carteirinha digital**, permitindo o acesso rápido a documentos e serviços acadêmicos, com foco em **portabilidade** e **conveniência** para o aluno.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
----
+## Expanding the ESLint configuration
 
-## 👥 Equipe
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- **Higor Vieira da Franca**
-- **João Victor Alexandre da Silva** 
-- **João Vitor Moreira dos Santos**   
-- **Lucas José Gomes da Silva**
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-**Supervisor:**  
-Prof. Dr. **Jonatas Santos de Souza**
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
----
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-## ⚙️ Funcionalidades Principais
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- 📇 **Carteirinha digital com QR Code** para identificação  
-- 🕒 **Consulta de horários de aula**  
-- 🗓️ **Acesso ao calendário acadêmico**
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
----
-
-## 💻 Atores do Sistema
-
-| Ator | Descrição |
-|------|------------|
-| **Administrador (Diretoria Acadêmica)** | Responsável por gerenciar cadastros de alunos, documentos, atualizar calendários e validar solicitações. Possui acesso total ao painel administrativo. |
-| **Aluno** | Usuário principal do aplicativo. Pode visualizar sua carteirinha digital, acessar documentos, solicitar atestados, agendar atendimentos e participar de eventos via QR Code. |
----
-
-## 🚫 Descrição do Problema
-
-Atualmente, os alunos da Fatec Itaquera utilizam uma **carteirinha física** que gera diversos problemas:
-
-- Trabalho operacional significativo para emissão e substituição  
-- Uso de recursos **não sustentáveis** (plástico e papel)  
-- Suscetibilidade a **perdas e danos**, gerando custos adicionais  
-- Limitações de **portabilidade** – o aluno nem sempre carrega a carteirinha física  
-- **Impossibilidade de uso** como meia-entrada em eventos culturais  
-
-Embora exista o **SIGA** para gestão acadêmica, **a ausência de uma solução móvel dedicada à carteirinha** prejudica a agilidade no atendimento e a experiência do aluno.
-
----
-
-## ✅ Solução Proposta: App Carteirinha Digital
-
-A solução é um **aplicativo móvel multiplataforma (Android/iOS)** que complementa os sistemas existentes, oferecendo uma **carteirinha digital prática e sempre acessível**.
-
-### Benefícios Principais
-
-- 💳 Eliminação da carteirinha física  
-- 📱 Portabilidade constante – sempre disponível no celular do aluno  
-- 🎫 Futura validação para meia-entrada em eventos culturais  
-- 🌱 Sustentabilidade – redução do uso de plástico e papel  
-- ⚡ Agilidade no atendimento e identificação do aluno  
-
-### Funcionalidades do App
-
-- **Carteirinha Digital:** Dados do aluno com QR Code único para identificação  
-- **Calendário Acadêmico:** Datas de provas, feriados e eventos  
-- **Notificações:** Comunicados importantes e alertas  
-
----
-
-## 📕 Metodologia
-
-O desenvolvimento seguirá uma **abordagem híbrida**, combinando **metodologias ágeis** com **elementos de metodologias tradicionais**, garantindo entrega dentro do cronograma acadêmico do **PEPPE - 2° semestre de 2025**.
-
-### Etapas Principais
-
-1. **Planejamento Iterativo:** Definição de funcionalidades prioritárias por fase  
-2. **Reuniões de Revisão:** Acompanhamento semanal do progresso  
-
-Essa abordagem garante o alinhamento com os prazos acadêmicos enquanto mantém a qualidade técnica necessária.
-
----
-
-## 🛠️ Ferramentas e Tecnologias
-
-### 🔧 Geral
-- **GitHub:** Controle de versão e colaboração  
-- **Visual Studio Code:** Ambiente de desenvolvimento  
-- **Discord:** Comunicação da equipe  
-- **Figma:** Prototipagem de interfaces  
-
-### 💻 Front-End
-- **React Native (Expo):** Desenvolvimento mobile multiplataforma  
-
-### ⚙️ Back-End
-- **Node.js + Express:** API e gerenciamento de requisições  
-- **JWT:** Autenticação segura de usuários  
-- **REST API:** Integração entre app e servidor  
-
-### 🗄️ Banco de Dados
-- **Firebase:** Armazenamento de dados de alunos e documentos  
-- **BrModelo:** Modelagem do banco de dados  
-
-### 🧩 Engenharia de Software
-- **Draw.io:** Criação de diagramas UML (casos de uso, sequência, classes)  
-- **Ferramentas Google:** Documentação e planejamento  
-
----
-
-## ❌ Desafios no Desenvolvimento
-
-- Integração com sistemas existentes da Fatec (como SIGA e portais internos)  
-- Conciliar desenvolvimento com o cronograma acadêmico do PEPPE  
-
----
-
-## 📄 Licença
-
-Este projeto é desenvolvido **exclusivamente para fins acadêmicos** no âmbito da **Fatec Itaquera**.  
-Qualquer uso externo deve ser previamente autorizado pela instituição.
-
----
-
-### 🚀 Fatec Itaquera - 2025  
-*Projeto de Prática Profissional e Extensão (PEPPE)*  
-📘 Curso: Desenvolvimento de Software Multiplataforma.
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```

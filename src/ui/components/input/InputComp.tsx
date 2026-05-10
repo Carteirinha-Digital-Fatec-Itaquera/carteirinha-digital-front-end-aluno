@@ -1,28 +1,25 @@
-import React, { Dispatch, SetStateAction } from "react"
-import { KeyboardTypeOptions, Text, TextInput, View } from "react-native"
-
-import { styles } from "./style"
+import type { Dispatch, SetStateAction } from "react";
+import styles from "./style.module.css"; 
 
 type InputProps = {
   label: string,
   placeholder: string,
-  keyboardType?: KeyboardTypeOptions,
+  type?: string,
   value: string,
   onChangeText: Dispatch<SetStateAction<string>>,
 }
 
-export const InputComp = ({ label, placeholder, keyboardType = "default", value, onChangeText }: InputProps) => {
+export const InputComp = ({ label, placeholder, type = "text", value, onChangeText }: InputProps) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={styles.inputField}
+    <div className={styles.container}>
+      <label className={styles.label}>{label}</label>
+      <input
+        className={styles.inputField}
         placeholder={placeholder}
-        placeholderTextColor="#999"
-        keyboardType={keyboardType}
+        type={type}
         value={value}
-        onChangeText={onChangeText}
+        onChange={(e) => onChangeText(e.target.value)}
       />
-    </View>
+    </div>
   )
 }

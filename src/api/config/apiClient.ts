@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { ApiError } from '../../utils/Types';
 import { GLOBAL_VAR } from './globalVar';
 
@@ -38,20 +37,38 @@ export async function apiClient(
   path: string,
   { method = 'GET', body, authenticated = false, multipart = false }: RequestOptions = {}
 ): Promise<Response> {
+  try {
   const headers: Record<string, string> = {};
 
   if (authenticated) {
-    const token = await AsyncStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
+  // if (authenticated) {
+  //   const token = await AsyncStorage.getItem('token');
+  //   if (token) headers['Authorization'] = `Bearer ${token}`;
+  // }
 
   if (body && !multipart) {
     headers['Content-Type'] = 'application/json';
   }
+  console.log(`${GLOBAL_VAR.BASE_URL}\n ${path}`)
 
+  
   return fetch(`${GLOBAL_VAR.BASE_URL}${path}`, {
     method,
     headers,
     body: multipart ? (body as any) : body ? JSON.stringify(body) : undefined,
   });
+
+  } catch (error) {
+    throw {
+      code: 'NETWORK_ERROR',
+      status: '0',
+      message: 'Não foi possível conectar ao servidor',
+      timestamp: new Date().toISOString(),
+      path,
+      errorFields: null,
+    } as ApiError;
+  }
 }

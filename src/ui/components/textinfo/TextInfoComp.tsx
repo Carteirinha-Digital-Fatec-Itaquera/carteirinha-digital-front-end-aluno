@@ -1,7 +1,5 @@
-import { Text } from "react-native";
-import { styles } from "./style";
-import { ReactNode } from "react";
-
+import type { ReactNode } from "react";
+import styles from "./style.module.css";
 
 type TextInfoProps = {
   size?: number,
@@ -10,8 +8,11 @@ type TextInfoProps = {
 
 export const TextInfoComp = ({ children, size = 18 }: TextInfoProps) => {
   return (
-    <Text style={[styles.text, { fontSize: size }]}>
+    <p 
+      className={styles.text} 
+      style={{ fontSize: `${size}px` }} /* Passamos o tamanho dinâmico pelo style inline */
+    >
       {children}
-    </Text>
+    </p>
   )
 }
