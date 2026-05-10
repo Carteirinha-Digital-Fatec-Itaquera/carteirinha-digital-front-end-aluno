@@ -30,6 +30,7 @@ export default function TelaQrcode() {
         
         if (response.ok) {
           const result = await response.json();
+          console.log(result)
           setStudent(new Student(result)); 
         } else {
           const errorData = await response.json();
@@ -72,7 +73,8 @@ export default function TelaQrcode() {
             <img 
               src={
                 student?.photo && student?.photoStatus === 'APPROVED' 
-                  ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  // ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
+                  ?`${student.photo}`
                   : perfilDefault
               } 
               className={styles.avatar} 

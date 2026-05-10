@@ -8,7 +8,8 @@ interface CardProps {
 }
 
 export default function CardMatriculaInfo({ period, admission, dueDate, status }: CardProps) {
-  const isAtivo = status === 'ATIVO' && new Date(dueDate) > new Date();
+  // const isAtivo = status === 'ATIVO' && new Date(dueDate) > new Date();
+  const isAtivo = status === 'Em curso' && new Date(dueDate) > new Date();
 
   return (
     <div className={styles.containerCard}>
