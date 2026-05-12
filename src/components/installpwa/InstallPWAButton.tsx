@@ -1,4 +1,3 @@
-// import React, 
 import { useEffect, useState } from 'react';
 import { Download, X } from 'lucide-react'; 
 
@@ -28,13 +27,12 @@ export const InstallPWAButton = () => {
   if (!deferredPrompt || !isVisible) return null; 
 
   return (
-    // Transformamos o botão em um "banner" flutuante na parte de baixo da tela
     <div style={{
       position: 'fixed',
       bottom: '20px',
       left: '50%',
       transform: 'translateX(-50%)',
-      zIndex: 9999, // Garante que fique por cima de tudo
+      zIndex: 9999, 
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
