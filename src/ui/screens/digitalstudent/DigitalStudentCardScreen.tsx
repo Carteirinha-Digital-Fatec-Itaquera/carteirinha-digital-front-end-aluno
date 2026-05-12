@@ -143,7 +143,12 @@ export default function DigitalStudentCardScreen() {
             />
 
           <div className={styles.qrWrapper}>
-            <QRCodeSVG value={validationUrl} size={130} includeMargin={true} />
+            <QRCodeSVG value={validationUrl} 
+            size={256} 
+            style={{ width: '100%', height: '100%' }}
+            
+            includeMargin={false} />
+            // includeMargin={true} />
           </div>
             {/* <div className={styles.qrWrapper}>
               <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
