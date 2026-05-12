@@ -147,8 +147,8 @@ export default function DigitalStudentCardScreen() {
             size={256} 
             style={{ width: '100%', height: '100%' }}
             
-            includeMargin={false} />
             // includeMargin={true} />
+            includeMargin={false} />
           </div>
             {/* <div className={styles.qrWrapper}>
               <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
