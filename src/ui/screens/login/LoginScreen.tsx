@@ -95,10 +95,13 @@ export default function LoginScreen() {
             }}
           />
         )}
-        <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("/SignUp")} />
+
+        {/* <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("/SignUp")} /> */}
         <SpacerComp />
         <img src={logoCps} className={styles.logocps} alt="Logo CPS" />
       </div>
     </div>
   );
 }
+
+
