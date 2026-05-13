@@ -9,9 +9,8 @@ interface CardProps {
 
 // export default function CardMatriculaInfo({ period, admission, dueDate, status }: CardProps) {
 export default function CardMatriculaInfo({admission, dueDate, status }: CardProps) {
-  // const isAtivo = status === 'ATIVO' && new Date(dueDate) > new Date();
-  const isAtivo = status === 'Em curso' && new Date(dueDate) > new Date();
-
+  // const isAtivo = status === 'Em curso' && new Date(dueDate) > new Date();
+  const isAtivo = status === 'Em curso' && new Date(dueDate).getTime() > new Date().getTime();
   return (
     <div className={styles.containerCard}>
       <h2 className={styles.title}>Dados da matrícula</h2>
@@ -29,7 +28,8 @@ export default function CardMatriculaInfo({admission, dueDate, status }: CardPro
       <div className={styles.containerTuplas}>
         <span className={styles.textTuplas}>Validade da carteirinha</span>
         <span className={isAtivo ? styles.textTuplasDataAtiva : styles.textTuplasDataInativa}>
-          {new Date(dueDate).toLocaleDateString('pt-BR')}
+          {/* {new Date(dueDate).toLocaleDateString('pt-BR')} */}
+          {dueDate}
         </span>
       </div>
 

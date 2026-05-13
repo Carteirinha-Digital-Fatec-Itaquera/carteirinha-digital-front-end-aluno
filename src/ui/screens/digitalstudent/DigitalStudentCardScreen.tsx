@@ -20,6 +20,9 @@ import type { Student } from "../../../domains/Student";
 import styles from './style.module.css';
 import { ArrowLeft } from "lucide-react"; 
 
+import { formatDateBR } from "../../../utils/dateProcessing";
+
+
 export default function DigitalStudentCardScreen() {
   const navigate = useNavigate();
 
@@ -119,7 +122,7 @@ export default function DigitalStudentCardScreen() {
       <div className={styles.appWrapper}>
         <div className={styles.header}>
           <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
-             <ArrowLeft size={28} color="#000" strokeWidth={2} />
+            <ArrowLeft size={28} color="#000" strokeWidth={2} />
           </button>
           <img src={logoFatecPreto} className={styles.logoTop} alt="Logo Fatec" />
         </div>
@@ -158,7 +161,7 @@ export default function DigitalStudentCardScreen() {
           <div className={styles.infoSection}>
             <h2 className={styles.studentName}>{student.name}</h2>
             
-            <div className={styles.row}>
+            <div className={`${styles.row} ${styles.rowStatus}`}>
               <div className={styles.statusContainer}>
                 <strong>STATUS:</strong> 
                 <span 
@@ -171,7 +174,7 @@ export default function DigitalStudentCardScreen() {
               <p><strong>CPF:</strong> {student.cpf}</p>
             </div>
             <div className={styles.row}>
-              <p><strong>NASCIMENTO:</strong> {student.birthDate}</p>
+              <p><strong>NASCIMENTO:</strong> {formatDateBR(student.birthDate)}</p>
             </div>
           </div>
 
@@ -182,7 +185,7 @@ export default function DigitalStudentCardScreen() {
               <p><strong>RA:</strong> {student.ra}</p>
             </div>
             <div className={styles.row}>
-              <p><strong>VALIDADE:</strong> {student.dueDate}</p>
+              <p><strong>VALIDADE:</strong> {formatDateBR(student.dueDate)}</p>
             </div>
           </div>
           

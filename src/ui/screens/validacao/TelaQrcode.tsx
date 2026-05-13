@@ -11,6 +11,9 @@ import perfilDefault from "../../../assets/images/perfil_default.png";
 import logoGoverno from "../../../assets/images/logos_cps_governo_com_slogan.png";
 import { GLOBAL_VAR } from "../../../api/config/globalVar";
 
+import { formatDateBR } from "../../../utils/dateProcessing";
+
+
 export default function TelaQrcode() {
   const { qrcodeToken } = useParams(); 
   const [student, setStudent] = useState<Student | null>(null);
@@ -97,8 +100,8 @@ export default function TelaQrcode() {
 
         <CardMatriculaInfo 
           // period={student.period}
-          admission={student.admission}
-          dueDate={student.dueDate}
+          admission={formatDateBR(student.admission)}
+          dueDate={formatDateBR(student.dueDate)}
           status={student.status}
         />
 

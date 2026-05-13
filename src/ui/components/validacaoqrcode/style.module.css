@@ -1,7 +1,8 @@
 .containerBadgeAtiva, .containerBadgeInativa {
-  width: 150px;
+  /* width: 150px; */
+  width: fit-content;
   height: 35px;
-  padding: 0 10px;
+  padding: 0 15px;
   border-radius: 50px;
   display: flex;
   flex-direction: row;
@@ -11,6 +12,7 @@
   margin-left: 15px;
   border: 1px solid;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 /* Estilos específicos para Ativa */
@@ -33,7 +35,6 @@
   font-weight: 600;
 }
 
-/* Estilos específicos para Inativa */
 .containerBadgeInativa {
   background-color: #fdc7c7;
   border-color: #ff0000;
@@ -52,6 +53,8 @@
   font-size: 14px;
   font-weight: 600;
 }
+
+
 /* import { StyleSheet } from "react-native"
 import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";
 
