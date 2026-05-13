@@ -10,7 +10,7 @@ export const TextInfoComp = ({ children, size = 18 }: TextInfoProps) => {
   return (
     <p 
       className={styles.text} 
-      style={{ fontSize: `${size}px` }} /* Passamos o tamanho dinâmico pelo style inline */
+      style={{ fontSize: `${size}px` }} 
     >
       {children}
     </p>

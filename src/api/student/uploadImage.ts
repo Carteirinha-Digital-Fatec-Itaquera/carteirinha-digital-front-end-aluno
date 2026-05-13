@@ -14,10 +14,10 @@ export async function uploadImage(image: File | null, ra: string): Promise<Ok | 
   }
 
   const formData = new FormData();
-  formData.append('file', image); // Deve ser 'file' para bater com o FileInterceptor
-  formData.append('ra', ra);      // O colega definiu que o RA vem no Body
+  formData.append('file', image); 
+  formData.append('ra', ra);     
 
-  const response = await apiClient('/estudantes/upload-foto', { // Rota limpa, sem o /:ra
+  const response = await apiClient('/estudantes/upload-foto', { 
     method: 'POST', 
     body: formData as any,
     authenticated: true,
