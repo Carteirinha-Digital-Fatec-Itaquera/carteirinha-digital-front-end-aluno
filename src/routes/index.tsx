@@ -21,11 +21,31 @@ const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 // const UploadImage = () => <div style={{ padding: 20 }}>Tela Upload Image</div>;
 
 export default function AppRoutes() {
+  const isAuthenticated = !!localStorage.getItem('token');
+  const hasCachedProfile = !!localStorage.getItem('@Carteirinha:profile');
+
   return (
+    
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<LoginScreen />} />
+        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+        <Route 
+          path="/" 
+          element={
+            isAuthenticated || hasCachedProfile 
+              ? <Navigate to="/MainMenu" replace /> 
+              : <Navigate to="/login" replace />
+          } 
+        />
+        {/* <Route path="/login" element={<LoginScreen />} /> */}
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated || hasCachedProfile 
+              ? <Navigate to="/MainMenu" replace /> 
+              : <LoginScreen />
+          } 
+        />
 
 
         
@@ -46,6 +66,7 @@ export default function AppRoutes() {
         <Route path="/reset-password" element={<ResetPasswordScreen />} />
 
         <Route path="/UploadImage" element={<UploadImageScreen />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

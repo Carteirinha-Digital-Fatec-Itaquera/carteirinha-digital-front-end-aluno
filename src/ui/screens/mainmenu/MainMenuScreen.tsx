@@ -44,14 +44,21 @@ export default function MainMenuScreen() {
     loadProfile();
   }, []);
 
+  // const handleLogout = () => {
+  //   const confirm = window.confirm("Tem certeza que deseja sair?");
+  //   if (confirm) {
+  //     localStorage.removeItem('token');
+  //     navigate("/login");
+  //   }
+  // };
   const handleLogout = () => {
-    const confirm = window.confirm("Tem certeza que deseja sair?");
-    if (confirm) {
+    if (window.confirm("Sair do app?")) {
       localStorage.removeItem('token');
+      localStorage.removeItem('@Carteirinha:profile');
+      localStorage.removeItem('@Carteirinha:photoOffline');
       navigate("/login");
     }
   };
-
   return (
     <div className={styles.container}>
       <div className={styles.mobileWrapper}>
