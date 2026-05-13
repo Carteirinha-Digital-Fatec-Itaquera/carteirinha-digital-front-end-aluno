@@ -16,6 +16,9 @@ import uploadAvatarPlaceholder from "../../../assets/images/upload_avatar.png";
 
 import styles from './style.module.css';
 
+import { compressImage } from "../../../utils/imageProcessing";
+
+
 export default function UploadImageScreen() {
   const navigate = useNavigate();
 
@@ -63,13 +66,17 @@ export default function UploadImageScreen() {
     setOnLoading(true);
 
     try {
-      const result = await uploadImage(imageFile, studentRa); 
+
+      console.log("Tamanho original:", (imageFile.size / 1024).toFixed(2), "KB");
+      const compressedFile = await compressImage(imageFile);
+      console.log("Tamanho comprimido:", (compressedFile.size / 1024).toFixed(2), "KB");
+
+      const result = await uploadImage(compressedFile, studentRa); 
       
       if ('ok' in result) {
         alert("Imagem enviada com sucesso!"); 
         navigate('/MainMenu');
       } else {
-        // Agora o TypeScript sabe 100% que aqui é o ApiError
         setMessage(result.message || "Erro ao enviar imagem.");
         setErrorFields(result.errorFields ?? []);
         setModalErrorVisible(true);
@@ -106,7 +113,7 @@ export default function UploadImageScreen() {
       <input 
         type="file" 
         accept="image/*" 
-        capture="user" 
+        // capture="user" 
         ref={fileInputRef} 
         onChange={handleImageChange} 
         style={{ display: 'none' }} 
