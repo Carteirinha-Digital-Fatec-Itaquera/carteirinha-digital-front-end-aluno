@@ -8,7 +8,7 @@ export class Student {
     rg: string;
     cpf: string;
     course: string;
-    period: string;
+    // period: string;
     status: string;
     admission: string;
     birthDate: string;
@@ -40,7 +40,7 @@ export class Student {
         this.rg = props.rg ?? "";
         this.cpf = props.cpf ?? "";
         this.course = props.course ?? "";
-        this.period = props.period ?? "";
+        // this.period = props.period ?? "";
         this.status = props.status ?? "";
         this.admission = props.admission ?? "";
         this.birthDate = props.birthDate ?? "";

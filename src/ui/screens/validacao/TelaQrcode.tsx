@@ -96,7 +96,7 @@ export default function TelaQrcode() {
         </section>
 
         <CardMatriculaInfo 
-          period={student.period}
+          // period={student.period}
           admission={student.admission}
           dueDate={student.dueDate}
           status={student.status}
