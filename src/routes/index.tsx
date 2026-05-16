@@ -25,7 +25,7 @@ const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 // const UploadImage = () => <div style={{ padding: 20 }}>Tela Upload Image</div>;
 
 const checkAuth = () => {
-  const token = !!localStorage.getItem('accessToken');
+  const token = !!localStorage.getItem('token');
   const profile = !!localStorage.getItem('@Carteirinha:profile');
   return token || profile;
 };
