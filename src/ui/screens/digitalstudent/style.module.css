@@ -1,8 +1,17 @@
+:root {
+  --red-fatec: #BA1A1A;
+  --card-width: 650px;
+  --card-height: 380px;
+  --card-radius: 20px;
+}
+
 .container {
   display: flex;
   justify-content: center;
+  
   min-height: 100vh;
   background-color: #f0f2f5;
+  overflow: hidden;
 }
 
 .loadingContainer {
@@ -10,21 +19,18 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-size: 20px;
-  color: #BA1A1A;
+  font-size: 18px;
+  color: var(--red-fatec);
   font-weight: bold;
 }
 
-/* Cobre a tela toda no Desktop */
 .appWrapper {
   width: 100%;
-  max-width: 100%; 
-  background-color: #f0f2f5; 
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 40px;
-  min-height: 100vh;
+  padding-bottom: 30px;
 }
 
 .header {
@@ -32,220 +38,314 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 900px; /* Mantém os itens alinhados com o Card central */
-  padding: 30px 20px 10px 20px;
+  padding: 15px 20px;
 }
 
 .backButton {
-  background: transparent;
+  background: white;
   border: none;
-  cursor: pointer;
-  padding: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: -10px;
-  transition: transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  cursor: pointer;
 }
 
-.backButton:hover {
-  transform: translateX(-5px);
+.headerTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-transform: uppercase;
 }
 
-.logoTop {
-  height: 45px;
+.cardStage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  
+}
+
+.cardViewport {
+  width: var(--card-width);
+  height: var(--card-height);
+  perspective: 2000px;
+  cursor: pointer;
+}
+
+.cardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.cardViewportBack .cardInner {
+  transform: rotateY(180deg);
+}
+
+.cardFace {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.15);
+  border: 1px solid #ddd;
+}
+
+.faceBack {
+  transform: rotateY(180deg);
+}
+
+.faceFront {
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.frontBlock1 {
+  height: 20%;
+  background: white;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+}
+
+.fatecLogoFront {
+  height: 50px;
   object-fit: contain;
 }
 
-/* O Card da Carteirinha vira um quadro branco chique no Desktop */
-.cardContainer {
+.frontBlock2 {
+  flex: 1;
+  background-color: var(--red-fatec);
+  display: flex;
+  padding: 20px 25px;
+  gap: 20px;
+  align-items: center;
+}
+
+.photoColumn {
+  width: 125px;
+  flex-shrink: 0;
+}
+
+.photoFrame {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid white;
+}
+
+.photoFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.infoColumn {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  width: 90%;
-  max-width: 900px; /* Igual a largura do Menu Principal */
-  background-color: #FFFFFF;
-  border: 1px solid #eaeaea;
-  border-radius: 30px;
-  padding: 40px;
-  margin-top: 10px;
-  box-shadow: 0px 15px 35px rgba(0,0,0,0.08); /* Sombra 3D */
+  color: white;
 }
 
-.topSection {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /* align-items: center; */
-  align-items: stretch;
-  margin-bottom: 25px;
-  gap: 20px;
-}
-
-.profileImage {
-  width: 48%; 
-  aspect-ratio: 1 / 1;
-  /* aspect-ratio: 3/4; */
-  object-fit: cover;
-  border-radius: 16px;
-  background-color: #000;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-}
-
-.qrWrapper {
-  width: 48%;
-  /* aspect-ratio: 1; */
-  aspect-ratio: 1 / 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 8px; 
-  border: 1px solid #eaeaea;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
-  overflow: hidden;
-  /* padding: 15px;
-  border: 1px solid #eaeaea;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.05); */
-}
-.qrWrapper svg {
-  width: 100% !important;
-  height: 100% !important;
-}
-/* Detalhes internos cinza claro no PC */
-.infoSection {
-  background-color: #f8f9fa; 
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 15px;
-  border: 1px solid #eaeaea;
+.labelWhite {
+  font-size: 9px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 1px;
 }
 
 .studentName {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 900;
-  color: #1a1a1a;
+  margin-bottom: 5px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  line-height: 1.1;
 }
 
 .courseName {
-  margin-bottom: 15px;
-  font-size: 15px;
-  font-weight: 800;
-  color: #1a1a1a;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-
-  gap: 10px; /**/
-}
-
-.rowStatus {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-.row p {
-  margin: 0;
-  font-size: 13px;
-  color: #555;
-}
-
-.row strong {
-  color: #000;
-  font-weight: 800;
-}
-
-.statusContainer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.statusPill {
-  color: #FFFFFF;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-weight: 900;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-}
-
-.logoCps {
-  width: 100%;
-  height: 45px;
-  object-fit: contain;
-  margin-top: 25px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 12px;
   opacity: 0.9;
 }
 
-/* @media (width: 760px) {
-  .statusContainer{
-    display: flexbox;
+.dataGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.dataItem label {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.statusBox { margin-top: auto; }
+
+.statusPill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.frontBlock3 {
+  height: 18%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.footerLogo {
+  height: 50px;
+  object-fit: contain;
+}
+
+.faceBack {
+  display: flex;
+  flex-direction: column;
+}
+
+.backBlock1 {
+  flex: 1;
+  background-color: var(--red-fatec);
+  padding: 25px 30px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.backHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.logoFatecBack { height: 35px; filter: brightness(0) invert(1); }
+.logoCpsBack { height: 35px; filter: brightness(0) invert(1); }
+
+.backMainRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.institutionBox { flex: 1; }
+.backInfoCard {
+  border: 1.5px solid white;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.instTitle { font-size: 14px; font-weight: 900; margin: 0; }
+.instSub { font-size: 11px; font-weight: 600; opacity: 0.8; margin: 0 0 5px 0; }
+
+
+.qrContainer {
+  background: white;
+  padding: 6px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.instructions {
+  margin-top: 10px;
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+.instructions p {
+  margin: 3px 0;
+  display: flex;
+  gap: 8px;
+}
+
+.instructions span { font-weight: 900; font-size: 14px; line-height: 1; }
+
+.backBlock2 {
+  height: 25%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 40px;
+}
+
+.backUrl {
+  font-size: 10px;
+  color: var(--red-fatec);
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.barcodeContainer {
+  width: 100%;
+  height: 35px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.barcodeLine {
+  height: 100%;
+  background-color: black;
+}
+
+
+
+/* @media (max-width: 375){
+  :root {
+  --card-width: 100px;
+  --card-height: 100px;
   }
 } */
 
-
-@media (max-width: 768px) {
-.rowStatus {
-    flex-direction: column; 
-    align-items: flex-start; 
-    gap: 12px; 
+@media (max-width: 640px) {
+  .cardViewport {
+    --scale-factor: 0.56; 
+    transform: rotate(-90deg) scale(var(--scale-factor));
   }
-
-.statusContainer {
-  width: 100%;
-  display: flex;
-  flex-direction: row; 
-  align-items: center;
-  gap: 10px;
+  
 }
 
-
-.statusPill {
-  padding: 4px 12px; 
-  font-size: 14px;
-  display: inline-block;
+@media (max-width: 375px) {
+  .cardViewport {
+    --scale-factor: 0.80; 
+  }
 }
 
-.rowStatus p {
-  margin: 0;
-  font-size: 14px;
+@media (max-width: 667px){
+  :root {
+  --card-width: 500px;
+  --card-height: 325px;
+  }
 }
 
-
-
-.appWrapper {
-  background-color: #FFFFFF; 
-}
-.profileImage{
-  max-height: none;
-}
-.cardContainer {
-  width: 92%;
-  padding: 20px;
-  border-radius: 20px;
-  background-color: #e5e5e5; 
-  box-shadow: none; 
-}
-.infoSection {
-  background-color: #FFFFFF; 
-}
-.studentName {
-  font-size: 16px;
-}
-
-}
-
+.flipHint { margin-top: 10px; font-size: 12px; color: #888; font-weight: 500; }
+.dotsRow { display: flex; gap: 8px; margin-top: 8px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; transition: 0.3s; }
+.dotActive { background: var(--red-fatec); }

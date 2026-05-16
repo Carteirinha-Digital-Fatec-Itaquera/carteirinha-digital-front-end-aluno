@@ -84,7 +84,8 @@
 .menuCard {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  /* align-items: flex-start; */
   justify-content: center;
   background-color: #FFFFFF;
   border: 1.5px solid #eaeaea; 
@@ -98,7 +99,8 @@
 .fullWidth {
   grid-column: span 2;
   flex-direction: row; 
-  justify-content: flex-start;
+  justify-content: center;
+  /* justify-content: flex-start; */
   align-items: center;
   gap: 20px;
 }
@@ -124,17 +126,38 @@
 .icon {
   width: 32px;
   height: 32px;
-  color: #1a1a1a;
+  /* color: #1a1a1a; */
+  color: #BA1A1A;
 }
 
+.logoutCotainerButton{
+  margin-top: 10px;
+  background-color: #BA1A1A;
+  width: 150px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  align-content: center;
+  align-items: center;
+  border-radius:12px;
+  padding-left: 9px;
+  padding-right: 9px;
+  color: white;
+  cursor: pointer;
+}
+.iconLogout{
+  margin: 5px;
+  color: white;
+}
 .logoutButton {
-  margin-top: 50px;
+  /* margin-top: 20px; */
   background: transparent;
   border: none;
-  color: #BA1A1A;
+  color: white;
   font-size: 16px;
   font-weight: bold;
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
   transition: opacity 0.2s;
 }
@@ -146,7 +169,8 @@
 @media (max-width: 768px) {
   .redHeader {
     height: 200px;
-    background-color: var(--primary-color, #BA1A1A); 
+    /* background-color: var(--primary-color, #BA1A1A);  */
+    background-color: var( #BA1A1A); 
   }
   /* .redHeader {
     height: 200px;
@@ -170,8 +194,10 @@
   }
   .fullWidth {
     flex-direction: column; 
-    align-items: flex-start;
+    /* align-items: flex-start; */
+    align-items: center;
     gap: 0;
+
   }
   .fullWidth p {
     margin-top: 15px !important;

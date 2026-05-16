@@ -1,195 +1,204 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from "qrcode.react";
-// import {Qrdcode}
+import { ArrowLeft } from "lucide-react";
 
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
 
-
-// import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
-const logoFatecPreto = '/fatec_itaquera_logo_preto.png'
-// import logoCps from "../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png";
-const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png'
-// import perfilDefault from "../../../assets/images/perfil_default.png";
-const perfilDefault = '/images/perfil_default.png'
-
 import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
-// import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import styles from './style.module.css';
-import { ArrowLeft } from "lucide-react"; 
-
 import { formatDateBR } from "../../../utils/dateProcessing";
 
+const logoFatecPreto = '/fatec_itaquera_logo_preto.png';
+// const logoFatecBranco = '/fatec_itaquera_logo_branco.png';
+const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png';
+// const logoCpsBranco = '/logos_cps_governo_com_slogan_horizontal_branco.png';
+// const logoSaoPauloBranco = '/logo_sao_paulo_governo_branco.png'; 
+const perfilDefault = '/images/perfil_default.png';
+
+function BarcodeMock() {
+  return (
+    <div className={styles.barcodeContainer}>
+      {Array.from({ length: 60 }).map((_, i) => (
+        <div 
+          key={i} 
+          className={styles.barcodeLine} 
+          style={{ 
+            width: i % 4 === 0 ? '3px' : '1px',
+            marginRight: '1px',
+            opacity: i % 7 === 0 ? 0.5 : 1
+          }} 
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function DigitalStudentCardScreen() {
   const navigate = useNavigate();
-
-  const cacheImageForOffline = async (imageUrl: string) => {
-    try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const reader = new FileReader();
-      
-      reader.onloadend = () => {
-        localStorage.setItem('@Carteirinha:photoOffline', reader.result as string);
-      };
-      reader.readAsDataURL(blob);
-    } catch (error) {
-      console.error("Erro ao salvar imagem para uso offline", error);
-    }
-  };
-
   const [student, setStudent] = useState<Student | undefined>(undefined);
   const [message, setMessage] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
+  const [showBack, setShowBack] = useState(false);
 
-  useEffect(() => {
-  const loadStudent = async () => {
-    const cachedData = localStorage.getItem('@Carteirinha:profile');
-    if (cachedData) {
-      setStudent(JSON.parse(cachedData));
-    }
-    if (navigator.onLine) {
-      const result = await findProfile();
-      
-      if (result && !('code' in result)) {
-        const freshStudent = result as Student;
-        setStudent(freshStudent);
-        setMessage('erro ao procurar imagem')
-        localStorage.setItem('@Carteirinha:profile', JSON.stringify(freshStudent));
-        
-        if (freshStudent.photo && freshStudent.photoStatus === 'APPROVED') {
-          cacheImageForOffline(freshStudent.photo);
-        }
-      }
+  const cacheImageForOffline = async (imageUrl: string) => {
+    try {
+      const res = await fetch(imageUrl);
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => localStorage.setItem('@Carteirinha:photoOffline', reader.result as string);
+      reader.readAsDataURL(blob);
+    } catch (e) {
+      console.error("Erro ao salvar imagem para uso offline", e);
     }
   };
 
-  loadStudent();
-}, []);
-  // useEffect(() => {
-  //   const loadStudent = async () => {
-  //     const result = await findProfile();
-  //     if (result && 'code' in result) {
-  //       setMessage(result.message);
-  //       setModalErrorVisible(true);
-  //     } else {
-  //       setStudent(result as Student);
-  //     }
-  //   };
-  //   loadStudent();
-  // }, []);
+  useEffect(() => {
+    const load = async () => {
+      const cached = localStorage.getItem('@Carteirinha:profile');
+      if (cached) setStudent(JSON.parse(cached));
 
-  if (!student) {
-    return <div className={styles.loadingContainer}>Carregando...</div>;
-  }
+      if (navigator.onLine) {
+        const result = await findProfile();
+        if (result && !('code' in result)) {
+          const s = result as Student;
+          setStudent(s);
+          setMessage("");
+          localStorage.setItem('@Carteirinha:profile', JSON.stringify(s));
+          if (s.photo && s.photoStatus === 'APPROVED') cacheImageForOffline(s.photo);
+        }
+      }
+    };
+    load();
+  }, []);
 
-  const studentStatus = student.status || "Em curso"; 
+  if (!student) return <div className={styles.loadingContainer}>Carregando...</div>;
 
-  // const validationUrl = `http://localhost:5173/valida/${student?.qrcode || 'local'}`;
-
-
+  const studentStatus = student.status || "Em curso";
   const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
-
-  console.log("Link do QR Code:", validationUrl);
+  const photoSrc = student.photo && student.photoStatus === 'APPROVED' ? student.photo : perfilDefault;
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
-    if (s.includes("curso") || s.includes("ativo") || s.includes("em curso")|| s.includes("concluido"))return "#2ecc71";
-    if (s.includes("trancado")) return "#f39c12"; 
-    if (s.includes("desistente") ) return "#e74c3c";
-    return "#BA1A1A"; 
+    if (s.includes("curso") || s.includes("ativo") || s.includes("concluido")) return "#2ecc71";
+    if (s.includes("trancado")) return "#f39c12";
+    return "#BA1A1A";
   };
-
-
-  
-
 
   return (
     <div className={styles.container}>
       <ErrorModalComp
         visible={modalErrorVisible}
         error={message}
-        fields={[]}
-        onClose={() => {
-          setModalErrorVisible(false);
-          navigate("/MainMenu");
-        }}
+        onClose={() => { setModalErrorVisible(false); navigate("/MainMenu"); }}
       />
 
       <div className={styles.appWrapper}>
-        <div className={styles.header}>
+        <header className={styles.header}>
           <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
-            <ArrowLeft size={28} color="#000" strokeWidth={2} />
+            <ArrowLeft size={24} color="#BA1A1A" strokeWidth={3} />
           </button>
-          <img src={logoFatecPreto} className={styles.logoTop} alt="Logo Fatec" />
-        </div>
-        
-        <div className={styles.cardContainer}>
-          <InternetWatcher />
-          
-          <div className={styles.topSection}>
-            <img 
-              src={
-                student?.photo && student?.photoStatus === 'APPROVED' 
-                  // ? `${GLOBAL_VAR.BASE_URL}${student.photo}` 
-                  ? student.photo
-                  : perfilDefault
-              } 
-              className={styles.profileImage} 
-              alt="Foto do Aluno" 
-              onError={(e) => {
-                e.currentTarget.src = perfilDefault; 
-              }}
-            />
+          <span className={styles.headerTitle}>Carteirinha</span>
+          <div style={{ width: 44 }} />
+        </header>
 
-          <div className={styles.qrWrapper}>
-            <QRCodeSVG value={validationUrl} 
-            size={256} 
-            style={{ width: '100%', height: '100%' }}
-            
-            // includeMargin={true} />
-            includeMargin={false} />
-          </div>
-            {/* <div className={styles.qrWrapper}>
-              <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
-            </div> */}
-          </div>
+        <InternetWatcher />
 
-          <div className={styles.infoSection}>
-            <h2 className={styles.studentName}>{student.name}</h2>
-            
-            <div className={`${styles.row} ${styles.rowStatus}`}>
-              <div className={styles.statusContainer}>
-                <strong>STATUS:</strong> 
-                <span 
-                  className={styles.statusPill} 
-                  style={{ backgroundColor: getStatusColor(studentStatus) }}
-                >
-                  {studentStatus.toUpperCase()}
-                </span>
+        <div className={styles.cardStage}>
+          <div
+            className={`${styles.cardViewport} ${showBack ? styles.cardViewportBack : ''}`}
+            onClick={() => setShowBack(!showBack)}
+          >
+            <div className={styles.cardInner}>
+              
+              <div className={`${styles.cardFace} ${styles.faceFront}`}>
+                <div className={styles.frontBlock1}>
+                  <img src={logoFatecPreto} className={styles.fatecLogoFront} alt="Fatec" />
+                </div>
+
+                <div className={styles.frontBlock2}>
+                  <div className={styles.photoColumn}>
+                    <div className={styles.photoFrame}>
+                      <img src={photoSrc} alt="Perfil" onError={(e) => e.currentTarget.src = perfilDefault} />
+                    </div>
+                  </div>
+                  
+                  <div className={styles.infoColumn}>
+                    <label className={styles.labelWhite}>NOME DO ALUNO</label>
+                    <h2 className={styles.studentName}>{student.name}</h2>
+                    <p className={styles.courseName}>Curso: {student.course}</p>
+
+                    <div className={styles.dataGrid}>
+                      <div className={styles.dataItem}>
+                        <label>RA: {student.ra}</label>
+                      </div>
+                      <div className={styles.dataItem}>
+                        <label>VAL: {formatDateBR(student.dueDate)}</label>
+                      </div>
+                      <div className={styles.dataItem}>
+                        <label>Data Nascimento: {formatDateBR(student.birthDate)}</label>
+                      </div>
+                      <div className={styles.dataItem}>
+                        <label>CPF: {student.cpf}</label>
+                      </div>
+                    </div>
+
+                    <div className={styles.statusBox}>
+                      <span className={styles.statusPill} style={{ backgroundColor: getStatusColor(studentStatus) }}>
+                        {studentStatus.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.frontBlock3}>
+                  <img src={logoCps} alt="CPS" className={styles.footerLogo} />
+                  {/* <img src={logoSaoPaulo} alt="SP" className={styles.footerLogo} /> */}
+                </div>
               </div>
-              <p><strong>CPF:</strong> {student.cpf}</p>
-            </div>
-            <div className={styles.row}>
-              <p><strong>NASCIMENTO:</strong> {formatDateBR(student.birthDate)}</p>
-            </div>
-          </div>
 
-          <div className={styles.infoSection}>
-            <h3 className={styles.courseName}>Curso: {student.course}</h3>
-            
-            <div className={styles.row}>
-              <p><strong>RA:</strong> {student.ra}</p>
-            </div>
-            <div className={styles.row}>
-              <p><strong>VALIDADE:</strong> {formatDateBR(student.dueDate)}</p>
+              <div className={`${styles.cardFace} ${styles.faceBack}`}>
+                <div className={styles.backBlock1}>
+                  <div className={styles.backHeader}>
+                    <img src={logoFatecPreto} alt="Fatec" className={styles.logoFatecBack} />
+                    {/* <img src={logoCpsBranco} alt="CPS" className={styles.logoCpsBack} /> */}
+                  </div>
+
+                  <div className={styles.backMainRow}>
+                    <div className={styles.institutionBox}>
+                      {/* <p className={styles.instTitle}>FATEC ITAQUERA</p> */}
+                      <div className={styles.backInfoCard}>
+                        <p className={styles.instSub}>Faculdade de Tecnologia Itaquera - Prof. Miguel Reale</p>
+                        <p className={styles.instSub}>Av. Miguel Ignácio Curi, 360 - Itaquera/SP | CEP: 08295-005</p>
+                        <p className={styles.instSub}> Tel: (11) 2056-4347 | 2058-4245</p>
+                      </div>
+                      <div className={styles.instructions}>
+                        <p><span>›</span> Documento pessoal e intransferível</p>
+                        <p><span>›</span> Validação via QR Code</p>
+                      </div>
+                    </div>
+                    <div className={styles.qrContainer}>
+                      <QRCodeSVG value={validationUrl} size={100} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.backBlock2}>
+                  <p className={styles.backUrl}>https://www.cps.sp.gov.br</p>
+                  <BarcodeMock />
+                </div>
+              </div>
+
             </div>
           </div>
-          
-          <img src={logoCps} className={styles.logoCps} alt="Logo CPS" />
+        </div>
+
+        <p className={styles.flipHint}>Toque para virar a carteirinha</p>
+        <div className={styles.dotsRow}>
+          <div className={`${styles.dot} ${!showBack ? styles.dotActive : ''}`} />
+          <div className={`${styles.dot} ${showBack ? styles.dotActive : ''}`} />
         </div>
       </div>
     </div>

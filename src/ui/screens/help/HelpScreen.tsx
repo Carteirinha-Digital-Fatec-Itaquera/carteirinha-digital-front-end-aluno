@@ -1,8 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, HelpCircle, Phone, MessageCircle, Mail } from 'lucide-react';
+import { ArrowLeft, Phone, MessageCircle, Mail } from 'lucide-react';
 
-// import logoFatecPreto from "../../../assets/images/fatec_itaquera_logo_preto.png";
-const logoFatecPreto = '/fatec_itaquera_logo_preto.png'
+// Assets
+const logoFatecbranca = '/fatec_itaquera_logo.png';
+const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png';
+// const logoSaoPaulo = '/logo_sao_paulo_governo.png';
+
 import styles from './style.module.css';
 
 export default function HelpScreen() {
@@ -10,46 +13,63 @@ export default function HelpScreen() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.appWrapper}>
-        
-        {/* Cabeçalho com botão de voltar */}
-        <div className={styles.header}>
-          <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
-            <ArrowLeft size={28} color="#000" strokeWidth={2} />
-          </button>
-          <img src={logoFatecPreto} className={styles.logoTop} alt="Logo Fatec" />
+      <div className={styles.redHeader}>
+        <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
+          <ArrowLeft size={28} color="#FFF" strokeWidth={2.5} />
+        </button>
+        <div className={styles.logoFatecContainer}>
+          <img src={logoFatecbranca} className={styles.logoFatec} alt="Logo Fatec" />
         </div>
+      </div>
 
-        <div className={styles.contentContainer}>
-          <div className={styles.helpCard}>
-            
-            <h1 className={styles.title}>Ajuda</h1>
-            <HelpCircle size={42} className={styles.mainIcon} strokeWidth={1.5} />
+      {/* Conteúdo que sobrepõe o fundo vermelho */}
+      <div className={styles.contentWrapper}>
+        <div className={styles.contactContainer}>
+          <p className={styles.faleConoscoLabel}>FALE CONOSCO</p>
+          <h1 className={styles.mainTitle}>Contatos</h1>
 
-            <p className={styles.subtitle}>Dúvidas? Entre em contato:</p>
-            <p className={styles.sectionTitle}>Contatos:</p>
-
-            <div className={styles.contactList}>
-              <div className={styles.contactItem}>
-                <Phone size={20} className={styles.icon} />
-                <span>Telefone: 11 23232323</span>
+          <div className={styles.contactList}>
+            {/* Card WhatsApp */}
+            <div className={styles.contactCard}>
+              <div className={`${styles.iconCircle} ${styles.bgWhatsapp}`}>
+                <MessageCircle size={24} color="#FFF" fill="#FFF" />
               </div>
-
-              <div className={styles.contactItem}>
-                <MessageCircle size={20} color="#25D366" className={styles.icon} />
-                <span>WhatsApp: 11 987877625</span>
-              </div>
-
-              <div className={styles.contactItem}>
-                <Mail size={20} className={styles.icon} />
-                <span className={styles.emailText}>
-                  email:<br/>
-                  <strong>coordfatec@fatec.sp.gov.br</strong>
-                </span>
+              <div className={styles.contactInfo}>
+                <label>WHATSAPP</label>
+                <p>98787-7625</p>
               </div>
             </div>
 
+            <div className={styles.contactCard}>
+              <div className={`${styles.iconCircle} ${styles.bgPhone}`}>
+                <Phone size={24} color="#FFF" fill="#FFF" />
+              </div>
+              <div className={styles.contactInfo}>
+                <label>TELEFONE</label>
+                <p>(11) 98787-7625</p>
+              </div>
+            </div>
+
+            <div className={styles.contactCard}>
+              <div className={`${styles.iconCircle} ${styles.bgEmail}`}>
+                <Mail size={24} color="#FFF" fill="#FFF" />
+              </div>
+              <div className={styles.contactInfo}>
+                <label>EMAIL</label>
+                <p>coordfatec@fatec.sp.gov.br</p>
+              </div>
+            </div>
           </div>
+
+          <div className={styles.hoursBox}>
+            <p className={styles.hoursLabel}>Horário de atendimento</p>
+            <p className={styles.hoursValue}>Seg - Sex, 8h às 18h</p>
+          </div>
+
+          <footer className={styles.footerLogos}>
+            <img src={logoCps} alt="Logo CPS" className={styles.footerLogoImg} />
+            {/* <img src={logoSaoPaulo} alt="Logo SP" className={styles.footerLogoImg} /> */}
+          </footer>
         </div>
       </div>
     </div>

@@ -4,6 +4,10 @@ import LoginScreen from "../ui/screens/login/LoginScreen";
 import MainMenuScreen from "../ui/screens/mainmenu/MainMenuScreen";
 import PasswordRecoveryScreen from "../ui/screens/passwordrecovery/PasswordRecoveryScreen";
 import FirstAccessScreen from "../ui/screens/passwordrecovery/FirstAccessScreen";
+// import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
+
+import DigitalStudentQrCode from "../ui/screens/digitalStudentScan/DigitalStudentQrCode";
+
 import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
 import UploadImageScreen from "../ui/screens/uploadimage/UploadImageScreen";
 import ResetPasswordScreen from "../ui/screens/passwordrecovery/ResetPasswordScreen";
@@ -20,9 +24,16 @@ const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 // const DigitalStudentCard = () => <div style={{ padding: 20 }}>Tela Carteirinha Digital</div>;
 // const UploadImage = () => <div style={{ padding: 20 }}>Tela Upload Image</div>;
 
+const checkAuth = () => {
+  const token = !!localStorage.getItem('accessToken');
+  const profile = !!localStorage.getItem('@Carteirinha:profile');
+  return token || profile;
+};
+
+
 export default function AppRoutes() {
-  const isAuthenticated = !!localStorage.getItem('token');
-  const hasCachedProfile = !!localStorage.getItem('@Carteirinha:profile');
+  // const isAuthenticated = !!localStorage.getItem('token');
+  // const hasCachedProfile = !!localStorage.getItem('@Carteirinha:profile');
 
   return (
     
@@ -32,7 +43,7 @@ export default function AppRoutes() {
         <Route 
           path="/" 
           element={
-            isAuthenticated || hasCachedProfile 
+            checkAuth()
               ? <Navigate to="/MainMenu" replace /> 
               : <Navigate to="/login" replace />
           } 
@@ -41,7 +52,7 @@ export default function AppRoutes() {
         <Route 
           path="/login" 
           element={
-            isAuthenticated || hasCachedProfile 
+            checkAuth()
               ? <Navigate to="/MainMenu" replace /> 
               : <LoginScreen />
           } 
@@ -61,11 +72,19 @@ export default function AppRoutes() {
 
         <Route path="/valida/:qrcodeToken" element={<TelaQrcode />} />
 
-        <Route path="/MainMenu" element={<MainMenuScreen />} />
+        <Route 
+          path="/MainMenu" 
+          element={
+            checkAuth() ? <MainMenuScreen /> : <Navigate to="/login" replace />
+          } 
+        />
         <Route path="/DigitalStudentCard" element={<DigitalStudentCardScreen />} />
         <Route path="/reset-password" element={<ResetPasswordScreen />} />
 
         <Route path="/UploadImage" element={<UploadImageScreen />} />
+
+        <Route path="/qrCodeScan" element={<DigitalStudentQrCode />} />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
