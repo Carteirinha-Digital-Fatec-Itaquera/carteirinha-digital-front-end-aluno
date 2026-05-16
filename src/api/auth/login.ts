@@ -27,7 +27,7 @@ export async function login(auth: Auth): Promise<LoginSuccess | ApiError> {
   try {
     const data: ResponseAuth = await response.json();
     const token = data.token ?? data.accessToken;
-
+    console.log()
     if (!token) {
       return {
         code: 'INVALID_RESPONSE',
@@ -38,8 +38,8 @@ export async function login(auth: Auth): Promise<LoginSuccess | ApiError> {
         errorFields: null,
       };
     }
-
-    // 3. Retornamos o token E a variável mustChangePassword
+    // console.log(`\n\n\n#{data.mustChangePassword}`)
+    // console.log(!!data.mustChangePassword)
     return { 
       token, 
       mustChangePassword: !!data.mustChangePassword 

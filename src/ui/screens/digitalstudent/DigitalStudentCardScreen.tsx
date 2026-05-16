@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft,AlertCircle } from "lucide-react";
 
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
@@ -76,6 +76,8 @@ export default function DigitalStudentCardScreen() {
 
   if (!student) return <div className={styles.loadingContainer}>Carregando...</div>;
 
+  const isPhotoApproved = student.photo && student.photoStatus === 'APPROVED';
+
   const studentStatus = student.status || "Em curso";
   const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
   const photoSrc = student.photo && student.photoStatus === 'APPROVED' ? student.photo : perfilDefault;
@@ -87,6 +89,8 @@ export default function DigitalStudentCardScreen() {
     return "#BA1A1A";
   };
 
+
+  
   return (
     <div className={styles.container}>
       <ErrorModalComp
@@ -180,7 +184,15 @@ export default function DigitalStudentCardScreen() {
                       </div>
                     </div>
                     <div className={styles.qrContainer}>
-                      <QRCodeSVG value={validationUrl} size={100} />
+                      {/* <QRCodeSVG value={validationUrl} size={100} /> */}
+                      {isPhotoApproved ? (
+                        <QRCodeSVG value={validationUrl} size={100} />
+                      ) : (
+                        <div className={styles.qrBlocked}>
+                          <AlertCircle size={30} color="#BA1A1A" />
+                          <span>Foto Pendente</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -34,7 +34,56 @@
   object-fit: contain;
 }
 
+.firstAccessTooltip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  cursor: help;
+  position: relative;
+}
 
+.tooltipText {
+  visibility: hidden;
+  width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  position: absolute;
+  z-index: 99;
+  bottom: 130%; 
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+}
+
+.tooltipText::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+.firstAccessTooltip:hover .tooltipText,
+.firstAccessTooltip:active .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .tooltipText {
+    width: 200px;
+  }
+}
 /* 
 import { StyleSheet } from "react-native";
 import { backgroundColor, backgroundSecondaryColor } from "../../themes/Color";

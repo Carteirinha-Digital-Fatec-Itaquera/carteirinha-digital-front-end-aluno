@@ -18,7 +18,7 @@ import { findProfile } from "../../../api/student/findProfile";
 import type { Student } from "../../../domains/Student";
 // import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import styles from './styleQrCode.module.css';
-import { ArrowLeft } from "lucide-react"; 
+import { ArrowLeft,AlertCircle } from "lucide-react"; 
 
 import { formatDateBR } from "../../../utils/dateProcessing";
 
@@ -44,7 +44,7 @@ export default function DigitalStudentQrCode() {
   const [student, setStudent] = useState<Student | undefined>(undefined);
   const [message, setMessage] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
-
+  
   useEffect(() => {
   const loadStudent = async () => {
     const cachedData = localStorage.getItem('@Carteirinha:profile');
@@ -103,9 +103,7 @@ export default function DigitalStudentQrCode() {
     return "#BA1A1A"; 
   };
 
-
-  
-
+  const isPhotoApproved = student.photo && student.photoStatus === 'APPROVED';
 
   return (
     <div className={styles.container}>
@@ -146,12 +144,17 @@ export default function DigitalStudentQrCode() {
             />
 
           <div className={styles.qrWrapper}>
-            <QRCodeSVG value={validationUrl} 
+            {isPhotoApproved?(
+              <QRCodeSVG value={validationUrl} 
             size={256} 
             style={{ width: '100%', height: '100%' }}
-            
-            // includeMargin={true} />
             includeMargin={false} />
+            ):(
+              <div className={styles.qrBlocked}>
+                  <AlertCircle size={30} color="#BA1A1A" />
+                  <span>Foto Pendente</span>
+              </div>
+            )}
           </div>
             {/* <div className={styles.qrWrapper}>
               <QRCodeSVG value={`https://meusite.com/valida/${student.ra}`} size={110} />
