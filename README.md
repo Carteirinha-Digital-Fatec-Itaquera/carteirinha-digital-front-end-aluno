@@ -39,7 +39,7 @@ Para rodar este projeto localmente, siga os passos abaixo:
 
 1. **Clonar o repositório:**
    ```bash
-   git clone [https://github.com/d-Jhon-b/carteirinha-digital-front-end-aluno-openSource.git](https://github.com/d-Jhon-b/carteirinha-digital-front-end-aluno-openSource.git)
+   git clone [https://github.com/Carteirinha-Digital-Fatec-Itaquera/carteirinha-digital-front-end-aluno.git](https://github.com/Carteirinha-Digital-Fatec-Itaquera/carteirinha-digital-front-end-aluno.git)
    cd carteirinha-digital-front-end-aluno-openSource
 
 2. **Instalar as dependências:**

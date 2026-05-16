@@ -42,7 +42,6 @@ export default function LoginScreen() {
         <TitleComp text="Login" size={20} />
         <SpacerComp />
 
-        {/* Retornado para E-mail Institucional */}
         <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
         <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
         <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("/PasswordRecovery")} alignSelf="flex-end" />
@@ -80,6 +79,7 @@ export default function LoginScreen() {
                     navigate('/first-access');
                   } else {
                     navigate('/MainMenu'); 
+                    // window.location.href = "/MainMenu"
                   }
                   
                 } else {
