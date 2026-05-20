@@ -334,20 +334,37 @@
 }
 
 @media (max-width: 375px) {
-  :root {
+  /* :root {
   --card-width: 100px;
   --card-height: 100px;
-  }
+  } */
 
   .cardViewport {
     --scale-factor: 0.80; 
   }
 }
 
-@media (max-width: 667px){
+@media (max-width: 665px){
   :root {
   --card-width: 500px;
-  --card-height: 325px;
+  --card-height: 400px;
+  }
+  
+}
+
+@media (max-width: 400px){
+  :root {
+  --card-width: 750px;
+  --card-height: 550px;
+  }
+  .dataItem label{
+    font-size: 15px;
+  }
+  .instSub {
+    font-size: 17px;
+  }
+  .instructions p{
+    font-size: 17px;
   }
 }
 
