@@ -117,7 +117,10 @@ export default function MainMenuScreen() {
             </button>
 
 
-            <button className={styles.menuCard} onClick={() => navigate('/config')}>
+            <button className={styles.menuCard} onClick={() => {
+              // navigate('/config')
+              alert('Futura feature de aplicação de daltonismo')
+            }}>
               <Settings className={styles.icon} strokeWidth={1.5} />
               <p>Configurações</p>
             </button>
