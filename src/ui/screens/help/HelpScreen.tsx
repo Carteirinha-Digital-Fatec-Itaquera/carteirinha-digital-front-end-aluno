@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, MessageCircle, Mail, WheatIcon } from 'lucide-react';
+// import { ArrowLeft, Phone, MessageCircle, Mail, WheatIcon } from 'lucide-react';
+import { ArrowLeft} from 'lucide-react';
 
 // Assets
 const logoFatecbranca = '/fatec_itaquera_logo.png';
