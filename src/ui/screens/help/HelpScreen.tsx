@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, MessageCircle, Mail } from 'lucide-react';
+import { ArrowLeft, Phone, MessageCircle, Mail, WheatIcon } from 'lucide-react';
 
 // Assets
 const logoFatecbranca = '/fatec_itaquera_logo.png';
-const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png';
+const logoCps = '/logos_cps_governo_com_slogan.png';
+const iconWhats = '/whatsappIcon.png'
+const iconEmail = '/emailIcon.png'
+const iconTele = '/phoneIcon.png'
 // const logoSaoPaulo = '/logo_sao_paulo_governo.png';
 
 import styles from './style.module.css';
@@ -32,7 +35,7 @@ export default function HelpScreen() {
             {/* Card WhatsApp */}
             <div className={styles.contactCard}>
               <div className={`${styles.iconCircle} ${styles.bgWhatsapp}`}>
-                <MessageCircle size={24} color="#FFF" fill="#FFF" />
+                <img src={iconWhats} alt="Logo whatsapp" className={styles.logoContatos} />
               </div>
               <div className={styles.contactInfo}>
                 <label>WHATSAPP</label>
@@ -42,7 +45,7 @@ export default function HelpScreen() {
 
             <div className={styles.contactCard}>
               <div className={`${styles.iconCircle} ${styles.bgPhone}`}>
-                <Phone size={24} color="#FFF" fill="#FFF" />
+                <img src={iconTele} alt="Logo telefone" className={styles.logoContatos} />
               </div>
               <div className={styles.contactInfo}>
                 <label>TELEFONE</label>
@@ -52,7 +55,7 @@ export default function HelpScreen() {
 
             <div className={styles.contactCard}>
               <div className={`${styles.iconCircle} ${styles.bgEmail}`}>
-                <Mail size={24} color="#FFF" fill="#FFF" />
+                <img src={iconEmail} alt="Logo email" className={styles.logoContatos} />
               </div>
               <div className={styles.contactInfo}>
                 <label>EMAIL</label>
@@ -66,12 +69,14 @@ export default function HelpScreen() {
             <p className={styles.hoursValue}>Seg - Sex, 8h às 18h</p>
           </div>
 
-          <footer className={styles.footerLogos}>
+          
+        </div>
+        
+      </div>
+      <footer className={styles.footerLogos}>
             <img src={logoCps} alt="Logo CPS" className={styles.footerLogoImg} />
             {/* <img src={logoSaoPaulo} alt="Logo SP" className={styles.footerLogoImg} /> */}
           </footer>
-        </div>
-      </div>
     </div>
   );
 }

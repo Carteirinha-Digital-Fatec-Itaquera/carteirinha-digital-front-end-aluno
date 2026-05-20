@@ -3,7 +3,6 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: #BA1A1A; 
-  font-family: 'Inter', sans-serif;
   overflow: auto;
 }
 
@@ -15,6 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 40px;
 }
 
 .backButton {
@@ -30,7 +30,7 @@
 }
 
 .logoFatec {
-  height: 60px;
+  height: 100px;
   object-fit: contain;
   /* filter: brightness(0) invert(1);  */
 }
@@ -39,7 +39,7 @@
   min-width: 100%;
   flex: 1;
   background-color: #f5f5f5;
-  border-radius: 35px 35px 0 0; 
+  border-radius: 30px; 
   margin-top: -40px; 
   padding: 30px 20px;
   z-index: 10;
@@ -72,19 +72,25 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
   margin-bottom: 40px;
 }
 
 .contactCard {
   background-color: #FFFFFF;
   border-radius: 16px;
-  padding: 5px 20px;
+  padding: 10px 10px;
   display: flex;
   align-items: center;
   gap: 15px;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.06); /* Sombra suave */
   border: 1px solid #eee;
+}
+.contactCard:hover {
+  background-color: #d1d1d1;
+}
+.logoContatos{
+  width: 25px;
 }
 
 .iconCircle {
@@ -151,19 +157,17 @@
   display: flex;
   /* border: 3px solid gray; */
   justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-top: auto;
+  align-items: flex-end;
   padding-bottom: 20px;
   width: 100%;
+  background-color: #BA1A1A;
 }
 
 .footerLogoImg {
   /* background-color: #BA1A1A; */
   height: 60px;
   /* object-fit: contain; */
-  opacity: 0.8;
-  margin-bottom: 50px;
+  margin-top: 10px;
 }
 
 @media (min-width: 768px) {
