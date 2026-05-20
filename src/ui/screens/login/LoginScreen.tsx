@@ -40,11 +40,15 @@ export default function LoginScreen() {
       <div className={styles.subcontainer}>
         <InternetWatcher />
         <SpacerComp />
-        <TitleComp text="Login" size={20} />
+        <TitleComp text="Login" size={30} />
         <SpacerComp />
 
-        <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
+        <div style={{display: 'flex', flexDirection: 'column', rowGap: 15}}>
+          <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
         <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
+        </div>
+
+        
 
         <div className={styles.firstAccessTooltip}>
             <HelpCircle size={18} color="#BA1A1A" />
