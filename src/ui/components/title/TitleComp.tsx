@@ -24,7 +24,7 @@ export const TitleComp = ({ text, size = 14, showButton = false, actionButton = 
         <span className={styles.title} style={{ fontSize: `${size}px` }}>
           {text}
         </span>
-        <div className={styles.divider} />
+        
       </div>
 
       {showButton && (

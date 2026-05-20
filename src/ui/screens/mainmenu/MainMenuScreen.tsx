@@ -12,7 +12,7 @@ const perfilDefault = "/perfil_default.png"
 import { findProfile } from '../../../api/student/findProfile';
 import type { Student } from '../../../domains/Student';
 // import { GLOBAL_VAR } from '../../../api/config/globalVar';
-import { IdCard, Settings, HelpCircle, Camera } from 'lucide-react'; 
+import { IdCard, Settings, HelpCircle, Camera, QrCode, LogOut } from 'lucide-react'; 
 
 import styles from './style.module.css';
 export default function MainMenuScreen() {
@@ -44,14 +44,23 @@ export default function MainMenuScreen() {
     loadProfile();
   }, []);
 
+  // const handleLogout = () => {
+  //   const confirm = window.confirm("Tem certeza que deseja sair?");
+  //   if (confirm) {
+  //     localStorage.removeItem('token');
+  //     navigate("/login");
+  //   }
+  // };
   const handleLogout = () => {
-    const confirm = window.confirm("Tem certeza que deseja sair?");
-    if (confirm) {
+    if (window.confirm("Sair do app?")) {
       localStorage.removeItem('token');
-      navigate("/login");
+      localStorage.removeItem('@Carteirinha:profile');
+      localStorage.removeItem('@Carteirinha:photoOffline');
+      
+      window.location.href = "/login"
+      // navigate("/");
     }
   };
-
   return (
     <div className={styles.container}>
       <div className={styles.mobileWrapper}>
@@ -87,34 +96,49 @@ export default function MainMenuScreen() {
           </h1>
 
           <div className={styles.gridContainer}>
+             
+
             <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => navigate("/DigitalStudentCard")}>
               <IdCard className={styles.icon} strokeWidth={1.5} />
               <p>Carteirinha</p>
             </button>
             
-            <button className={styles.menuCard} onClick={() => navigate('/config')}>
+            <button className={`${styles.menuCard} ${styles.menuCard}`} onClick={() => {
+                alert("Instruções: Fundo neutro, rosto centralizado, sem óculos escuros.");
+                navigate("/UploadImage");
+              }}>
+                <Camera className={styles.icon} strokeWidth={1.5} />
+                <p>Enviar Foto</p>
+              </button>
+            
+            <button className={styles.menuCard} onClick={() => navigate("/qrCodeScan")}>
+              <QrCode className={styles.icon} strokeWidth={1.5} />
+              <p>QRCode</p>
+            </button>
+
+
+            <button className={styles.menuCard} onClick={() => {
+              // navigate('/config')
+              alert('Futura feature de aplicação de daltonismo')
+            }}>
               <Settings className={styles.icon} strokeWidth={1.5} />
               <p>Configurações</p>
             </button>
             
-            {/* <button className={styles.menuCard} onClick={() => alert("Central de Ajuda")}> */}
+            
+
             <button className={styles.menuCard} onClick={() => navigate("/Help")}>
               <HelpCircle className={styles.icon} strokeWidth={1.5} />
               <p>Ajuda</p>
             </button>
-            
-            <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => {
-              alert("Instruções: Fundo neutro, rosto centralizado, sem óculos escuros.");
-              navigate("/UploadImage");
-            }}>
-              <Camera className={styles.icon} strokeWidth={1.5} />
-              <p>Enviar Foto</p>
-            </button>
           </div>
 
-          <button className={styles.logoutButton} onClick={handleLogout}>
-            Sair
-          </button>
+          <div className={styles.logoutCotainerButton} onClick={()=>{handleLogout()}}>
+            {/* <button className={styles.logoutButton} onClick={handleLogout}> */}
+            Deslogar
+          {/* </button> */}
+          <LogOut className={styles.iconLogout}></LogOut>
+          </div>
         </div>
       </div>
     </div>

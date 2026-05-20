@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import { TitleComp } from '../../components/title/TitleComp';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
@@ -12,7 +12,7 @@ import { apiClient } from '../../../api/config/apiClient';
 import styles from './style.module.css';
 
 export default function FirstAccessScreen() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -45,7 +45,9 @@ export default function FirstAccessScreen() {
 
       if (response.ok) {
         alert("Senha criada com sucesso! Bem-vindo(a).");
-        navigate('/MainMenu'); 
+        // navigate('/MainMenu'); 
+        localStorage.setItem("mustChangePassword", "true");
+        window.location.href = "/MainMenu"
       } else {
         const data = await response.json();
         setMessage(data.message || "Erro ao atualizar a senha.");

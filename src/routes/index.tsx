@@ -4,6 +4,10 @@ import LoginScreen from "../ui/screens/login/LoginScreen";
 import MainMenuScreen from "../ui/screens/mainmenu/MainMenuScreen";
 import PasswordRecoveryScreen from "../ui/screens/passwordrecovery/PasswordRecoveryScreen";
 import FirstAccessScreen from "../ui/screens/passwordrecovery/FirstAccessScreen";
+// import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
+
+import DigitalStudentQrCode from "../ui/screens/digitalStudentScan/DigitalStudentQrCode";
+
 import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
 import UploadImageScreen from "../ui/screens/uploadimage/UploadImageScreen";
 import ResetPasswordScreen from "../ui/screens/passwordrecovery/ResetPasswordScreen";
@@ -20,19 +24,57 @@ const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 // const DigitalStudentCard = () => <div style={{ padding: 20 }}>Tela Carteirinha Digital</div>;
 // const UploadImage = () => <div style={{ padding: 20 }}>Tela Upload Image</div>;
 
+const getAuthState = () => {
+  const token = localStorage.getItem('token');
+  const profile = localStorage.getItem('@Carteirinha:profile');
+  const mustChange = localStorage.getItem('mustChangePassword') === 'false';
+  
+  return {
+    isAuthenticated: !!token || !!profile,
+    mustChange: mustChange
+  };
+};
+
 export default function AppRoutes() {
+  const { isAuthenticated, mustChange } = getAuthState();
   return (
+    
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<LoginScreen />} />
+        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+        <Route 
+          path="/" 
+          element={
+            !isAuthenticated ? <Navigate to="/login" replace /> :
+            mustChange ? <Navigate to="/first-access" replace /> :
+            <Navigate to="/MainMenu" replace />
+          }
+        />
+        {/* <Route path="/login" element={<LoginScreen />} /> */}
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated ? (
+              mustChange ? <Navigate to="/first-access" replace /> : <Navigate to="/MainMenu" replace />
+            ) : <LoginScreen />
+          }
+        />
 
 
         
         <Route path="/home" element={<Home />} />
-        <Route path="/config" element={<ConfigScreen />} />
+        <Route path="/config" element={
+          !isAuthenticated ? <Navigate to="/login" replace /> :
+          mustChange ? <Navigate to="/first-access" replace /> :
+          <ConfigScreen />} 
+          />
         
-        <Route path="/Help" element={<HelpScreen />} />
+        <Route path="/Help" element={
+          !isAuthenticated ? <Navigate to="/login" replace /> :
+          mustChange ? <Navigate to="/first-access" replace /> :
+          <HelpScreen />} />
+
+          
         <Route path="/signup" element={<SignUp />} />
         <Route path="/PasswordRecovery" element={<PasswordRecoveryScreen />} />
         <Route path="/first-access" element={<FirstAccessScreen />} />
@@ -41,11 +83,34 @@ export default function AppRoutes() {
 
         <Route path="/valida/:qrcodeToken" element={<TelaQrcode />} />
 
-        <Route path="/MainMenu" element={<MainMenuScreen />} />
-        <Route path="/DigitalStudentCard" element={<DigitalStudentCardScreen />} />
+        <Route 
+          path="/MainMenu" 
+          element={
+            !isAuthenticated ? <Navigate to="/login" replace /> :
+            mustChange ? <Navigate to="/first-access" replace /> :
+            <MainMenuScreen />
+          }
+        />
+        <Route path="/DigitalStudentCard" 
+         element={
+            !isAuthenticated ? <Navigate to="/login" replace /> :
+            mustChange ? <Navigate to="/first-access" replace /> :
+            <DigitalStudentCardScreen />
+          }
+        />
         <Route path="/reset-password" element={<ResetPasswordScreen />} />
 
-        <Route path="/UploadImage" element={<UploadImageScreen />} />
+        <Route path="/UploadImage" 
+        element={
+            !isAuthenticated ? <Navigate to="/login" replace /> :
+            mustChange ? <Navigate to="/first-access" replace /> :
+            <UploadImageScreen />
+          }
+        />
+
+        <Route path="/qrCodeScan" element={<DigitalStudentQrCode />} />
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

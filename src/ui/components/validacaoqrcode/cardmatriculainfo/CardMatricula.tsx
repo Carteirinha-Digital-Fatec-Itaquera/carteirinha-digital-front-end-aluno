@@ -1,24 +1,24 @@
 import styles from './style.module.css';
 
 interface CardProps {
-  period: string;   
+  // period: string;   
   admission: string;
   dueDate: string;  
   status: string;
 }
 
-export default function CardMatriculaInfo({ period, admission, dueDate, status }: CardProps) {
-  // const isAtivo = status === 'ATIVO' && new Date(dueDate) > new Date();
-  const isAtivo = status === 'Em curso' && new Date(dueDate) > new Date();
-
+// export default function CardMatriculaInfo({ period, admission, dueDate, status }: CardProps) {
+export default function CardMatriculaInfo({admission, dueDate, status }: CardProps) {
+  // const isAtivo = status === 'Em curso' && new Date(dueDate) > new Date();
+  const isAtivo = status === 'Em curso' && new Date(dueDate).getTime() > new Date().getTime();
   return (
     <div className={styles.containerCard}>
       <h2 className={styles.title}>Dados da matrícula</h2>
       
-      <div className={styles.containerTuplas}>
+      {/* <div className={styles.containerTuplas}>
         <span className={styles.textTuplas}>Período</span>
         <span className={styles.textTuplasResult}>{period}</span>
-      </div>
+      </div> */}
 
       <div className={styles.containerTuplas}>
         <span className={styles.textTuplas}>Semestre de Ingresso</span>
@@ -28,7 +28,8 @@ export default function CardMatriculaInfo({ period, admission, dueDate, status }
       <div className={styles.containerTuplas}>
         <span className={styles.textTuplas}>Validade da carteirinha</span>
         <span className={isAtivo ? styles.textTuplasDataAtiva : styles.textTuplasDataInativa}>
-          {new Date(dueDate).toLocaleDateString('pt-BR')}
+          {/* {new Date(dueDate).toLocaleDateString('pt-BR')} */}
+          {dueDate}
         </span>
       </div>
 

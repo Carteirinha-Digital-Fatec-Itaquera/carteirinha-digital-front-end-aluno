@@ -1,11 +1,11 @@
 .container {
   display: flex;
   flex-direction: column;
+  width: 100%;
   padding: 0 16px; 
 }
 
 .label {
-  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #333333; 
@@ -14,14 +14,18 @@
 }
 
 .inputField {
+  width: 100%;
   border: 1px solid #333333; /* colors.border */
-  border-radius: 20px;
+  border-radius: 50px;
   padding: 14px;
   font-size: 14px;
   background-color: #FFFFFF; 
-  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   outline: none; 
+}
+.inputField:focus-within{
+  border: 1px solid #c11818;
+
 }
 
 .inputField::placeholder {

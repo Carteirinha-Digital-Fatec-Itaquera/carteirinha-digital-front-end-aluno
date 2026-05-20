@@ -19,6 +19,7 @@ import { Auth } from '../../../domains/Auth';
 
 import styles from './style.module.css';
 
+import { HelpCircle } from 'lucide-react'; // Importando o ícone
 export default function LoginScreen() {
   const navigate = useNavigate();
 
@@ -39,12 +40,25 @@ export default function LoginScreen() {
       <div className={styles.subcontainer}>
         <InternetWatcher />
         <SpacerComp />
-        <TitleComp text="Login" size={20} />
+        <TitleComp text="Login" size={30} />
         <SpacerComp />
 
-        {/* Retornado para E-mail Institucional */}
-        <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
+        <div style={{display: 'flex', flexDirection: 'column', rowGap: 15}}>
+          <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
         <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
+        </div>
+
+        
+
+        <div className={styles.firstAccessTooltip}>
+            <HelpCircle size={18} color="#BA1A1A" />
+            <span className={styles.tooltipText}>
+              Se esse for seu primeiro acesso, utilize sua data de nascimento (DDMMAAAA) como senha.
+              Exemplo: 03/05/2005 ficaria 03052005
+            </span>
+        </div>
+
+        
         <TextClickableComp text="Esqueceu a sua senha?" action={() => navigate("/PasswordRecovery")} alignSelf="flex-end" />
         <SpacerComp />
 
@@ -77,9 +91,13 @@ export default function LoginScreen() {
                   localStorage.setItem("token", result.token);
                   
                   if (result.mustChangePassword) {
+                    alert(`${result.mustChangePassword}\n\n${String(result.mustChangePassword)}`)
+                    localStorage.setItem("mustChangePassword", "false");  
                     navigate('/first-access');
                   } else {
-                    navigate('/MainMenu'); 
+                    // navigate('/MainMenu'); 
+                    localStorage.setItem("mustChangePassword", "true");  
+                    window.location.href = "/MainMenu"
                   }
                   
                 } else {
@@ -95,10 +113,13 @@ export default function LoginScreen() {
             }}
           />
         )}
-        <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("/SignUp")} />
+
+        {/* <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("/SignUp")} /> */}
         <SpacerComp />
         <img src={logoCps} className={styles.logocps} alt="Logo CPS" />
       </div>
     </div>
   );
 }
+
+

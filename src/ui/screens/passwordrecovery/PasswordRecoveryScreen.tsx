@@ -65,7 +65,7 @@ export default function PasswordRecoveryScreen() {
 
         {step === 1 && (
           <div className={styles.stepContainer}>
-            <TitleComp text="Recuperação de senha" size={20} />
+            <TitleComp text="Recuperação de senha" size={28} />
             <SpacerComp />
             <p className={styles.infoText}>
               Insira seu e-mail institucional. Se ele estiver cadastrado, enviaremos um link para redefinição.

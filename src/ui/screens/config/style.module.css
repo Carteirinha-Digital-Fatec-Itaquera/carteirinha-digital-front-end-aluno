@@ -4,7 +4,8 @@
 }
 
 .header {
-  background-color: var(--primary-color, #BA1A1A); 
+  /* background-color: var(--primary-color, #BA1A1A);  */
+  background-color: #BA1A1A; 
   color: white;
   padding: 20px;
   display: flex;

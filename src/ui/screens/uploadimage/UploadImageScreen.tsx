@@ -16,6 +16,9 @@ import uploadAvatarPlaceholder from "../../../assets/images/upload_avatar.png";
 
 import styles from './style.module.css';
 
+import { compressImage } from "../../../utils/imageProcessing";
+
+
 export default function UploadImageScreen() {
   const navigate = useNavigate();
 
@@ -41,6 +44,22 @@ export default function UploadImageScreen() {
     fetchStudentData();
   }, []);
 
+
+
+  const handleOpenCamera = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.setAttribute('capture', 'user');
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleOpenGallery = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.removeAttribute('capture');
+      fileInputRef.current.click();
+    }
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -63,13 +82,17 @@ export default function UploadImageScreen() {
     setOnLoading(true);
 
     try {
-      const result = await uploadImage(imageFile, studentRa); 
+
+      // console.log("Tamanho original:", (imageFile.size / 1024).toFixed(2), "KB");
+      const compressedFile = await compressImage(imageFile);
+      // console.log("Tamanho comprimido:", (compressedFile.size / 1024).toFixed(2), "KB");
+
+      const result = await uploadImage(compressedFile, studentRa); 
       
       if ('ok' in result) {
         alert("Imagem enviada com sucesso!"); 
         navigate('/MainMenu');
       } else {
-        // Agora o TypeScript sabe 100% que aqui é o ApiError
         setMessage(result.message || "Erro ao enviar imagem.");
         setErrorFields(result.errorFields ?? []);
         setModalErrorVisible(true);
@@ -103,10 +126,10 @@ export default function UploadImageScreen() {
       
       <SpacerComp vertical={10} />
 
-      <input 
+      {/* <input 
         type="file" 
         accept="image/*" 
-        capture="user" 
+        // capture="user" 
         ref={fileInputRef} 
         onChange={handleImageChange} 
         style={{ display: 'none' }} 
@@ -130,6 +153,55 @@ export default function UploadImageScreen() {
         disabled={onLoading}
       >
         {onLoading ? "Enviando..." : "Confirmar"}
+      </button>
+    </div> */}
+
+    <input 
+        type="file" 
+        accept="image/*" 
+        ref={fileInputRef} 
+        onChange={handleImageChange} 
+        style={{ display: 'none' }} 
+      />
+
+      <div className={styles.box}>
+        <img 
+          src={imagePreview ? imagePreview : uploadAvatarPlaceholder} 
+          className={imagePreview ? styles.userImage : styles.placeholderImage} 
+          alt="Preview do Upload" 
+        />
+      </div>
+
+      <SpacerComp vertical={15} />
+      <TextInfoComp>Como deseja enviar sua foto?</TextInfoComp>
+      <SpacerComp vertical={10} />
+
+      <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center' }}>
+        <button 
+          className={styles.button} 
+          style={{ flex: 1, backgroundColor: '#555' }} 
+          onClick={handleOpenCamera}
+        >
+          Tirar Foto
+        </button>
+        <button 
+          className={styles.button} 
+          style={{ flex: 1, backgroundColor: '#555' }} 
+          onClick={handleOpenGallery}
+        >
+          Galeria
+        </button>
+      </div>
+
+      <SpacerComp vertical={20} />
+
+      <button 
+        className={styles.button} 
+        onClick={handleUpload} 
+        disabled={onLoading || !imageFile}
+        style={{ opacity: (!imageFile || onLoading) ? 0.6 : 1 }}
+      >
+        {onLoading ? "Enviando..." : "Confirmar Envio"}
       </button>
     </div>
   );
