@@ -275,6 +275,7 @@
   margin-top: 10px;
   font-size: 10px;
   opacity: 0.9;
+  margin-left: 15px;
 }
 
 .instructions p {
@@ -333,6 +334,11 @@
 }
 
 @media (max-width: 375px) {
+  :root {
+  --card-width: 100px;
+  --card-height: 100px;
+  }
+
   .cardViewport {
     --scale-factor: 0.80; 
   }
