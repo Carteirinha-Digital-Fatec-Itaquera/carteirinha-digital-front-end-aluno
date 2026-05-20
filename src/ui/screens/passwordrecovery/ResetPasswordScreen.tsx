@@ -89,7 +89,7 @@ export default function ResetPasswordScreen() {
         />
 
         <div className={styles.stepContainer}>
-          <TitleComp text="Criar Nova Senha" size={20} />
+          <TitleComp text="Criar Nova Senha" size={28} />
           <SpacerComp />
           <p className={styles.infoText}>Seu link foi validado. Digite sua nova senha de acesso abaixo.</p>
           <SpacerComp vertical={20} />
