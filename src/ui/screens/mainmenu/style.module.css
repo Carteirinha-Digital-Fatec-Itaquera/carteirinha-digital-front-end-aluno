@@ -2,18 +2,18 @@
   display: flex;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f0f2f5;
 }
 
 .mobileWrapper {
   width: 100%;
   max-width: 100%; 
-  background-color: #f0f2f5; 
+  background-color: #BA1A1A;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   min-height: 100vh;
+  
 }
 
 .redHeader {
@@ -24,6 +24,7 @@
   justify-content: center;
   align-items: flex-start;
   padding-top: 45px;
+  margin-bottom: 40px;
 }
 
 .logo {
@@ -40,21 +41,21 @@
   width: 90%;
   max-width: 900px; 
   background-color: #FFFFFF;
-  border-radius: 30px; /* Bordas arredondadas em todos os cantos no PC */
+  border-radius: 50px; /* Bordas arredondadas em todos os cantos no PC */
   padding: 0 50px 50px 50px;
   margin-top: -50px; /* Puxa o card para cima da faixa vermelha */
   position: relative;
   box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08); /* Sombra 3D elegante */
-  margin-bottom: 50px; 
+  margin-bottom: 50px;
 }
 
 .avatarWrapper {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
+  width: 140px;
+  height: 140px;
+  border-radius: 5px;
   background-color: #fff;
   padding: 6px;
-  margin-top: -65px;
+  margin-top: -60px;
   box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.12);
   margin-bottom: 25px;
 }
