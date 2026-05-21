@@ -8,12 +8,24 @@
 .container {
   display: flex;
   justify-content: center;
-  
   min-height: 100vh;
   background-color: #f0f2f5;
   overflow: hidden;
 }
+.qrBlocked{
+  width: 70px;   /* mesmo valor do size={70} no QRCodeSVG */
+  height: 70px;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #BA1A1A;
+}
 .loadingContainer {
   display: flex;
   justify-content: center;
@@ -39,30 +51,29 @@
   align-items: center;
   width: 100%;
   padding: 15px 20px;
+  background-color: #BA1A1A;
 }
 
 .backButton {
-  background: white;
   border: none;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   cursor: pointer;
+  background-color: transparent;
+  color: #ffffff;
 }
 
 .headerTitle {
   font-size: 16px;
   font-weight: 800;
-  color: #1a1a1a;
+  color: #ffffff;
   text-transform: uppercase;
 }
 
 .cardStage {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -112,15 +123,15 @@
 }
 
 .frontBlock1 {
-  height: 20%;
-  background: white;
+  height: 25%;
+  background: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   padding: 0 25px;
 }
 
 .fatecLogoFront {
-  height: 50px;
+  height: 55px;
   object-fit: contain;
 }
 
@@ -161,14 +172,14 @@
 }
 
 .labelWhite {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 800;
   color: rgba(255,255,255,0.7);
   margin-bottom: 1px;
 }
 
 .studentName {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 900;
   margin-bottom: 5px;
   text-transform: uppercase;
@@ -176,22 +187,22 @@
 }
 
 .courseName {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   margin-bottom: 12px;
-  opacity: 0.9;
+  color: #f1f1f1;
 }
 
 .dataGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  grid-template-columns: 2fr 1fr;
   margin-bottom: 12px;
 }
 
 .dataItem label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
+  color: #f1f1f1;
 }
 
 .statusBox { margin-top: auto; }
@@ -199,15 +210,15 @@
 .statusPill {
   display: inline-block;
   padding: 3px 12px;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 900;
-  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgb(245, 245, 245);
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .frontBlock3 {
-  height: 18%;
+  height: 22%;
   background: white;
   display: flex;
   justify-content: center;
@@ -217,7 +228,7 @@
 }
 
 .footerLogo {
-  height: 50px;
+  height: 70px;
   object-fit: contain;
 }
 
@@ -238,42 +249,45 @@
 .backHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
-.logoFatecBack { height: 35px; filter: brightness(0) invert(1); }
-.logoCpsBack { height: 35px; filter: brightness(0) invert(1); }
+.logoFatecBack { height: 45px}
+.logoCpsBack { height: 45px }
 
 .backMainRow {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
+  /* centraliza verticalmente o QR com o texto */
+  gap: 12px;           /* menos gap, mais espaço pro texto */
 }
 
 .institutionBox { flex: 1; }
 .backInfoCard {
-  border: 1.5px solid white;
+  border: 1.5px solid #cccccc;;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 15px;
 }
 
-.instTitle { font-size: 14px; font-weight: 900; margin: 0; }
-.instSub { font-size: 11px; font-weight: 600; opacity: 0.8; margin: 0 0 5px 0; }
+.instTitle { font-size: 12px; font-weight: 900; margin: 0; }
+.instSub { font-size: 13px; font-weight: 600; opacity: 0.8; margin: 0 0 5px 0; }
 
 
 .qrContainer {
   background: white;
-  padding: 6px;
   border-radius: 6px;
-  flex-shrink: 0;
+  width: 85px;   /* 70px do QR + 6px padding de cada lado */
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .instructions {
   margin-top: 10px;
-  font-size: 10px;
+  font-size: 17px;
   opacity: 0.9;
   margin-left: 15px;
 }
@@ -281,14 +295,16 @@
 .instructions p {
   margin: 3px 0;
   display: flex;
+  font-size: 13px;
   gap: 8px;
+  color: #dfdfdf;
 }
 
-.instructions span { font-weight: 900; font-size: 14px; line-height: 1; }
+.instructions span { font-weight: 900; font-size: 17px; line-height: 1; }
 
 .backBlock2 {
-  height: 25%;
-  background: white;
+  height: 38%;
+  background: rgb(255, 255, 255);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -297,7 +313,7 @@
 }
 
 .backUrl {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--red-fatec);
   font-weight: 800;
   margin-bottom: 5px;
@@ -317,58 +333,32 @@
 }
 
 
-
-/* @media (max-width: 375){
-  :root {
-  --card-width: 100px;
-  --card-height: 100px;
-  }
-} */
-
 @media (max-width: 640px) {
-  .cardViewport {
-    --scale-factor: 0.56; 
-    transform: rotate(-90deg) scale(var(--scale-factor));
+  :root {
+    --card-width: 600px;
+    --card-height: 380px;
   }
-  
-}
 
-@media (max-width: 375px) {
-  /* :root {
-  --card-width: 100px;
-  --card-height: 100px;
-  } */
+  /* O transform não afeta o layout, então o cardStage precisa de altura explícita */
+  .cardStage {
+    height: 580px;
+    overflow: visible;
+  }
 
   .cardViewport {
-    --scale-factor: 0.80; 
+    transform: rotate(-90deg) scale(0.70); /* era 0.56 — agora ocupa 323px de largura */
+    transform-origin: center center;
   }
 }
 
-@media (max-width: 665px){
-  :root {
-  --card-width: 500px;
-  --card-height: 400px;
+/* Telas menores (iPhone SE, etc) */
+@media (max-width: 390px) {
+  .cardViewport {
+    transform: rotate(-90deg) scale(0.60);
   }
-  
-}
 
-@media (max-width: 400px){
-  :root {
-  --card-width: 750px;
-  --card-height: 550px;
+  .cardStage {
+    height: 530px;
   }
-  .dataItem label{
-    font-size: 15px;
-  }
-  .instSub {
-    font-size: 17px;
-  }
-  .instructions p{
-    font-size: 17px;
-  }
-}
 
-.flipHint { margin-top: 10px; font-size: 12px; color: #888; font-weight: 500; }
-.dotsRow { display: flex; gap: 8px; margin-top: 8px; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; transition: 0.3s; }
-.dotActive { background: var(--red-fatec); }
+}

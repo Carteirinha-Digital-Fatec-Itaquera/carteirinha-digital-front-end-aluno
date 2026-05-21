@@ -31,8 +31,7 @@
 
 .logoFatec {
   height: 100px;
-  object-fit: contain;
-  /* filter: brightness(0) invert(1);  */
+
 }
 
 .contentWrapper {
@@ -85,6 +84,7 @@
   gap: 15px;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.06); /* Sombra suave */
   border: 1px solid #eee;
+  flex-wrap: wrap;
 }
 .contactCard:hover {
   background-color: #d1d1d1;
@@ -104,13 +104,10 @@
 }
 
 .bgWhatsapp { background-color: #dcf8c6; color: #25D366; }
-.bgWhatsapp svg { color: #25D366 !important; fill: #25D366 !important; }
 
 .bgPhone { background-color: #e3f2fd; color: #1e88e5; }
-.bgPhone svg { color: #1e88e5 !important; fill: #1e88e5 !important; }
 
 .bgEmail { background-color: #fce4ec; color: #e91e63; }
-.bgEmail svg { color: #e91e63 !important; fill: #e91e63 !important; }
 
 .contactInfo {
   display: flex;

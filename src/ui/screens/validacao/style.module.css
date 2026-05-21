@@ -38,7 +38,7 @@
   max-width: 450px; /* Tamanho de uma tela de celular */
   background-color: #f5f5f5; /* Cinza clarinho de fundo dos cards */
   margin-top: -40px; /* Faz o efeito de sobrepor o topo vermelho */
-  border-radius: 20px 20px 0 0;
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
   gap: 15px;

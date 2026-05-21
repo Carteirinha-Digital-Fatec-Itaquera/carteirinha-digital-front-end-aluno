@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowLeft,AlertCircle } from "lucide-react";
+import { ArrowLeft,AlertCircle, ArrowRight } from "lucide-react";
 
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
@@ -12,9 +12,10 @@ import styles from './style.module.css';
 import { formatDateBR } from "../../../utils/dateProcessing";
 
 const logoFatecPreto = '/fatec_itaquera_logo_preto.png';
-// const logoFatecBranco = '/fatec_itaquera_logo_branco.png';
+const logoFatecBranco = '/fatec_itaquera_logo.png';
 const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png';
-// const logoCpsBranco = '/logos_cps_governo_com_slogan_horizontal_branco.png';
+const logoCpsBranco = '/logos_cps_governo_com_slogan.png';
+const iconCarteirinha = '/iconCarteirinha.png';
 // const logoSaoPauloBranco = '/logo_sao_paulo_governo_branco.png'; 
 const perfilDefault = '/images/perfil_default.png';
 
@@ -102,8 +103,9 @@ export default function DigitalStudentCardScreen() {
       <div className={styles.appWrapper}>
         <header className={styles.header}>
           <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
-            <ArrowLeft size={24} color="#BA1A1A" strokeWidth={3} />
+            <ArrowLeft size={24} color="#ffffff" strokeWidth={3} />
           </button>
+          <img src={iconCarteirinha} alt="Carteirinha" style={{width: 30}}/>
           <span className={styles.headerTitle}>Carteirinha</span>
           <div style={{ width: 44 }} />
         </header>
@@ -130,7 +132,7 @@ export default function DigitalStudentCardScreen() {
                   </div>
                   
                   <div className={styles.infoColumn}>
-                    <label className={styles.labelWhite}>NOME DO ALUNO</label>
+                
                     <h2 className={styles.studentName}>{student.name}</h2>
                     <p className={styles.courseName}>Curso: {student.course}</p>
 
@@ -166,8 +168,8 @@ export default function DigitalStudentCardScreen() {
               <div className={`${styles.cardFace} ${styles.faceBack}`}>
                 <div className={styles.backBlock1}>
                   <div className={styles.backHeader}>
-                    <img src={logoFatecPreto} alt="Fatec" className={styles.logoFatecBack} />
-                    {/* <img src={logoCpsBranco} alt="CPS" className={styles.logoCpsBack} /> */}
+                    <img src={logoFatecBranco} alt="Fatec" className={styles.logoFatecBack} />
+                    <img src={logoCpsBranco} alt="CPS" className={styles.logoCpsBack} /> 
                   </div>
 
                   <div className={styles.backMainRow}>
@@ -179,14 +181,15 @@ export default function DigitalStudentCardScreen() {
                         <p className={styles.instSub}> Tel: (11) 2056-4347 | 2058-4245</p>
                       </div>
                       <div className={styles.instructions}>
-                        <p><span>›</span> Documento pessoal e intransferível</p>
-                        <p><span>›</span> Validação via QR Code</p>
+                        
+                        <p><ArrowRight color="#ffff" size={15}/>Documento pessoal e intransferível</p>
+                        <p><span><ArrowRight color="#ffff" size={15}/></span> Validação via QR Code</p>
                       </div>
                     </div>
                     <div className={styles.qrContainer}>
                       {/* <QRCodeSVG value={validationUrl} size={100} /> */}
                       {isPhotoApproved ? (
-                        <QRCodeSVG value={validationUrl} size={100} />
+                        <QRCodeSVG value={validationUrl} size={70} />
                       ) : (
                         <div className={styles.qrBlocked}>
                           <AlertCircle size={30} color="#BA1A1A" />
