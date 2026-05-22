@@ -9,13 +9,11 @@ export interface ResponseAuth {
   accessToken?: string;
 }
 
-// 1. Criamos um tipo para o sucesso do login
 export interface LoginSuccess {
   token: string;
   mustChangePassword: boolean;
 }
 
-// 2. Atualizamos o retorno para Promise<LoginSuccess | ApiError>
 export async function login(auth: Auth): Promise<LoginSuccess | ApiError> {
   const response = await apiClient('/autenticacao/login', {
     method: 'POST',

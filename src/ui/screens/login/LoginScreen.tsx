@@ -93,7 +93,8 @@ export default function LoginScreen() {
                   if (result.mustChangePassword) {
                     alert(`${result.mustChangePassword}\n\n${String(result.mustChangePassword)}`)
                     localStorage.setItem("mustChangePassword", "false");  
-                    navigate('/first-access');
+                    // navigate('/first-access');
+                    window.location.href = "/first-access"
                   } else {
                     // navigate('/MainMenu'); 
                     localStorage.setItem("mustChangePassword", "true");  

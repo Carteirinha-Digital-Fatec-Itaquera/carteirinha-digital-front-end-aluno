@@ -53,10 +53,12 @@ export default function AppRoutes() {
         {/* <Route path="/login" element={<LoginScreen />} /> */}
         <Route 
           path="/login" 
+          
           element={
-            isAuthenticated ? (
-              mustChange ? <Navigate to="/first-access" replace /> : <Navigate to="/MainMenu" replace />
-            ) : <LoginScreen />
+          <LoginScreen/>
+            // isAuthenticated ? (
+              // mustChange ? <Navigate to="/first-access" replace /> : <Navigate to="/MainMenu" replace />
+            // ) : <LoginScreen />
           }
         />
 
@@ -77,7 +79,10 @@ export default function AppRoutes() {
           
         <Route path="/signup" element={<SignUp />} />
         <Route path="/PasswordRecovery" element={<PasswordRecoveryScreen />} />
-        <Route path="/first-access" element={<FirstAccessScreen />} />
+        <Route path="/first-access" element={
+          !isAuthenticated? <Navigate to="/MainMenu" replace/>:
+          !mustChange?<Navigate to="/MainMenu" replace/>:
+          <FirstAccessScreen />} />
         
         {/* <Route path="/TelaQrcode" element={<TelaQrcode />} /> */}
 
@@ -98,7 +103,10 @@ export default function AppRoutes() {
             <DigitalStudentCardScreen />
           }
         />
-        <Route path="/reset-password" element={<ResetPasswordScreen />} />
+        <Route path="/reset-password" element={
+          
+          <ResetPasswordScreen />
+          } />
 
         <Route path="/UploadImage" 
         element={
