@@ -91,7 +91,7 @@ export default function LoginScreen() {
                   localStorage.setItem("token", result.token);
                   
                   if (result.mustChangePassword) {
-                    alert(`${result.mustChangePassword}\n\n${String(result.mustChangePassword)}`)
+                    // alert(`${result.mustChangePassword}\n\n${String(result.mustChangePassword)}`)
                     localStorage.setItem("mustChangePassword", "false");  
                     // navigate('/first-access');
                     window.location.href = "/first-access"
