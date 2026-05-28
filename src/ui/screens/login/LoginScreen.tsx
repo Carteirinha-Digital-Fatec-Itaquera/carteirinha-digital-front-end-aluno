@@ -53,9 +53,23 @@ export default function LoginScreen() {
         <div className={styles.firstAccessTooltip}>
             <HelpCircle size={18} color="#BA1A1A" />
             <span className={styles.tooltipText}>
-              Se esse for seu primeiro acesso, utilize sua RA senha de primeiro acesso.
-              Ela é composta por 13 digitos
-              Exemplo: 1234567891011
+              Para o primeiro acesso use a RA como senha <br></br>
+              {/* Ela é composta por 13 digitos */}
+              Não sabe o seu RA?{' '}
+              <a 
+                href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{
+                  color: '#FFD700', // Amarelo para destacar do fundo cinza escuro
+                  fontWeight: 'bold',
+                  textDecoration: 'underline',
+                  cursor: 'pointer'
+                }}
+              >
+                Acesse o portal SIGA
+              </a>
+              {/* Exemplo: 1234567891011 */}
             </span>
         </div>
 

@@ -12,11 +12,11 @@ export const TextClickableComp = ({ text, fontColor = "#333333", action, alignSe
     <button 
       className={styles.container}
       onClick={action}
-      style={{ alignSelf: alignSelf }} /* Passamos apenas o que é dinâmico */
+      style={{ alignSelf: alignSelf }} 
     >
       <span 
         className={styles.text} 
-        style={{ color: fontColor }} /* A cor do texto também é dinâmica */
+        style={{ color: fontColor }} 
       >
         {text}
       </span>
