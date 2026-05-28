@@ -66,6 +66,7 @@ export default function DigitalStudentQrCode() {
   }
 
   const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
+  console.log(`${student.qrcode}`)
   const isPhotoApproved = student.photo && student.photoStatus === 'APPROVED';
 
   return (

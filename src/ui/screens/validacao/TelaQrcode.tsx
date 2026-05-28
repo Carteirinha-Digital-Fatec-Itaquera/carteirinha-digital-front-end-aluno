@@ -31,11 +31,14 @@ export default function TelaQrcode() {
 
       try {
         const response = await fetch(`${GLOBAL_VAR.BASE_URL}/estudantes/verificar/${qrcodeToken}`);
-        
         if (response.ok) {
           const result = await response.json();
-          console.log(result)
-          setStudent(new Student(result)); 
+          // console.log("DADOS DO BACKEND ", result);
+          // setStudent(new Student(result)); 
+
+          const studentInstance = new Student(result);
+          // console.log("ENTIDADE NO FRONTEND ", studentInstance);
+          setStudent(studentInstance);
         } else {
           const errorData = await response.json();
           setError(errorData.message || "Perfil não encontrado.");
@@ -92,7 +95,6 @@ export default function TelaQrcode() {
             </div>
           </div>
           <div className={styles.badgeWrapper}>
-            {/* O Badge exibe o status (Ativo/Inativo) e a validade */}
             <Badge status={student.status} validade={new Date(student.dueDate)} />
           </div>
         </section>
