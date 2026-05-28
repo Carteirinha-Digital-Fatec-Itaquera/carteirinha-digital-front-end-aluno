@@ -29,13 +29,13 @@ export default function ConfigScreen() {
     { id: 'protanopia', name: 'Protanopia (Total)', desc: 'Ausência de fotorreceptores vermelhos' },
     { id: 'tritanopia', name: 'Tritanopia', desc: 'Dificuldade com azul e amarelo (Raro)' },
   ];
-
+/*
   const toggleTheme = () => {
     const nextTheme = !isDarkMode ? 'dark' : 'light';
     setIsDarkMode(!isDarkMode);
     document.documentElement.setAttribute('data-theme', nextTheme);
     localStorage.setItem('@Carteirinha:theme', nextTheme);
-  };
+  };*/
 
   const applyAccessibilityFilter = (filterId: string) => {
     setCurrentFilter(filterId);
