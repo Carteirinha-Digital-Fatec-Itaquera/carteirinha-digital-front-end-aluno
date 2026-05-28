@@ -13,7 +13,7 @@ export default function ConfigScreen() {
 
   // Estados de Preferência (buscam o que já está salvo no navegador)
   const [currentFilter, setCurrentFilter] = useState(localStorage.getItem('@Carteirinha:accessibility') || 'normal');
-  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('@Carteirinha:theme') === 'dark');
+  //const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('@Carteirinha:theme') === 'dark');
 
   // Estados do Formulário de Senha
   const [newPassword, setNewPassword] = useState("");
