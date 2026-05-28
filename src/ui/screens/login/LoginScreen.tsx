@@ -45,7 +45,7 @@ export default function LoginScreen() {
 
         <div style={{display: 'flex', flexDirection: 'column', rowGap: 15}}>
           <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
-        <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
+          <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
         </div>
 
         
@@ -53,8 +53,9 @@ export default function LoginScreen() {
         <div className={styles.firstAccessTooltip}>
             <HelpCircle size={18} color="#BA1A1A" />
             <span className={styles.tooltipText}>
-              Se esse for seu primeiro acesso, utilize sua data de nascimento (DDMMAAAA) como senha.
-              Exemplo: 03/05/2005 ficaria 03052005
+              Se esse for seu primeiro acesso, utilize sua RA senha de primeiro acesso.
+              Ela é composta por 13 digitos
+              Exemplo: 1234567891011
             </span>
         </div>
 

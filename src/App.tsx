@@ -10,12 +10,13 @@ registerSW({ immediate: true });
 
 function App() {
   useEffect(() => {
-    const savedPrimary = localStorage.getItem('theme-primary');
-    const savedSecondary = localStorage.getItem('theme-secondary');
-    
-    if (savedPrimary && savedSecondary) {
-      document.documentElement.style.setProperty('--primary-color', savedPrimary);
-      document.documentElement.style.setProperty('--secondary-color', savedSecondary);
+    // const savedPrimary = localStorage.getItem('theme-primary');
+    // const savedSecondary = localStorage.getItem('theme-secondary');
+    const savedFilter = localStorage.getItem('@Carteirinha:accessibility') || 'normal';
+    const savedTheme = localStorage.getItem('@Carteirinha:theme') || 'light';
+    if (savedFilter && savedTheme) {
+      document.documentElement.style.setProperty('--primary-color', savedFilter);
+      document.documentElement.style.setProperty('--secondary-color', savedTheme);
     }
   }, []);
   return (

@@ -141,10 +141,10 @@ export default function DigitalStudentCardScreen() {
                         <label>RA: {student.ra}</label>
                       </div>
                       <div className={styles.dataItem}>
-                        <label>VAL: {formatDateBR(student.dueDate)}</label>
+                        <label>VAL: {formatDateBR(student.birthDate)}</label>
                       </div>
                       <div className={styles.dataItem}>
-                        <label>Data Nascimento: {formatDateBR(student.birthDate)}</label>
+                        <label>Data Nascimento: {formatDateBR(student.dueDate)}</label>
                       </div>
                       <div className={styles.dataItem}>
                         <label>CPF: {student.cpf}</label>
