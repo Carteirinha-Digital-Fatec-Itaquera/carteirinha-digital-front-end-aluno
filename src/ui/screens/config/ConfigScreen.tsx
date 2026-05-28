@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, ShieldCheck, Moon, Check } from 'lucide-react';
+import { ArrowLeft, Eye, ShieldCheck, Check } from 'lucide-react';
 import { apiClient } from '../../../api/config/apiClient';
 import styles from './style.module.css';
 
