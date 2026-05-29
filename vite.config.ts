@@ -32,13 +32,13 @@ export default defineConfig({
             // purpose: 'maskable'
             purpose: 'maskable'
           },
-          {
-            src: 'pwa-512x512-Final.png',
-            sizes: '512x512',
-            type: 'image/png',
-            // purpose: 'any'
-            purpose: 'any maskable'
-          }
+          // {
+          //   src: 'pwa-512x512-Final.png',
+          //   sizes: '512x512',
+          //   type: 'image/png',
+          //   // purpose: 'any'
+          //   purpose: 'any maskable'
+          // }
         ],
         screenshots: [
         {
