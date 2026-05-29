@@ -19,21 +19,21 @@ export default defineConfig({
         display: 'standalone', 
         icons: [
           {
-            src: 'pwa-192x192-end.png',
+            src: 'pwa-192x192-Final.png',
             sizes: '192x192',
             type: 'image/png',
             // purpose: 'any',
             purpose: 'any'
           },
           {
-            src: 'pwa-192x192-end.png',
+            src: 'pwa-192x192-Final.png',
             sizes: '192x192',
             type: 'image/png',
             // purpose: 'maskable'
             purpose: 'maskable'
           },
           {
-            src: 'pwa-512x512-end.png',
+            src: 'pwa-512x512-Final.png',
             sizes: '512x512',
             type: 'image/png',
             // purpose: 'any'
