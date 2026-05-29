@@ -22,19 +22,22 @@ export default defineConfig({
             src: 'pwa-192x192-refatorado.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
+            // purpose: 'any',
+            purpose: 'any maskable'
           },
           {
             src: 'pwa-192x192-refatorado.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'maskable'
+            // purpose: 'maskable'
+            purpose: 'any maskable'
           },
           {
             src: 'pwa-512x512-refatorado.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
+            // purpose: 'any'
+            purpose: 'any maskable'
           }
         ],
         screenshots: [
