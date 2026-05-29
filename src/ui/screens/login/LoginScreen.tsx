@@ -19,7 +19,7 @@ import { Auth } from '../../../domains/Auth';
 
 import styles from './style.module.css';
 
-import { HelpCircle } from 'lucide-react'; // Importando o ícone
+import { HelpCircle } from 'lucide-react'; 
 export default function LoginScreen() {
   const navigate = useNavigate();
 

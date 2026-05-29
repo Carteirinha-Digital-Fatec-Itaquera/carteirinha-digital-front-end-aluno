@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, ShieldCheck, Check } from 'lucide-react';
+import { ArrowLeft, Eye, ShieldCheck, Check,Settings} from 'lucide-react';
 import { apiClient } from '../../../api/config/apiClient';
 import styles from './style.module.css';
 
 export default function ConfigScreen() {
   const navigate = useNavigate();
 
-  // Estados dos Modais
   const [modalDaltonismo, setModalDaltonismo] = useState(false);
   const [modalSenha, setModalSenha] = useState(false);
 
-  // Estados de Preferência (buscam o que já está salvo no navegador)
   const [currentFilter, setCurrentFilter] = useState(localStorage.getItem('@Carteirinha:accessibility') || 'normal');
   //const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('@Carteirinha:theme') === 'dark');
 
-  // Estados do Formulário de Senha
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [onLoading, setOnLoading] = useState(false);
@@ -56,7 +53,6 @@ export default function ConfigScreen() {
 
     setOnLoading(true);
     try {
-      // O apiClient envia automaticamente o token via "authenticated: true"
       const response = await apiClient('/autenticacao/reset-password', {
         method: 'POST',
         body: { newPassword }, 
@@ -88,9 +84,10 @@ export default function ConfigScreen() {
     <div className={styles.container}>
       <header className={styles.header}>
         <button className={styles.backButton} onClick={() => navigate(-1)}>
-          <ArrowLeft color="white" size={24} />
+          <ArrowLeft color="#ffffff" strokeWidth={3} size={24} />
         </button>
-        <h1 className={styles.title}>Configurações</h1>
+        <Settings color='white' strokeWidth={3}/>
+        <strong><h1 className={styles.title}>CONFIGURAÇÕES</h1></strong>
       </header>
 
       <main className={styles.main}>
