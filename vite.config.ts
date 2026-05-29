@@ -23,14 +23,14 @@ export default defineConfig({
             sizes: '192x192',
             type: 'image/png',
             // purpose: 'any',
-            purpose: 'any maskable'
+            purpose: 'any'
           },
           {
             src: 'pwa-192x192-end.png',
             sizes: '192x192',
             type: 'image/png',
             // purpose: 'maskable'
-            purpose: 'any maskable'
+            purpose: 'maskable'
           },
           {
             src: 'pwa-512x512-end.png',
