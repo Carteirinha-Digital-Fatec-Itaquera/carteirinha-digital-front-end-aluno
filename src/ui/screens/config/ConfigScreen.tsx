@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, ShieldCheck, Moon, Check } from 'lucide-react';
+import { ArrowLeft, Eye, ShieldCheck, Check } from 'lucide-react';
 import { apiClient } from '../../../api/config/apiClient';
 import styles from './style.module.css';
 
@@ -13,7 +13,7 @@ export default function ConfigScreen() {
 
   // Estados de Preferência (buscam o que já está salvo no navegador)
   const [currentFilter, setCurrentFilter] = useState(localStorage.getItem('@Carteirinha:accessibility') || 'normal');
-  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('@Carteirinha:theme') === 'dark');
+  //const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('@Carteirinha:theme') === 'dark');
 
   // Estados do Formulário de Senha
   const [newPassword, setNewPassword] = useState("");
@@ -29,13 +29,13 @@ export default function ConfigScreen() {
     { id: 'protanopia', name: 'Protanopia (Total)', desc: 'Ausência de fotorreceptores vermelhos' },
     { id: 'tritanopia', name: 'Tritanopia', desc: 'Dificuldade com azul e amarelo (Raro)' },
   ];
-
+/*
   const toggleTheme = () => {
     const nextTheme = !isDarkMode ? 'dark' : 'light';
     setIsDarkMode(!isDarkMode);
     document.documentElement.setAttribute('data-theme', nextTheme);
     localStorage.setItem('@Carteirinha:theme', nextTheme);
-  };
+  };*/
 
   const applyAccessibilityFilter = (filterId: string) => {
     setCurrentFilter(filterId);
