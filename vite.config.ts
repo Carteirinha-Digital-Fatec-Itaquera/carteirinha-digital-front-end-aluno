@@ -18,20 +18,20 @@ export default defineConfig({
         background_color: '#BA1A1A',
         display: 'standalone', 
         icons: [
-          // {
-          //   src: 'pwa-192x192-Final.png',
-          //   sizes: '192x192',
-          //   type: 'image/png',
-          //   purpose: 'any'
-          // },
-          // {
-          //   src: 'pwa-192x192-Final.png',
-          //   sizes: '192x192',
-          //   type: 'image/png',
-          //   purpose: 'maskable'
-          // },
           {
-            src: 'pwa-512x512-Final.png',
+            src: 'pwa-192x192-refatorado.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-192x192-refatorado.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
+          },
+          {
+            src: 'pwa-512x512-refatorado.png',
             sizes: '512x512',
             type: 'image/png',
             // purpose: 'any'
