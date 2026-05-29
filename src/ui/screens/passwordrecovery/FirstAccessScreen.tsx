@@ -20,7 +20,6 @@ export default function FirstAccessScreen() {
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
   const [onLoading, setOnLoading] = useState(false);
 
-  // Tipagem corrigida para bater com o Dispatch do React esperado pelo InputComp
   const handleCpfChange: React.Dispatch<React.SetStateAction<string>> = (valueOrFn) => {
     const text = typeof valueOrFn === 'function' ? (valueOrFn as Function)(cpf) : valueOrFn;
     const raw = text.replace(/\D/g, "");
@@ -33,7 +32,6 @@ export default function FirstAccessScreen() {
     setCpf(formatted);
   };
 
-  // Tipagem corrigida para bater com o Dispatch do React esperado pelo InputComp
   const handleBirthDateChange: React.Dispatch<React.SetStateAction<string>> = (valueOrFn) => {
     const text = typeof valueOrFn === 'function' ? (valueOrFn as Function)(birthDate) : valueOrFn;
     const raw = text.replace(/\D/g, "");

@@ -88,7 +88,7 @@ export default function ConfigScreen() {
     <div className={styles.container}>
       <header className={styles.header}>
         <button className={styles.backButton} onClick={() => navigate(-1)}>
-          <ArrowLeft size={24} />
+          <ArrowLeft color="white" size={24} />
         </button>
         <h1 className={styles.title}>Configurações</h1>
       </header>

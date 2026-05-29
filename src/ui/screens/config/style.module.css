@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  background-color: var(--background-card, #ffffff);
+  background-color: var(--background-card, #BA1A1A);
   border-bottom: 1px solid var(--border-color, #e9ecef);
   gap: 16px;
   transition: background-color 0.3s ease;
