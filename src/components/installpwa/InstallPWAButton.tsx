@@ -38,7 +38,7 @@ export const InstallPWAButton = () => {
       gap: '12px',
       backgroundColor: '#FFFFFF',
       padding: '10px 20px',
-      borderRadius: '30px',
+      // borderRadius: '30px',
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
       border: '2px solid #BA1A1A'
     }}>

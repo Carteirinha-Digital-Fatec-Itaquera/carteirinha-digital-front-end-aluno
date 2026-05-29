@@ -87,7 +87,8 @@ export default function ConfigScreen() {
           <ArrowLeft color="#ffffff" strokeWidth={3} size={24} />
         </button>
         <Settings color='white' strokeWidth={3}/>
-        <strong><h1 className={styles.title}>CONFIGURAÇÕES</h1></strong>
+        {/* <strong><h1 className={styles.title}>CONFIGURAÇÕES</h1></strong> */}
+        <span className={styles.title}>CONFIGURAÇÕES</span>
       </header>
 
       <main className={styles.main}>
