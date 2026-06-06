@@ -14,7 +14,8 @@ function App() {
     // const savedSecondary = localStorage.getItem('theme-secondary');
     const savedFilter = localStorage.getItem('@Carteirinha:accessibility') || 'normal';
     const savedTheme = localStorage.getItem('@Carteirinha:theme') || 'light';
-    if (savedFilter && savedTheme) {
+    // if (savedFilter && savedTheme) {
+    if (savedTheme) {
       document.documentElement.style.setProperty('--primary-color', savedFilter);
       document.documentElement.style.setProperty('--secondary-color', savedTheme);
     }
