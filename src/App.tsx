@@ -16,8 +16,8 @@ function App() {
     const savedTheme = localStorage.getItem('@Carteirinha:theme') || 'light';
     // if (savedFilter && savedTheme) {
     if (savedTheme) {
-      document.documentElement.style.setProperty('--primary-color', savedFilter);
-      document.documentElement.style.setProperty('--secondary-color', savedTheme);
+      document.documentElement.style.setProperty('data-accessibility', savedFilter);
+      document.documentElement.style.setProperty('data-theme', savedTheme);
     }
   }, []);
   return (
