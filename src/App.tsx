@@ -14,7 +14,7 @@ function App() {
     // const savedSecondary = localStorage.getItem('theme-secondary');
     const savedFilter = localStorage.getItem('@Carteirinha:accessibility') || 'normal';
     // const savedTheme = localStorage.getItem('@Carteirinha:theme') || 'light';
-    document.documentElement.style.setProperty('data-accessibility', savedFilter);
+    document.documentElement.setAttribute('data-accessibility', savedFilter);
     // document.documentElement.style.setProperty('data-theme', savedTheme);
     
     // if (savedFilter && savedTheme) {
