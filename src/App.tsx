@@ -13,12 +13,15 @@ function App() {
     // const savedPrimary = localStorage.getItem('theme-primary');
     // const savedSecondary = localStorage.getItem('theme-secondary');
     const savedFilter = localStorage.getItem('@Carteirinha:accessibility') || 'normal';
-    const savedTheme = localStorage.getItem('@Carteirinha:theme') || 'light';
+    // const savedTheme = localStorage.getItem('@Carteirinha:theme') || 'light';
+    document.documentElement.style.setProperty('data-accessibility', savedFilter);
+    // document.documentElement.style.setProperty('data-theme', savedTheme);
+    
     // if (savedFilter && savedTheme) {
-    if (savedTheme) {
-      document.documentElement.style.setProperty('data-accessibility', savedFilter);
-      document.documentElement.style.setProperty('data-theme', savedTheme);
-    }
+    //   document.documentElement.style.setProperty('data-accessibility', savedFilter);
+    //   document.documentElement.style.setProperty('data-theme', savedTheme);
+    
+    // }
   }, []);
   return (
     <>
