@@ -56,7 +56,7 @@ export default function MainMenuScreen() {
       localStorage.removeItem('token');
       localStorage.removeItem('@Carteirinha:profile');
       localStorage.removeItem('@Carteirinha:photoOffline');
-      
+      localStorage.removeItem('@Carteirinha:accessibility')
       window.location.href = "/login"
       // navigate("/");
     }
