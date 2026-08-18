@@ -44,7 +44,7 @@ export default function LoginScreen() {
         <SpacerComp />
 
         <div style={{display: 'flex', flexDirection: 'column', rowGap: 15}}>
-          <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br" value={email} onChangeText={setEmail} />
+          <InputComp label="E-mail institucional" placeholder="Ex: aluno@fatec.sp.gov.br." value={email} onChangeText={setEmail} />
           <InputPasswordComp label="Senha" placeholder="Ex: ********" value={password} onChangeText={setPassword} />
         </div>
 
