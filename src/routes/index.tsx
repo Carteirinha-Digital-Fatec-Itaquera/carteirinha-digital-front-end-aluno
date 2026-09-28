@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { EventsStub, CertificatesStub, ScannerStub, CertificateStub } from '../ui/screens/events/EventStubs';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 
 import LoginScreen from "../ui/screens/login/LoginScreen";
 import MainMenuScreen from "../ui/screens/mainmenu/MainMenuScreen";
@@ -35,12 +36,27 @@ const getAuthState = () => {
   };
 };
 
+// Executado dentro do router a cada navegação, inclusive após login/logout.
+function StudentRoute() {
+  useLocation();
+  const { isAuthenticated, mustChange } = getAuthState();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (mustChange) return <Navigate to="/first-access" replace />;
+  return <Outlet />;
+}
+
 export default function AppRoutes() {
   const { isAuthenticated, mustChange } = getAuthState();
   return (
     
     <BrowserRouter>
       <Routes>
+        <Route element={<StudentRoute />}>
+          <Route path="/eventos" element={<EventsStub />} />
+          <Route path="/eventos/scanner" element={<ScannerStub />} />
+          <Route path="/certificados" element={<CertificatesStub />} />
+          <Route path="/certificado/:id" element={<CertificateStub />} />
+        </Route>
         {/* <Route path="/" element={<Navigate to="/login" />} /> */}
         <Route 
           path="/" 

@@ -12,9 +12,10 @@ const perfilDefault = "/perfil_default.png"
 import { findProfile } from '../../../api/student/findProfile';
 import type { Student } from '../../../domains/Student';
 // import { GLOBAL_VAR } from '../../../api/config/globalVar';
-import { IdCard, Settings, HelpCircle, Camera, QrCode, LogOut } from 'lucide-react'; 
+import { IdCard, Settings, HelpCircle, Camera, QrCode, LogOut, CalendarDays, Award } from 'lucide-react';
 
 import styles from './style.module.css';
+import { useMockEvents } from '../../../services/eventService';
 export default function MainMenuScreen() {
   const navigate = useNavigate();
   const [student, setStudent] = useState<Student | null>(null);
@@ -26,7 +27,7 @@ export default function MainMenuScreen() {
         setStudent(JSON.parse(cachedData));
       }
 
-      if (navigator.onLine) {
+      if (navigator.onLine && !useMockEvents) {
         const result = await findProfile();
         if (result && !('code' in result)) {
           const freshData = result as Student;
@@ -96,6 +97,14 @@ export default function MainMenuScreen() {
           </h1>
 
           <div className={styles.gridContainer}>
+            <button className={styles.menuCard} onClick={() => navigate('/eventos')}>
+              <CalendarDays className={styles.icon} strokeWidth={1.5} />
+              <p>Eventos &amp; Palestras</p>
+            </button>
+            <button className={styles.menuCard} onClick={() => navigate('/certificados')}>
+              <Award className={styles.icon} strokeWidth={1.5} />
+              <p>Meus Certificados</p>
+            </button>
              
 
             <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => navigate("/DigitalStudentCard")}>
