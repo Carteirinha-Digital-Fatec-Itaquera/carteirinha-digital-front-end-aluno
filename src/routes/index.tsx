@@ -1,4 +1,5 @@
-import { EventsStub, CertificatesStub, ScannerStub, CertificateStub } from '../ui/screens/events/EventStubs';
+import AlunoEventosScreen from '../ui/screens/events/AlunoEventosScreen';
+import { CertificatesStub, ScannerStub, CertificateStub } from '../ui/screens/events/EventStubs';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 
 import LoginScreen from "../ui/screens/login/LoginScreen";
@@ -52,7 +53,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route element={<StudentRoute />}>
-          <Route path="/eventos" element={<EventsStub />} />
+          <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<ScannerStub />} />
           <Route path="/certificados" element={<CertificatesStub />} />
           <Route path="/certificado/:id" element={<CertificateStub />} />

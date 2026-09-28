@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:events": "node --import ./tests/register.mjs --test tests/events.test.mjs"
   },
   "dependencies": {
     "localforage": "^1.10.0",
