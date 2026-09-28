@@ -88,10 +88,6 @@ function PageLayout({
 }
 
 
-/* =========================================================
-   HOOK DE DADOS
-========================================================= */
-
 function useData<T>(load: () => Promise<T>) {
   const [data, setData] = useState<T>();
   const [error, setError] = useState(false);
@@ -124,10 +120,6 @@ function useData<T>(load: () => Promise<T>) {
   };
 }
 
-
-/* =========================================================
-   ESTADOS
-========================================================= */
 
 function LoadingState({
   text,
@@ -166,10 +158,6 @@ function ErrorState({
   );
 }
 
-
-/* =========================================================
-   EVENTOS
-========================================================= */
 
 const loadEvents = (): Promise<[Event[], Attendance[]]> =>
   Promise.all([
@@ -341,9 +329,6 @@ export function EventsStub() {
 }
 
 
-/* =========================================================
-   CERTIFICADOS
-========================================================= */
 
 export function CertificatesStub() {
   const { data, error } = useData<Certificate[]>(
@@ -462,10 +447,6 @@ export function CertificatesStub() {
 }
 
 
-/* =========================================================
-   SCANNER
-========================================================= */
-
 export function ScannerStub() {
   return (
     <PageLayout
@@ -537,10 +518,6 @@ export function ScannerStub() {
   );
 }
 
-
-/* =========================================================
-   DETALHE DO CERTIFICADO
-========================================================= */
 
 export function CertificateStub() {
   const { id } = useParams();
