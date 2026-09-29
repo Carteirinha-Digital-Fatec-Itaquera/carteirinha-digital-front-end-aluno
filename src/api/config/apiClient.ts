@@ -8,6 +8,7 @@ interface RequestOptions {
   body?: object;
   authenticated?: boolean;
   multipart?: boolean;
+  signal?: AbortSignal;
 }
 
 export async function buildApiError(response: Response, path: string): Promise<ApiError> {
@@ -35,7 +36,7 @@ export async function buildApiError(response: Response, path: string): Promise<A
 
 export async function apiClient(
   path: string,
-  { method = 'GET', body, authenticated = false, multipart = false }: RequestOptions = {}
+  { method = 'GET', body, authenticated = false, multipart = false, signal }: RequestOptions = {}
 ): Promise<Response> {
   try {
   const headers: Record<string, string> = {};
@@ -58,6 +59,7 @@ export async function apiClient(
   return fetch(`${GLOBAL_VAR.BASE_URL}${path}`, {
     method,
     headers,
+    signal,
     body: multipart ? (body as any) : body ? JSON.stringify(body) : undefined,
   });
 

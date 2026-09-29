@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import PageLayout from './EventsPageLayout';
 
 import {
   ArrowLeft,
   Award,
-  CalendarDays,
   CheckCircle2,
   ChevronRight,
   LoaderCircle,
@@ -14,8 +13,6 @@ import {
   TriangleAlert,
 } from 'lucide-react';
 
-import type { Event } from '../../../domains/Event';
-import type { Attendance } from '../../../domains/Attendance';
 import type { Certificate } from '../../../domains/Certificate';
 
 import { eventService } from '../../../services/eventService';
@@ -27,67 +24,6 @@ import styles from './style.module.css';
    LAYOUT BASE
 ========================================================= */
 
-interface PageLayoutProps {
-  title: string;
-  subtitle?: string;
-  icon?: ReactNode;
-  children?: ReactNode;
-}
-
-function PageLayout({
-  title,
-  subtitle,
-  icon,
-  children,
-}: PageLayoutProps) {
-  return (
-    <main className={styles.page}>
-      <div className={styles.container}>
-
-        <div className={styles.headerArea}>
-          <header className={styles.header}>
-
-            <Link
-              to="/MainMenu"
-              className={styles.backLink}
-            >
-              <ArrowLeft size={17} strokeWidth={2} />
-              Voltar ao menu
-            </Link>
-
-            <div className={styles.headerIdentity}>
-              {icon && (
-                <div className={styles.headerIcon}>
-                  {icon}
-                </div>
-              )}
-
-              <span className={styles.badge}>
-                Carteirinha Digital
-              </span>
-            </div>
-
-            <h1>{title}</h1>
-
-            {subtitle && (
-              <p className={styles.subtitle}>
-                {subtitle}
-              </p>
-            )}
-
-          </header>
-        </div>
-
-        <section className={styles.content}>
-          {children}
-        </section>
-
-      </div>
-    </main>
-  );
-}
-
-
 function useData<T>(load: () => Promise<T>) {
   const [data, setData] = useState<T>();
   const [error, setError] = useState(false);
@@ -95,7 +31,6 @@ function useData<T>(load: () => Promise<T>) {
   useEffect(() => {
     let active = true;
 
-    setError(false);
 
     load()
       .then((value) => {
@@ -157,177 +92,6 @@ function ErrorState({
     </div>
   );
 }
-
-
-const loadEvents = (): Promise<[Event[], Attendance[]]> =>
-  Promise.all([
-    eventService.getEvents(),
-    eventService.getMyAttendances(),
-  ]);
-
-
-export function EventsStub() {
-  const { data, error } = useData(loadEvents);
-
-  const events = data?.[0] ?? [];
-  const attendances = data?.[1] ?? [];
-
-  return (
-    <PageLayout
-      title="Eventos & Palestras"
-      subtitle="Descubra as atividades disponíveis e acompanhe suas participações acadêmicas."
-      icon={
-        <CalendarDays
-          size={22}
-          strokeWidth={1.8}
-        />
-      }
-    >
-
-      {error ? (
-        <ErrorState text="Não foi possível carregar os eventos e presenças." />
-      ) : !data ? (
-        <LoadingState text="Carregando eventos..." />
-      ) : (
-        <>
-
-          {/* RESUMO */}
-
-          <section className={styles.summaryGrid}>
-
-            <article className={styles.summaryCard}>
-              <div className={styles.summaryIcon}>
-                <CalendarDays size={19} />
-              </div>
-
-              <div>
-                <span className={styles.summaryNumber}>
-                  {events.length}
-                </span>
-
-                <span className={styles.summaryLabel}>
-                  Eventos disponíveis
-                </span>
-              </div>
-            </article>
-
-
-            <article className={styles.summaryCard}>
-              <div className={styles.summaryIcon}>
-                <CheckCircle2 size={19} />
-              </div>
-
-              <div>
-                <span className={styles.summaryNumber}>
-                  {attendances.length}
-                </span>
-
-                <span className={styles.summaryLabel}>
-                  Participações registradas
-                </span>
-              </div>
-            </article>
-
-          </section>
-
-
-          {/* EVENTOS */}
-
-          <section className={styles.section}>
-
-            <div className={styles.sectionHeader}>
-              <div>
-                <span className={styles.sectionEyebrow}>
-                  Agenda acadêmica
-                </span>
-
-                <h2>Próximos eventos</h2>
-              </div>
-
-              <span className={styles.sectionCount}>
-                {events.length}
-              </span>
-            </div>
-
-
-            {events.length === 0 ? (
-              <div className={styles.emptyState}>
-                <CalendarDays size={34} />
-
-                <h2>Nenhum evento disponível</h2>
-
-                <p>
-                  Quando novos eventos forem publicados,
-                  eles aparecerão aqui.
-                </p>
-              </div>
-            ) : (
-              <div className={styles.cardList}>
-
-                {events.map((event) => (
-                  <article
-                    key={event.id}
-                    className={styles.eventCard}
-                  >
-
-                    <div className={styles.eventCardTop}>
-
-                      <span className={styles.eventTag}>
-                        Evento
-                      </span>
-
-                      <CalendarDays
-                        size={18}
-                        className={styles.eventCardIcon}
-                      />
-
-                    </div>
-
-                    <h3>
-                      {event.title}
-                    </h3>
-
-                    {'description' in event &&
-                      event.description && (
-                        <p>
-                          {String(event.description)}
-                        </p>
-                      )}
-
-                  </article>
-                ))}
-
-              </div>
-            )}
-
-          </section>
-
-        </>
-      )}
-
-
-      {/* AÇÃO */}
-
-      <div className={styles.actionsArea}>
-
-        <Link
-          to="/eventos/scanner"
-          className={styles.primaryButton}
-        >
-          <QrCode size={18} />
-          Registrar presença
-        </Link>
-
-        <p className={styles.actionHint}>
-          Use o QR Code disponibilizado no evento para registrar sua participação.
-        </p>
-
-      </div>
-
-    </PageLayout>
-  );
-}
-
 
 
 export function CertificatesStub() {

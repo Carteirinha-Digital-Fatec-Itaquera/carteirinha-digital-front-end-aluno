@@ -1032,3 +1032,34 @@
     grid-template-columns: 1fr;
   }
 }
+/* Listagem: preserva a identidade visual dos stubs. */
+.eventsPage { background: #f5f6f8; }
+.eventsPage .headerArea { background: #ba1a1a; padding-top: max(30px, env(safe-area-inset-top)); }
+.eventsPage .content { padding-bottom: max(54px, env(safe-area-inset-bottom)); }
+.eventsPage button { font-family: inherit; }
+.eventsPage button:focus-visible, .eventsPage a:focus-visible { outline: 3px solid #c68028; outline-offset: 4px; }
+.eventsPage .backLink { min-height: 44px; }
+.eventsPage .summaryGrid { margin-bottom: 24px; }
+.eventsPage .emptyState svg { margin-bottom: 16px; color: #ba1a1a; }
+.tabs { display: flex; gap: 6px; padding: 6px; border-radius: 13px; background: #fff; border: 1px solid #e8e9ec; margin-bottom: 28px; }
+.tabs button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 10px; min-height: 48px; border: 0; border-radius: 9px; background: transparent; color: #626771; font-size: 13px; font-weight: 700; cursor: pointer; }
+.tabs button[aria-selected='true'] { background: #fff0f0; color: #a81919; }
+.tabs svg { flex-shrink: 0; }
+.refreshButton { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; margin-left: 12px; border: 1px solid #e8e9ec; border-radius: 11px; background: #fff; color: #ba1a1a; cursor: pointer; }
+.refreshButton:disabled { opacity: .5; cursor: wait; }
+.resourceError { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 16px; margin-bottom: 18px; border: 1px solid #f0d5d5; background: #fff5f5; color: #a81919; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+.resourceError > svg { flex-shrink: 0; }
+.resourceError p { flex: 1; min-width: 150px; }
+.resourceError button { padding: 8px 12px; min-height: 44px; background: #fff; border: 1px solid #e5baba; color: #a81919; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.mockNotice { color: #82510d; background: #fff3df; border: 1px solid #f4ddb5; padding: 10px 14px; border-radius: 10px; font-size: 12px; margin-bottom: 20px; }
+.participationPlaceholder { padding: 22px; border: 1px solid #e8e9ec; border-radius: 16px; background: #fff; overflow-wrap: anywhere; }
+.participationPlaceholder h3 { margin-bottom: 16px; font-size: 17px; color: #1b1c1e; }
+@media (max-width: 540px) {
+  .eventsPage .summaryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .eventsPage .summaryCard { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .eventsPage .headerArea { padding-top: max(24px, env(safe-area-inset-top)); }
+  .tabs button { flex-direction: column; font-size: 12px; }
+  .eventsPage .sectionHeader h2 { font-size: 17px; }
+}
+@media (max-width: 390px) { .eventsPage .summaryCard { padding: 14px; } }
+@media (prefers-reduced-motion: reduce) { .eventsPage .loadingIcon { animation: none; } }

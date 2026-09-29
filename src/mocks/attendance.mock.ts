@@ -1,7 +1,6 @@
-// Contrato V1: backend/src/contracts/v1-events.types.ts (snapshot fornecido).
 import type { Attendance } from '../domains/Attendance';
 
-// Exemplos de fases distintas do evento, conforme o contrato V1.
+// Histórico de desenvolvimento coerente com os cenários de events.mock.ts.
 export const attendanceMock: Attendance[] = [
   {
     "id": "44444444-4444-4444-8444-444444444444",
@@ -10,5 +9,13 @@ export const attendanceMock: Attendance[] = [
     "checkInAt": "2026-10-05T18:55:10.000Z",
     "checkOutAt": "2026-10-05T21:02:00.000Z",
     "status": "CONFIRMED"
+  },
+  {
+    "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "eventId": "99999999-9999-4999-8999-999999999990",
+    "eventTitle": "Design de produtos digitais acessíveis",
+    "checkInAt": "2026-10-06T18:55:10.000Z",
+    "checkOutAt": null,
+    "status": "CHECKED_IN"
   }
 ];
