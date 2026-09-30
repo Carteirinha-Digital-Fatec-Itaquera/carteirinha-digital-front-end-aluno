@@ -105,15 +105,23 @@ export default function LoginScreen() {
                 if ('token' in result) {
                   localStorage.setItem("token", result.token);
                   
+                  const returnUrl = sessionStorage.getItem("returnUrl");
+                  const safeReturn =
+                    returnUrl && returnUrl.startsWith("/p/") ? returnUrl : null;
+
                   if (result.mustChangePassword) {
                     // alert(`${result.mustChangePassword}\n\n${String(result.mustChangePassword)}`)
                     localStorage.setItem("mustChangePassword", "false");  
                     // navigate('/first-access');
-                    window.location.href = "/first-access"
+                    window.location.href = "/first-access";
                   } else {
-                    // navigate('/MainMenu'); 
                     localStorage.setItem("mustChangePassword", "true");  
-                    window.location.href = "/MainMenu"
+                    if (safeReturn) {
+                      sessionStorage.removeItem("returnUrl");
+                      window.location.href = safeReturn;
+                    } else {
+                      window.location.href = "/MainMenu";
+                    }
                   }
                   
                 } else {

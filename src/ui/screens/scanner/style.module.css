@@ -51,3 +51,76 @@
 @keyframes scanning { to { top: 90%; } }
 @media (max-width: 540px) { .card { padding: 22px 18px; } .card h2 { font-size: 21px; } }
 @media (prefers-reduced-motion: reduce) { .spin, .scanLine { animation: none; } }
+
+.zoomControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0 6px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e8e9ec;
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+.zoomButton {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d7d9de;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #1b1c1e;
+  transition: background-color 0.15s;
+}
+.zoomButton:hover:not(:disabled) {
+  background: #f1f3f5;
+}
+.zoomButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.zoomSliderContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 120px;
+}
+.zoomSliderContainer input[type="range"] {
+  flex: 1;
+  cursor: pointer;
+  accent-color: #ba1a1a;
+}
+.zoomLabel {
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: right;
+  color: #1b1c1e;
+}
+.zoomPresets {
+  display: flex;
+  gap: 6px;
+  margin-left: 4px;
+}
+.zoomPresetButton {
+  padding: 4px 8px;
+  border: 1px solid #d7d9de;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #4a5568;
+}
+.zoomPresetActive {
+  background: #ba1a1a;
+  color: #fff;
+  border-color: #ba1a1a;
+}

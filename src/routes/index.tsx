@@ -22,6 +22,8 @@ import ConfigScreen from "../ui/screens/config/ConfigScreen";
 
 
 
+import PresencaConfirmacaoScreen from '../ui/screens/attendance/PresencaConfirmacaoScreen';
+
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
 const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 // const PasswordRecovery = () => <div style={{ padding: 20 }}>Tela PasswordRecovery</div>;
@@ -42,9 +44,14 @@ const getAuthState = () => {
 
 // Executado dentro do router a cada navegação, inclusive após login/logout.
 function StudentRoute() {
-  useLocation();
+  const location = useLocation();
   const { isAuthenticated, mustChange } = getAuthState();
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    if (location.pathname.startsWith('/p/')) {
+      sessionStorage.setItem('returnUrl', location.pathname);
+    }
+    return <Navigate to="/login" replace />;
+  }
   if (mustChange) return <Navigate to="/first-access" replace />;
   return <Outlet />;
 }
@@ -56,6 +63,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/certificado/verificar/:code" element={<CertificadoVerificarScreen />} />
+        <Route path="/p/:reference" element={<PresencaConfirmacaoScreen />} />
         <Route element={<StudentRoute />}>
           <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<AlunoScannerScreen />} />
