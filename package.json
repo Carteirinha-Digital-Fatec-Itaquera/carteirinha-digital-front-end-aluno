@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test:events": "node --import ./tests/register.mjs --test tests/events.test.mjs",
     "test:scanner": "node --import ./tests/register.mjs --test tests/scanner.test.mjs",
-    "test:scanner:browser": "node tests/scanner.browser.mjs"
+    "test:scanner:browser": "node tests/scanner.browser.mjs",
+    "test:certificates": "node --import ./tests/register.mjs --test tests/certificates.test.mjs",
+    "test:certificates:browser": "node --import ./tests/register.mjs tests/certificates.browser.mjs"
   },
   "dependencies": {
     "html5-qrcode": "^2.3.8",

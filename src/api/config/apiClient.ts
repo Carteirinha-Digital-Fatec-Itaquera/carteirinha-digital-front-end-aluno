@@ -9,6 +9,7 @@ interface RequestOptions {
   authenticated?: boolean;
   multipart?: boolean;
   signal?: AbortSignal;
+  cache?: RequestCache;
 }
 
 export async function buildApiError(response: Response, path: string): Promise<ApiError> {
@@ -36,7 +37,7 @@ export async function buildApiError(response: Response, path: string): Promise<A
 
 export async function apiClient(
   path: string,
-  { method = 'GET', body, authenticated = false, multipart = false, signal }: RequestOptions = {}
+  { method = 'GET', body, authenticated = false, multipart = false, signal, cache }: RequestOptions = {}
 ): Promise<Response> {
   try {
   const headers: Record<string, string> = {};
@@ -60,6 +61,7 @@ export async function apiClient(
     method,
     headers,
     signal,
+    cache,
     body: multipart ? (body as any) : body ? JSON.stringify(body) : undefined,
   });
 
