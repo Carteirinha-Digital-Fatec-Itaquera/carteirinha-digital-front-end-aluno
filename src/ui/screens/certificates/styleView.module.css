@@ -1,0 +1,40 @@
+
+.content { display:flex; flex-direction:column; align-items:stretch; gap:20px; }
+.certificate { background:#fff; border:3px solid #ba1a1a; border-radius:8px; padding:12px; box-shadow:0 8px 28px #1720330a; }
+.certBorder { border:1px solid #dfb5b5; padding:36px 30px; }
+.certHeader { text-align:center; }
+.institution { font-size:.95rem; font-weight:700; letter-spacing:.08em; line-height:1.6; margin:0; }
+.cps { font-size:.85rem; color:#666; margin:7px 0 0; }
+.certTitle { text-align:center; color:#ba1a1a; letter-spacing:4px; font-size:2rem; margin:32px 0; }
+.certBody { margin:0 auto; max-width:640px; }
+.certText { text-align:center; font-size:1.05rem; line-height:2; color:#444; margin:0; overflow-wrap:anywhere; }
+.certText strong { color:#252525; }
+.certFooter { display:flex; align-items:center; justify-content:space-between; gap:32px; margin-top:44px; }
+.certQr { text-align:center; max-width:240px; }
+.certQr svg { display:block; margin:auto; }
+.certCode { font-size:.7rem; line-height:1.6; color:#555; margin:8px 0 0; overflow-wrap:anywhere; }
+.certCode span { display:block; font-family:monospace; }
+.certSignature { text-align:center; flex:1; max-width:260px; font-size:.8rem; color:#666; }
+.certSignature p { margin:6px 0; }
+.signatureLine { height:1px; background:#777; margin:0 0 10px; }
+.watermark { color:#ba1a1a; font-weight:700; font-size:.8rem; text-align:center; border:1px dashed #ba1a1a; padding:10px; }
+.actions { display:flex; flex-direction:column; gap:12px; }
+.downloadBtn { display:flex; align-items:center; justify-content:center; gap:10px; border:0; border-radius:12px; background:#ba1a1a; color:#fff; padding:16px 24px; font:inherit; font-weight:700; cursor:pointer; }
+.downloadBtn:hover:not(:disabled) { background:#9e1616; }
+.downloadBtn:disabled { opacity:.55; cursor:not-allowed; }
+.downloadBtn:focus-visible,.verifyLink:focus-visible { outline:3px solid #ba1a1a; outline-offset:4px; }
+.error { background:#fff0f0; border:1px solid #efc1c1; color:#922222; padding:14px 16px; border-radius:10px; line-height:1.6; margin:0; }
+.downloadHint { background:#f0f6ff; border-radius:10px; padding:14px; color:#334761; font-size:.9rem; line-height:1.6; margin:0; }
+.downloadHint a { color:inherit; font-weight:700; }
+.verifyLink { align-self:center; display:inline-flex; align-items:center; gap:8px; color:#ba1a1a; font-size:.9rem; font-weight:600; text-align:center; }
+.privacyNote { text-align:center; font-size:.8rem; color:#666; line-height:1.6; margin:0; }
+.verification { background:white; border:1px solid #e3e5e9; border-radius:16px; padding:28px; text-align:center; }
+.verification h2 { font-size:1.4rem; margin:16px 0 12px; }
+.verification p { color:#555; line-height:1.6; }
+.validIcon { color:#15803d; }.invalidIcon { color:#ba1a1a; }
+.verification dl { text-align:left; margin:24px 0; }
+.verification dl div { padding:12px 0; border-bottom:1px solid #eee; }
+.verification dt { color:#666; font-size:.8rem; margin-bottom:6px; }
+.verification dd { margin:0; font-weight:600; overflow-wrap:anywhere; line-height:1.5; }
+.verification code { overflow-wrap:anywhere; }
+@media(max-width:540px) { .certificate { padding:8px; } .certBorder { padding:26px 14px; } .institution { font-size:.76rem; } .certTitle { font-size:1.35rem; letter-spacing:3px; margin:26px 0; } .certText { font-size:.95rem; line-height:1.9; } .certFooter { flex-direction:column; gap:30px; margin-top:28px; } .certSignature { width:100%; max-width:220px; } .verification { padding:20px; } }

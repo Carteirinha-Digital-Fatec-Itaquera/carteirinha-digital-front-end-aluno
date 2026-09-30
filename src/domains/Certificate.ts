@@ -29,3 +29,19 @@ export interface CertificateDetails {
   issuedAt: IsoDateTime;
   revokedAt: IsoDateTime | null;
 }
+
+export type CertificateVerification = {
+  valid: true;
+  code: string;
+  studentName: string;
+  eventTitle: string;
+  eventDate: string;
+  workload: string;
+  issuedAt: IsoDateTime;
+  institution: string;
+} | {
+  valid: false;
+  code: string;
+  revoked: true;
+  message: string;
+};
