@@ -8,9 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:events": "node --import ./tests/register.mjs --test tests/events.test.mjs"
+    "test:events": "node --import ./tests/register.mjs --test tests/events.test.mjs",
+    "test:scanner": "node --import ./tests/register.mjs --test tests/scanner.test.mjs",
+    "test:scanner:browser": "node tests/scanner.browser.mjs"
   },
   "dependencies": {
+    "html5-qrcode": "^2.3.8",
     "localforage": "^1.10.0",
     "lucide-react": "^1.8.0",
     "qrcode.react": "^4.2.0",
@@ -29,6 +32,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
+    "playwright": "^1.63.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^7.3.2"

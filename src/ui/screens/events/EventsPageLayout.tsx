@@ -5,6 +5,8 @@ import styles from './style.module.css';
 
 interface PageLayoutProps {
   title: string;
+  backTo?: string;
+  backLabel?: string;
   subtitle?: string;
   icon?: ReactNode;
   children?: ReactNode;
@@ -13,6 +15,8 @@ interface PageLayoutProps {
 
 export default function EventsPageLayout({
   title,
+  backTo = "/MainMenu",
+  backLabel = "Voltar ao menu",
   subtitle,
   icon,
   children,
@@ -26,11 +30,11 @@ export default function EventsPageLayout({
           <header className={styles.header}>
 
             <Link
-              to="/MainMenu"
+              to={backTo}
               className={styles.backLink}
             >
               <ArrowLeft size={17} strokeWidth={2} />
-              Voltar ao menu
+              {backLabel}
             </Link>
 
             <div className={styles.headerIdentity}>
