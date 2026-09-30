@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
-import { presenceEventId, scanAttendance, getScanAttendance } from '../src/api/attendance/scanAttendance.ts';
+import { presenceEventId, parsePresenceUrlOrToken, getAttendanceQrPreview, confirmAttendanceReference, scanAttendance, getScanAttendance } from '../src/api/attendance/scanAttendance.ts';
 import { responseFeedback, errorFeedback, cameraErrorMessage } from '../src/ui/screens/scanner/scanFeedback.ts';
 import ScanResultCard from '../src/ui/screens/scanner/ScanResultCard.tsx';
 
@@ -14,6 +14,18 @@ const token = payload => encode({alg:'HS256',typ:'JWT'}) + '.' + encode(payload)
 const valid = token(claims);
 const success = {success:true,type:'CHECK_IN',status:'CHECKED_IN',eventTitle:'Palestra',timestamp:'2026-09-29T15:00:00Z',message:'ok'};
 const html = result => renderToStaticMarkup(h(MemoryRouter, null, h(ScanResultCard, {result, onRetry(){}})));
+
+test('parsePresenceUrlOrToken reconhece link curto autorizado, URL completa e JWT legado, rejeitando domínios maliciosos', () => {
+  const ref = 'abcdefghijk12345678901';
+  assert.deepEqual(parsePresenceUrlOrToken(`/p/${ref}`), { type: 'reference', reference: ref });
+  assert.deepEqual(parsePresenceUrlOrToken(`https://carteirinha-digital-front-end-aluno.vercel.app/p/${ref}`), { type: 'reference', reference: ref });
+  assert.deepEqual(parsePresenceUrlOrToken(valid), { type: 'jwt', token: valid });
+
+  // Rejeita origens externas maliciosas
+  assert.equal(parsePresenceUrlOrToken(`https://phishing.site/p/${ref}`), null);
+  assert.equal(parsePresenceUrlOrToken(`https://attacker.com/p/${ref}`), null);
+  assert.equal(parsePresenceUrlOrToken('not-a-token'), null);
+});
 
 test('aceita formato de presença; expiração e assinatura ficam no servidor', () => {
   assert.equal(presenceEventId(valid), id);
@@ -96,5 +108,47 @@ test('scan envia apenas qrToken com Bearer, não usa fixtures e propaga falhas',
     assert.equal((await getScanAttendance(id,signal)).checkInAt,success.timestamp);
   } finally {
     globalThis.fetch=originalFetch; globalThis.localStorage=originalStorage; delete process.env.VITE_USE_MOCK;
+  }
+});
+
+test('prévia e confirmação por referência usam Bearer, GET para prévia e POST apenas no toque', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalStorage = globalThis.localStorage;
+  globalThis.localStorage = { getItem: () => 'student-jwt' };
+  const calls = [];
+  process.env.VITE_USE_MOCK = 'true';
+  const previewData = {
+    event: { id, title: 'Palestra de Inovação', speaker: 'Profa. Dra.', location: 'Auditório' },
+    checkpoint: { type: 'CHECK_IN' },
+    expiresAt: '2026-10-01T20:00:20Z',
+    serverTime: '2026-10-01T20:00:00Z',
+  };
+
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, options });
+    if (url.includes('/attendances/qr/')) {
+      return Response.json(previewData);
+    }
+    return Response.json(success);
+  };
+
+  try {
+    const ref = 'abcdefghijk12345678901';
+    const previewResult = await getAttendanceQrPreview(ref);
+    assert.deepEqual(previewResult, previewData);
+    assert.equal(calls[0].url, `http://api.test/attendances/qr/${ref}`);
+    assert.equal(calls[0].options.method, 'GET');
+    assert.equal(calls[0].options.headers.Authorization, 'Bearer student-jwt');
+
+    const confirmResult = await confirmAttendanceReference(ref);
+    assert.deepEqual(confirmResult, success);
+    assert.equal(calls[1].url, 'http://api.test/attendances/scan-reference');
+    assert.equal(calls[1].options.method, 'POST');
+    assert.equal(calls[1].options.headers.Authorization, 'Bearer student-jwt');
+    assert.deepEqual(JSON.parse(calls[1].options.body), { qrReference: ref });
+  } finally {
+    globalThis.fetch = originalFetch;
+    globalThis.localStorage = originalStorage;
+    delete process.env.VITE_USE_MOCK;
   }
 });

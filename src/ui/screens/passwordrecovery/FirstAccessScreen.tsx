@@ -87,8 +87,14 @@ export default function FirstAccessScreen() {
       if (response.ok) {
         alert("Dados registrados com sucesso! Bem-vindo(a).");
         // localStorage.setItem("mustChangePassword", "true");
-        localStorage.removeItem("mustChangePassword")
-        window.location.href = "/MainMenu";
+        localStorage.removeItem("mustChangePassword");
+        const returnUrl = sessionStorage.getItem("returnUrl");
+        if (returnUrl && returnUrl.startsWith("/p/")) {
+          sessionStorage.removeItem("returnUrl");
+          window.location.href = returnUrl;
+        } else {
+          window.location.href = "/MainMenu";
+        }
       } else {
         const data = await response.json();
         setMessage(data.message || "Erro ao atualizar seus dados de primeiro acesso.");

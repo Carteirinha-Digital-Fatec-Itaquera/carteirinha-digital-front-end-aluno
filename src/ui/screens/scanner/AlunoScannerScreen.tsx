@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Camera, LoaderCircle, ScanLine, ShieldCheck } from 'lucide-react';
-import { scanAttendance, getScanAttendance, presenceEventId } from '../../../api/attendance/scanAttendance';
+import {
+  scanAttendance,
+  getScanAttendance,
+  presenceEventId,
+  parsePresenceUrlOrToken,
+} from '../../../api/attendance/scanAttendance';
 import EventsPageLayout from '../events/EventsPageLayout';
 import eventStyles from '../events/style.module.css';
 import CameraReader from './CameraReader';
@@ -10,6 +16,7 @@ import type { ScanFeedback } from './scanFeedback';
 import styles from './style.module.css';
 
 export default function AlunoScannerScreen() {
+  const navigate = useNavigate();
   const [camera, setCamera] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -39,7 +46,15 @@ export default function AlunoScannerScreen() {
     locked.current = true;
     setCamera(false); setBusy(true); setToken('');
     try { navigator.vibrate?.(80); } catch { /* Haptics opcionais. */ }
-    const qrToken = raw.trim();
+    const trimmed = raw.trim();
+
+    const parsed = parsePresenceUrlOrToken(trimmed);
+    if (parsed?.type === 'reference') {
+      navigate(`/p/${parsed.reference}`);
+      return;
+    }
+
+    const qrToken = parsed?.type === 'jwt' ? parsed.token : trimmed;
     const controller = new AbortController();
     request.current = controller;
     const isCurrent = () => alive.current && request.current === controller;
@@ -66,7 +81,7 @@ export default function AlunoScannerScreen() {
         if (isCurrent()) setBusy(false);
       }
     })();
-  }, []);
+  }, [navigate]);
 
   function retry() {
     request.current?.abort();

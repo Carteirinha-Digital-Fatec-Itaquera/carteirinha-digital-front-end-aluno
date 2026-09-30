@@ -3,6 +3,8 @@ import { registerHooks } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
+import 'react';
+import 'react-dom';
 
 process.env.VITE_API_URL = 'http://api.test';
 process.env.VITE_USE_MOCK = 'false';
