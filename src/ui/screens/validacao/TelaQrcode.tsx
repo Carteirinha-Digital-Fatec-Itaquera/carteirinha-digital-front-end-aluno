@@ -8,7 +8,7 @@ import CardMatriculaInfo from "../../components/validacaoqrcode/cardmatriculainf
 
 import { Student } from "../../../domains/Student"; 
 import perfilDefault from "../../../assets/images/perfil_default.png";
-import logoGoverno from "../../../assets/images/logos_cps_governo_com_slogan.png";
+const logoCps = '/cps_logo_br.png';
 import { GLOBAL_VAR } from "../../../api/config/globalVar";
 
 import { formatDateBR } from "../../../utils/dateProcessing";
@@ -114,7 +114,7 @@ export default function TelaQrcode() {
       </main>
 
       <footer className={styles.redFooter}>
-        <img src={logoGoverno} className={styles.govLogo} alt="Governo SP" />
+        <img src={logoCps} className={styles.govLogo} alt="Centro Paula Souza" />
       </footer>
     </div>
   );

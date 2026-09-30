@@ -2,14 +2,16 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: #BA1A1A; 
-  overflow: auto;
+  overflow-x: hidden;
 }
 
 .redHeader {
   background-color: #BA1A1A;
   height: 150px;
   padding: 40px 20px;
+  padding-top: max(40px, env(safe-area-inset-top, 40px));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -23,7 +25,7 @@
   cursor: pointer;
   position: absolute;
   left: 15px;
-  top: 40px;
+  top: max(40px, env(safe-area-inset-top, 40px));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,18 +154,16 @@
 
 .footerLogos {
   display: flex;
-  /* border: 3px solid gray; */
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: 20px;
+  padding-bottom: max(20px, calc(15px + env(safe-area-inset-bottom, 0px)));
   width: 100%;
   background-color: #BA1A1A;
 }
 
 .footerLogoImg {
-  /* background-color: #BA1A1A; */
-  height: 60px;
-  /* object-fit: contain; */
+  height: 55px;
+  object-fit: contain;
   margin-top: 10px;
 }
 

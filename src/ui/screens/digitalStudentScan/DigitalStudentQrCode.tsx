@@ -11,7 +11,7 @@ import type { Student } from "../../../domains/Student";
 import styles from './styleQrCode.module.css';
 
 const logoFatec = '/fatec_itaquera_logo.png'
-const logoCps = '/logos_cps_governo_com_slogan.png'
+const logoCps = '/cps_logo_br.png'
 const iconScan = '/iconScan.png'
 
 

@@ -4,7 +4,7 @@ import { ArrowLeft} from 'lucide-react';
 
 // Assets
 const logoFatecbranca = '/fatec_itaquera_logo.png';
-const logoCps = '/logos_cps_governo_com_slogan.png';
+const logoCps = '/cps_logo_br.png';
 const iconWhats = '/whatsappIcon.png'
 const iconEmail = '/emailIcon.png'
 const iconTele = '/phoneIcon.png'

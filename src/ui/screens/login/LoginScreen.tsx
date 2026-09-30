@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
-import logoCps from "../../../assets/images/logos_cps_governo_com_slogan_horizontal_cor.png";
+const logoCps = '/cps_logo_cor.png';
 
 import { ButtonComp } from '../../components/button/ButtonComp';
 import { TitleComp } from '../../components/title/TitleComp';

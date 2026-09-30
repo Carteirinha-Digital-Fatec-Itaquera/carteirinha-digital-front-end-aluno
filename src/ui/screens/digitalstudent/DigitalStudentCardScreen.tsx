@@ -13,8 +13,8 @@ import { formatDateBR } from "../../../utils/dateProcessing";
 
 const logoFatecPreto = '/fatec_itaquera_logo_preto.png';
 const logoFatecBranco = '/fatec_itaquera_logo.png';
-const logoCps = '/logos_cps_governo_com_slogan_horizontal_cor.png';
-const logoCpsBranco = '/logos_cps_governo_com_slogan.png';
+const logoCps = '/cps_logo_cor.png';
+const logoCpsBranco = '/cps_logo_br.png';
 const iconCarteirinha = '/iconCarteirinha.png';
 // const logoSaoPauloBranco = '/logo_sao_paulo_governo_branco.png'; 
 const perfilDefault = '/images/perfil_default.png';
