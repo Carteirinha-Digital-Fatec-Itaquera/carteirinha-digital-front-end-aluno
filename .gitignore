@@ -24,3 +24,7 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+
+# Documentation
+/docs
+
