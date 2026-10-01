@@ -40,16 +40,16 @@ export default function PresencaConfirmacaoScreen() {
       return;
     }
 
-    if (!reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference)) {
-      setLoading(false);
-      setErrorMessage('Link de presença inválido ou incompleto.');
-      return;
-    }
-
     const controller = new AbortController();
     requestRef.current = controller;
 
     void (async () => {
+      if (!reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference)) {
+        setLoading(false);
+        setErrorMessage('Link de presença inválido ou incompleto.');
+        return;
+      }
+
       try {
         setLoading(true);
         setErrorMessage(null);

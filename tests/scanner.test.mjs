@@ -4,6 +4,7 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import { presenceEventId, parsePresenceUrlOrToken, getAttendanceQrPreview, confirmAttendanceReference, scanAttendance, getScanAttendance } from '../src/api/attendance/scanAttendance.ts';
+import { apiClient } from '../src/api/config/apiClient.ts';
 import { responseFeedback, errorFeedback, cameraErrorMessage } from '../src/ui/screens/scanner/scanFeedback.ts';
 import ScanResultCard from '../src/ui/screens/scanner/ScanResultCard.tsx';
 
@@ -150,5 +151,22 @@ test('prévia e confirmação por referência usam Bearer, GET para prévia e PO
     globalThis.fetch = originalFetch;
     globalThis.localStorage = originalStorage;
     delete process.env.VITE_USE_MOCK;
+  }
+});
+
+test('apiClient não vaza caminhos ou referências sensíveis no console', async () => {
+  const originalLog = console.log;
+  const originalFetch = globalThis.fetch;
+  const logged = [];
+  console.log = (...args) => logged.push(args.join(' '));
+  globalThis.fetch = async () => new Response(JSON.stringify({ ok: true }), { status: 200 });
+
+  try {
+    const sensitiveRef = 'sensitiveQrReference22';
+    await apiClient(`/attendances/qr/${sensitiveRef}`);
+    assert.equal(logged.some(msg => msg.includes(sensitiveRef)), false);
+  } finally {
+    console.log = originalLog;
+    globalThis.fetch = originalFetch;
   }
 });
