@@ -1,6 +1,7 @@
 // import React from 'react';
 import { AlertCircle } from 'lucide-react'; // Substitui o MaterialIcons
 import styles from './style.module.css';
+import Modal from '../modal/Modal';
 
 type Props = {
   visible: boolean;
@@ -15,10 +16,10 @@ export const ErrorModalComp = ({ visible, error, buttonText = "Fechar", fields =
   if (!visible) return null;
 
   return (
-    <div className={styles.overlay}>
+    <Modal label="Não foi possível concluir" onClose={onClose}>
       <div className={styles.modalContent}>
         <AlertCircle size={30} color="#B00020" />
-        <span className={styles.errorText}>{error}</span>
+        <span role="alert" className={styles.errorText}>{error}</span>
         
         {fields.map((field) => (
           <span key={field} className={styles.fieldText}>• {field}</span>
@@ -28,6 +29,6 @@ export const ErrorModalComp = ({ visible, error, buttonText = "Fechar", fields =
           <span className={styles.closeButtonText}>{buttonText}</span>
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };

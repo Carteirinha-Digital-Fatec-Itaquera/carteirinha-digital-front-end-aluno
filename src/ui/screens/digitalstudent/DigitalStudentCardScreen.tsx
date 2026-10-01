@@ -75,7 +75,7 @@ export default function DigitalStudentCardScreen() {
     load();
   }, []);
 
-  if (!student) return <div className={styles.loadingContainer}>Carregando...</div>;
+  if (!student) return <div role="status" className={styles.loadingContainer}>Carregando...</div>;
 
   const isPhotoApproved = student.photo && student.photoStatus === 'APPROVED';
 
@@ -102,7 +102,7 @@ export default function DigitalStudentCardScreen() {
 
       <div className={styles.appWrapper}>
         <header className={styles.header}>
-          <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
+          <button aria-label="Voltar ao menu" className={styles.backButton} onClick={() => navigate("/MainMenu")}>
             <ArrowLeft size={24} color="#ffffff" strokeWidth={3} />
           </button>
           <img src={iconCarteirinha} alt="Carteirinha" style={{width: 30}}/>
@@ -115,6 +115,8 @@ export default function DigitalStudentCardScreen() {
         <div className={styles.cardStage}>
           <div
             className={`${styles.cardViewport} ${showBack ? styles.cardViewportBack : ''}`}
+            role="button" tabIndex={0} aria-label={showBack ? "Mostrar frente da carteirinha" : "Mostrar verso da carteirinha"}
+            onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setShowBack(!showBack); } }}
             onClick={() => setShowBack(!showBack)}
           >
             <div className={styles.cardInner}>

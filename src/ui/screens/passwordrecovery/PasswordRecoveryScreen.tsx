@@ -1,3 +1,4 @@
+import AuthLayout from '../../components/page/AuthLayout';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +8,6 @@ import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { ErrorModalComp } from '../../components/ErrorModal/ErrorModalComp';
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
-import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 import type { ErrorField } from '../../../utils/Types';
 import { sendEmail } from '../../../api/recoverypassword/sendEmail';
 
@@ -44,15 +44,14 @@ export default function PasswordRecoveryScreen() {
         // Agora o TypeScript sabe que aqui dentro é 100% um ApiError!
         showError(result.message || "Erro ao enviar e-mail.", result.errorFields);
       }
-    } catch (e) {
+    } catch {
       showError("Erro de conexão com o servidor.");
     }
     setOnLoading(false);
   };
 
   return (
-    <div className={styles.container}>
-      <img src={logoFatec} className={styles.logo} alt="Logo Fatec" />
+    <AuthLayout title="Recuperar acesso" subtitle="Vamos ajudar você a entrar novamente na sua conta.">
       
       <div className={styles.subcontainer}>
         <InternetWatcher />
@@ -104,6 +103,6 @@ export default function PasswordRecoveryScreen() {
           </div>
         )}
       </div>
-    </div>
+    </AuthLayout>
   );
 }

@@ -14,16 +14,16 @@ export const TitleComp = ({ text, size = 14, showButton = false, actionButton = 
   return (
     <div className={styles.container}>
       {showButton && (
-        <button className={styles.button} onClick={actionButton}>
+        <button aria-label="Voltar" className={styles.button} onClick={actionButton}>
           <ArrowLeft size={20} color="#FFFFFF" />
         </button>
       )}
       
       <div className={styles.titleContainer}>
         {/* Usamos o CSS Module, mas sobrescrevemos o tamanho da fonte dinamicamente */}
-        <span className={styles.title} style={{ fontSize: `${size}px` }}>
+        <h2 className={styles.title} style={{ fontSize: `${size}px` }}>
           {text}
-        </span>
+        </h2>
         
       </div>
 

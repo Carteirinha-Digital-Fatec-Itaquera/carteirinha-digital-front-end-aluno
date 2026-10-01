@@ -1,7 +1,7 @@
+import PageLayout from '../../components/page/PageLayout';
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import { TitleComp } from "../../components/title/TitleComp";
 import { TextInfoComp } from "../../components/textinfo/TextInfoComp";
 import { SpacerComp } from "../../components/spacer/SpacerComp";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
@@ -97,7 +97,7 @@ export default function UploadImageScreen() {
         setErrorFields(result.errorFields ?? []);
         setModalErrorVisible(true);
       }
-    } catch (error) {
+    } catch {
       setMessage("Erro na conexão com o servidor.");
       setModalErrorVisible(true);
     }
@@ -106,7 +106,7 @@ export default function UploadImageScreen() {
   };
 
   return (
-    <div className={styles.container}>
+    <PageLayout title="Enviar fotografia" subtitle="Use uma foto com fundo neutro, rosto centralizado e sem óculos escuros." backTo="/MainMenu" narrow><div className={styles.container}>
       <ErrorModalComp
         visible={modalErrorVisible}
         error={message}
@@ -119,42 +119,11 @@ export default function UploadImageScreen() {
       />
       <InternetWatcher />
       
-      <div className={styles.header}>
-        <TitleComp text="Enviar Fotografia" size={18} />
-        <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>Voltar</button>
-      </div>
+
       
       <SpacerComp vertical={10} />
 
-      {/* <input 
-        type="file" 
-        accept="image/*" 
-        // capture="user" 
-        ref={fileInputRef} 
-        onChange={handleImageChange} 
-        style={{ display: 'none' }} 
-      />
 
-      <div className={styles.box} onClick={() => fileInputRef.current?.click()}>
-        <img 
-          src={imagePreview ? imagePreview : uploadAvatarPlaceholder} 
-          className={imagePreview ? styles.userImage : styles.placeholderImage} 
-          alt="Preview do Upload" 
-        />
-      </div>
-
-      <SpacerComp vertical={15} />
-      <TextInfoComp>Clique na caixa para enviar</TextInfoComp>
-      <SpacerComp vertical={20} />
-
-      <button 
-        className={styles.button} 
-        onClick={handleUpload} 
-        disabled={onLoading}
-      >
-        {onLoading ? "Enviando..." : "Confirmar"}
-      </button>
-    </div> */}
 
     <input 
         type="file" 
@@ -179,14 +148,14 @@ export default function UploadImageScreen() {
       <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center' }}>
         <button 
           className={styles.button} 
-          style={{ flex: 1, backgroundColor: '#555' }} 
+          style={{ flex: 1 }} 
           onClick={handleOpenCamera}
         >
           Tirar Foto
         </button>
         <button 
           className={styles.button} 
-          style={{ flex: 1, backgroundColor: '#555' }} 
+          style={{ flex: 1 }} 
           onClick={handleOpenGallery}
         >
           Galeria
@@ -203,6 +172,6 @@ export default function UploadImageScreen() {
       >
         {onLoading ? "Enviando..." : "Confirmar Envio"}
       </button>
-    </div>
+    </div></PageLayout>
   );
 }

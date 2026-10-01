@@ -3,7 +3,7 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
-  background-color: #BA1A1A; /* Fundo vermelho Fatec superior */
+  background-color: var(--app-color-primary); /* Fundo vermelho Fatec superior */
   overflow-x: hidden;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .redHeader {
-  background-color: #BA1A1A;
+  background-color: var(--app-color-primary);
   height: 160px;
   padding: 30px 20px;
   padding-top: max(30px, env(safe-area-inset-top, 30px));
@@ -41,7 +41,7 @@
 
 .backButton {
   background: transparent;
-  /* background: var(#BA1A1A); */
+  /* background: var(var(--app-color-primary)); */
   border: none;
   cursor: pointer;
   position: absolute;
@@ -104,7 +104,7 @@
   position: absolute;
   width: 24px;
   height: 24px;
-  border-color: #BA1A1A;
+  border-color: var(--app-color-primary);
   border-style: solid;
 }
 
@@ -137,7 +137,7 @@
   text-align: center;
   font-size: 13px;
   font-weight: 700;
-  color: #BA1A1A;
+  color: var(--app-color-primary);
 }
 
 .infoInstructionRow {
@@ -157,7 +157,7 @@
 }
 
 .footerLogos {
-  background-color: #BA1A1A;
+  background-color: var(--app-color-primary);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,3 +189,14 @@
     filter: none; 
   }
 }
+
+
+.container { background: var(--app-color-background); }
+.appWrapper { max-width: 820px; }
+.redHeader { height: auto; min-height: 176px; border-radius: 0 0 20px 20px; padding-bottom: 48px; }
+.contentWrapper { flex: 0; margin: -24px 16px 24px; padding: 32px 16px; border: 1px solid var(--app-color-border); border-radius: var(--app-radius-card); background: var(--app-color-surface); box-shadow: var(--app-shadow); }
+.mainTitle { font-size: 1.5rem; margin-bottom: 24px; }
+.backButton { width: 44px; height: 44px; border-radius: 12px; }
+.qrViewportContainer { margin-bottom: 24px; background: #fff; }
+.footerLogos { background: var(--app-color-primary); border-radius: 16px; margin: 0 16px 24px; padding: 24px; }
+.loadingContainer { color: var(--app-color-primary); background: var(--app-color-background); }

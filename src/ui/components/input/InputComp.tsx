@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { Dispatch, SetStateAction } from "react";
 import styles from "./style.module.css"; 
 
@@ -10,10 +11,11 @@ type InputProps = {
 }
 
 export const InputComp = ({ label, placeholder, type = "text", value, onChangeText }: InputProps) => {
+  const id = useId();
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{label}</label>
-      <input
+      <label htmlFor={id} className={styles.label}>{label}</label>
+      <input id={id}
         className={styles.inputField}
         placeholder={placeholder}
         type={type}

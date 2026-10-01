@@ -38,3 +38,6 @@
 .verification dd { margin:0; font-weight:600; overflow-wrap:anywhere; line-height:1.5; }
 .verification code { overflow-wrap:anywhere; }
 @media(max-width:540px) { .certificate { padding:8px; } .certBorder { padding:26px 14px; } .institution { font-size:.76rem; } .certTitle { font-size:1.35rem; letter-spacing:3px; margin:26px 0; } .certText { font-size:.95rem; line-height:1.9; } .certFooter { flex-direction:column; gap:30px; margin-top:28px; } .certSignature { width:100%; max-width:220px; } .verification { padding:20px; } }
+
+.verifyLink { min-height: 44px; }
+.verification { border-color: var(--app-color-border); border-radius: var(--app-radius-card); box-shadow: var(--app-shadow); }

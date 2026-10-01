@@ -1,0 +1,4 @@
+.dialog { margin: auto; padding: 0; width: calc(100% - 32px); max-width: 480px; max-height: calc(100dvh - 32px); overflow-y: auto; border: 1px solid var(--app-color-border); border-radius: var(--app-radius-card); background: var(--app-color-surface); color: var(--app-color-text); box-shadow: 0 24px 80px #0003; }
+.dialog::backdrop { background: #17203399; }
+.content { padding: 24px; }
+@media(max-width:540px) { .content { padding: 24px 16px; } }

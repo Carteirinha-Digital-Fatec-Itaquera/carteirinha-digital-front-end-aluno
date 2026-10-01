@@ -27,7 +27,7 @@
 .inputField {
   width: 45px;
   height: 55px;
-  border: 1.5px solid #BA1A1A; /* Usando a cor de destaque do seu tema */
+  border: 1.5px solid var(--app-color-primary); /* Usando a cor de destaque do seu tema */
   border-radius: 12px;
   font-size: 18px;
   text-align: center;
@@ -40,7 +40,7 @@
 }
 
 .inputField:focus {
-  border-color: #BA1A1A;
+  border-color: var(--app-color-primary);
   box-shadow: 0 0 0 3px rgba(186, 26, 26, 0.15);
   background-color: #fff;
 }

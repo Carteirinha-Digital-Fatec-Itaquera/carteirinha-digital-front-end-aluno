@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  background-color: var(--background-card, #BA1A1A);
+  background-color: var(--background-card, var(--app-color-primary));
   border-bottom: 1px solid var(--border-color, #e9ecef);
   gap: 16px;
   transition: background-color 0.3s ease;
@@ -61,7 +61,7 @@
 }
 
 .iconRed {
-  color: var(--primary-fatec, #BA1A1A);
+  color: var(--primary-fatec, var(--app-color-primary));
   flex-shrink: 0;
 }
 
@@ -174,7 +174,7 @@
 
 .closeButton, .submitButton {
   width: 100%;
-  background: var(--primary-fatec, #BA1A1A);
+  background: var(--primary-fatec, var(--app-color-primary));
   color: #ffffff;
   border: none;
   padding: 12px;
@@ -231,3 +231,11 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+.main { padding: 0; gap: 16px; }
+.menuRow { width: 100%; text-align: left; padding: 24px; border-color: var(--app-color-border); border-radius: var(--app-radius-card); box-shadow: var(--app-shadow); }
+.menuRowLeft h3 { font-size: 1rem; }
+.menuRowLeft p, .optionDesc { font-size: .8125rem; color: var(--app-color-muted); }
+.modalContent { max-height: none; padding: 0; box-shadow: none; border-radius: 0; }
+.inputGroup input { min-width: 0; border-color: var(--app-color-input-border); border-radius: 12px; }
+@media(max-width:540px) { .menuRow { padding: 16px; } .modalActions { flex-wrap: wrap; } }

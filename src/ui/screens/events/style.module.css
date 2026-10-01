@@ -4,10 +4,10 @@
   background:
     linear-gradient(
       180deg,
-      #ba1a1a 0,
-      #ba1a1a 250px,
-      #f5f6f8 250px,
-      #f5f6f8 100%
+      var(--app-color-primary) 0,
+      var(--app-color-primary) 250px,
+      var(--app-color-background) 250px,
+      var(--app-color-background) 100%
     );
 }
 
@@ -128,7 +128,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #e8e9ec;
+  border: 1px solid var(--app-color-border);
   border-radius: 16px;
 
   box-shadow:
@@ -172,7 +172,7 @@
 
   margin-bottom: 5px;
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   font-size: 32px;
   line-height: 1;
@@ -184,7 +184,7 @@
   position: relative;
   z-index: 1;
 
-  color: #70757e;
+  color: var(--app-color-muted);
 
   font-size: 13px;
   font-weight: 600;
@@ -232,7 +232,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #e8e9ec;
+  border: 1px solid var(--app-color-border);
   border-radius: 15px;
 
   box-shadow:
@@ -256,7 +256,7 @@
 
   border-radius: 0 4px 4px 0;
 
-  background: #ba1a1a;
+  background: var(--app-color-primary);
 }
 
 .eventCard:hover {
@@ -276,9 +276,9 @@
 
   border-radius: 999px;
 
-  background: #fff1f1;
+  background: var(--app-color-primary-soft);
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   font-size: 10px;
   font-weight: 800;
@@ -301,7 +301,7 @@
 
   margin: 0;
 
-  color: #73777f;
+  color: var(--app-color-muted);
 
   font-size: 13px;
   line-height: 1.6;
@@ -320,7 +320,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #e8e9ec;
+  border: 1px solid var(--app-color-border);
   border-radius: 15px;
 
   box-shadow:
@@ -356,7 +356,7 @@
 .certificateCard p {
   margin: 0;
 
-  color: #797d84;
+  color: var(--app-color-muted);
 
   font-size: 13px;
 }
@@ -373,9 +373,9 @@
 
   border-radius: 50%;
 
-  background: #fff1f1;
+  background: var(--app-color-primary-soft);
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   font-size: 18px;
   font-weight: 700;
@@ -388,7 +388,7 @@
 .certificateCard:hover .arrow {
   transform: translateX(3px);
 
-  background: #ba1a1a;
+  background: var(--app-color-primary);
   color: #ffffff;
 }
 
@@ -421,7 +421,7 @@
 .primaryButton {
   margin-top: 3px;
 
-  background: #ba1a1a;
+  background: var(--app-color-primary);
 
   color: #ffffff;
 
@@ -443,7 +443,7 @@
 
   background: transparent;
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   border: 1px solid rgba(186, 26, 26, 0.3);
 }
@@ -463,7 +463,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #e8e9ec;
+  border: 1px solid var(--app-color-border);
   border-radius: 18px;
 
   text-align: center;
@@ -486,7 +486,7 @@
 
   background: #fff8f8;
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   font-size: 25px;
   font-weight: 800;
@@ -505,7 +505,7 @@
 
   margin: 0 auto;
 
-  color: #747980;
+  color: var(--app-color-muted);
 
   font-size: 14px;
   line-height: 1.65;
@@ -522,7 +522,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #e8e9ec;
+  border: 1px solid var(--app-color-border);
   border-radius: 18px;
 
   box-shadow:
@@ -540,7 +540,7 @@
 .certificateId {
   margin-bottom: 7px;
 
-  color: #777b82;
+  color: var(--app-color-muted);
 
   font-size: 12px;
   font-weight: 700;
@@ -570,7 +570,7 @@
 .infoText {
   margin: 18px 0 0;
 
-  color: #777b82;
+  color: var(--app-color-muted);
 
   font-size: 13px;
   line-height: 1.65;
@@ -617,7 +617,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #e8e9ec;
+  border: 1px solid var(--app-color-border);
   border-radius: 18px;
 
   text-align: center;
@@ -634,7 +634,7 @@
 .emptyState p {
   margin: 0;
 
-  color: #777b82;
+  color: var(--app-color-muted);
 
   font-size: 14px;
   line-height: 1.6;
@@ -686,9 +686,9 @@
 
   border-radius: 12px;
 
-  background: #fff1f1;
+  background: var(--app-color-primary-soft);
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 }
 
 
@@ -698,7 +698,7 @@
 
   margin-bottom: 4px;
 
-  color: #8a8f98;
+  color: var(--app-color-muted);
 
   font-size: 10px;
   font-weight: 800;
@@ -722,7 +722,7 @@
 
   background: #fff0f0;
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   font-size: 12px;
   font-weight: 800;
@@ -757,9 +757,9 @@
 
   border-radius: 13px;
 
-  background: #fff1f1;
+  background: var(--app-color-primary-soft);
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 }
 
 .certificateContent {
@@ -781,7 +781,7 @@
 
   margin: 10px 0 0;
 
-  color: #8a8e95;
+  color: var(--app-color-muted);
 
   font-size: 12px;
   line-height: 1.5;
@@ -800,7 +800,7 @@
 
   margin-bottom: 10px;
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 
   font-size: 11px;
   font-weight: 800;
@@ -843,7 +843,7 @@
 
 .scannerInfo svg {
   flex-shrink: 0;
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 }
 
 
@@ -866,9 +866,9 @@
 
   border-radius: 16px;
 
-  background: #fff1f1;
+  background: var(--app-color-primary-soft);
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 }
 
 .certificateDetailHeader h2 {
@@ -904,7 +904,7 @@
 .infoBox svg {
   flex-shrink: 0;
 
-  color: #ba1a1a;
+  color: var(--app-color-primary);
 }
 
 .infoBox p {
@@ -941,10 +941,10 @@
     background:
       linear-gradient(
         180deg,
-        #ba1a1a 0,
-        #ba1a1a 225px,
-        #f5f6f8 225px,
-        #f5f6f8 100%
+        var(--app-color-primary) 0,
+        var(--app-color-primary) 225px,
+        var(--app-color-background) 225px,
+        var(--app-color-background) 100%
       );
   }
 
@@ -1033,26 +1033,26 @@
   }
 }
 /* Listagem: preserva a identidade visual dos stubs. */
-.eventsPage { background: #f5f6f8; }
-.eventsPage .headerArea { background: #ba1a1a; padding-top: max(30px, env(safe-area-inset-top)); }
+.eventsPage { background: var(--app-color-background); }
+.eventsPage .headerArea { background: var(--app-color-primary); padding-top: max(30px, env(safe-area-inset-top)); }
 .eventsPage .content { padding-bottom: max(54px, env(safe-area-inset-bottom)); }
 .eventsPage button { font-family: inherit; }
 .eventsPage button:focus-visible, .eventsPage a:focus-visible { outline: 3px solid #c68028; outline-offset: 4px; }
 .eventsPage .backLink { min-height: 44px; }
 .eventsPage .summaryGrid { margin-bottom: 24px; }
-.eventsPage .emptyState svg { margin-bottom: 16px; color: #ba1a1a; }
-.tabs { display: flex; gap: 6px; padding: 6px; border-radius: 13px; background: #fff; border: 1px solid #e8e9ec; margin-bottom: 28px; }
+.eventsPage .emptyState svg { margin-bottom: 16px; color: var(--app-color-primary); }
+.tabs { display: flex; gap: 6px; padding: 6px; border-radius: 13px; background: #fff; border: 1px solid var(--app-color-border); margin-bottom: 28px; }
 .tabs button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 10px; min-height: 48px; border: 0; border-radius: 9px; background: transparent; color: #626771; font-size: 13px; font-weight: 700; cursor: pointer; }
 .tabs button[aria-selected='true'] { background: #fff0f0; color: #a81919; }
 .tabs svg { flex-shrink: 0; }
-.refreshButton { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; margin-left: 12px; border: 1px solid #e8e9ec; border-radius: 11px; background: #fff; color: #ba1a1a; cursor: pointer; }
+.refreshButton { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; margin-left: 12px; border: 1px solid var(--app-color-border); border-radius: 11px; background: #fff; color: var(--app-color-primary); cursor: pointer; }
 .refreshButton:disabled { opacity: .5; cursor: wait; }
 .resourceError { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 16px; margin-bottom: 18px; border: 1px solid #f0d5d5; background: #fff5f5; color: #a81919; border-radius: 12px; font-size: 13px; line-height: 1.6; }
 .resourceError > svg { flex-shrink: 0; }
 .resourceError p { flex: 1; min-width: 150px; }
 .resourceError button { padding: 8px 12px; min-height: 44px; background: #fff; border: 1px solid #e5baba; color: #a81919; border-radius: 8px; font-weight: 700; cursor: pointer; }
 .mockNotice { color: #82510d; background: #fff3df; border: 1px solid #f4ddb5; padding: 10px 14px; border-radius: 10px; font-size: 12px; margin-bottom: 20px; }
-.participationPlaceholder { padding: 22px; border: 1px solid #e8e9ec; border-radius: 16px; background: #fff; overflow-wrap: anywhere; }
+.participationPlaceholder { padding: 22px; border: 1px solid var(--app-color-border); border-radius: 16px; background: #fff; overflow-wrap: anywhere; }
 .participationPlaceholder h3 { margin-bottom: 16px; font-size: 17px; color: #1b1c1e; }
 @media (max-width: 540px) {
   .eventsPage .summaryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1063,3 +1063,7 @@
 }
 @media (max-width: 390px) { .eventsPage .summaryCard { padding: 14px; } }
 @media (prefers-reduced-motion: reduce) { .eventsPage .loadingIcon { animation: none; } }
+
+.summaryCard, .eventCard, .certificateCard, .emptyState { border-radius: var(--app-radius-card); box-shadow: var(--app-shadow); }
+.certificateContent { min-width: 0; overflow-wrap: anywhere; }
+.primaryButton, .secondaryButton { padding-block: 12px; }

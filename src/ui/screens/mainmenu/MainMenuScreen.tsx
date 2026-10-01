@@ -95,6 +95,7 @@ export default function MainMenuScreen() {
           <h1 className={styles.welcomeText}>
             Bem-vindo(a), {student?.name ? student.name.split(' ')[0] : "Aluno"}
           </h1>
+          <p className={styles.intro}>Acesse sua identificação, acompanhe eventos e consulte suas conquistas.</p>
 
           <div className={styles.gridContainer}>
             <button className={styles.menuCard} onClick={() => navigate('/eventos')}>
@@ -142,12 +143,12 @@ export default function MainMenuScreen() {
             </button>
           </div>
 
-          <div className={styles.logoutCotainerButton} onClick={()=>{handleLogout()}}>
+          <button type="button" className={styles.logoutCotainerButton} onClick={()=>{handleLogout()}}>
             {/* <button className={styles.logoutButton} onClick={handleLogout}> */}
             Deslogar
           {/* </button> */}
           <LogOut className={styles.iconLogout}></LogOut>
-          </div>
+          </button>
         </div>
       </div>
     </div>
