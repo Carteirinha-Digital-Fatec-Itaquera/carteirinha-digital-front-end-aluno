@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Test Decoder Harness</title>
+  <script src="/node_modules/html5-qrcode/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <div id="reader" style="width: 500px; display: none;"></div>
+  <script>
+    window.decodeQrFromDataUrl = async function(dataUrl) {
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+      const html5QrCode = new Html5Qrcode('reader');
+      try {
+        const decodedText = await html5QrCode.scanFile(file, false);
+        return { success: true, text: decodedText };
+      } catch (err) {
+        return { success: false, error: String(err) };
+      }
+    };
+  </script>
+</body>
+</html>

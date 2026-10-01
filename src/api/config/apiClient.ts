@@ -54,7 +54,6 @@ export async function apiClient(
   if (body && !multipart) {
     headers['Content-Type'] = 'application/json';
   }
-  console.log(`${GLOBAL_VAR.BASE_URL}\n ${path}`)
 
   
   return fetch(`${GLOBAL_VAR.BASE_URL}${path}`, {
@@ -62,10 +61,10 @@ export async function apiClient(
     headers,
     signal,
     cache,
-    body: multipart ? (body as any) : body ? JSON.stringify(body) : undefined,
+    body: multipart ? (body as unknown as BodyInit) : body ? JSON.stringify(body) : undefined,
   });
 
-  } catch (error) {
+  } catch {
     throw {
       code: 'NETWORK_ERROR',
       status: '0',
