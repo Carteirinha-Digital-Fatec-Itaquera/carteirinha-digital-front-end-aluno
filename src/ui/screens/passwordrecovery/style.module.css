@@ -1,5 +1,23 @@
 
-.subcontainer, .stepContainer { display: flex; flex-direction: column; width: 100%; }
-.infoText { color: var(--app-color-muted); font-size: .9375rem; line-height: 1.7; }
-.button { composes: button from '../../components/button/style.module.css'; }
-.linkButton { padding: 12px; align-self: center; border: 0; border-radius: 12px; background: transparent; color: var(--app-color-primary); font-weight: 700; cursor: pointer; }
+.subcontainer, .stepContainer { 
+    display: flex; 
+    flex-direction: column; 
+    width: 100%; 
+}
+.infoText { 
+    color: var(--app-color-muted);
+    font-size: .9375rem; 
+    line-height: 1.7; 
+}
+.button { 
+    composes: button from '../../components/button/style.module.css';
+}
+.linkButton { 
+    padding: 12px; 
+    align-self: center; 
+    border: 0; 
+    border-radius: 12px; 
+    background: transparent; 
+    color: var(--app-color-primary); 
+    font-weight: 700; cursor: pointer; 
+}

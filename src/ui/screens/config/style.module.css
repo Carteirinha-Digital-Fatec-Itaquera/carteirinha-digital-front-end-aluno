@@ -1,92 +1,176 @@
 .container {
   min-height: 100vh;
+  min-height: 100dvh;
+
   background-color: var(--background-page, #f8f9fa);
+
   display: flex;
   flex-direction: column;
+
   transition: background-color 0.3s ease;
 }
+
+/* =========================================
+   CABEÇALHO
+   ========================================= */
 
 .header {
   display: flex;
   align-items: center;
+
   padding: 16px;
-  background-color: var(--background-card, var(--app-color-primary));
+
+  background-color: var(
+    --background-card,
+    var(--app-color-primary)
+  );
+
   border-bottom: 1px solid var(--border-color, #e9ecef);
+
   gap: 16px;
+
   transition: background-color 0.3s ease;
 }
 
 .backButton {
   background: transparent;
   border: none;
+
   cursor: pointer;
+
   color: var(--text-primary, #333);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
+  margin: 0;
+
   font-size: 20px;
   font-weight: 700;
+
   color: var(--text-primary, #ffffff);
 }
 
+/* =========================================
+   CONTEÚDO PRINCIPAL
+   ========================================= */
+
 .main {
-  padding: 16px;
+  padding: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
+
+  gap: 16px;
 }
 
+/* =========================================
+   BOTÕES / CARDS DE CONFIGURAÇÃO
+   ========================================= */
+
 .menuRow {
-  background: var(--background-card, #ffffff);
-  padding: 16px;
-  border-radius: 12px;
+  width: 100%;
+
+  padding: 24px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  background: var(--background-card, #ffffff);
+
+  border: 1px solid var(--app-color-border);
+  border-radius: var(--app-radius-card);
+
+  box-shadow: var(--app-shadow);
+
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-  transition: background 0.2s, border-color 0.2s;
-  border: 1px solid transparent;
+
+  text-align: left;
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
+/*
+  Hover suave:
+  - não muda o fundo
+  - não deixa o card "sumir"
+  - apenas destaca a borda e eleva levemente
+*/
 .menuRow:hover {
-  background: var(--background-page);
-  border-color: var(--border-color);
+  background: var(--background-card, #ffffff);
+
+  border-color: var(--app-color-primary);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.08);
+
+  transform: translateY(-2px);
+}
+
+.menuRow:active {
+  transform: translateY(0);
+
+  box-shadow: var(--app-shadow);
 }
 
 .menuRowLeft {
   display: flex;
   align-items: center;
+
   gap: 16px;
+
+  min-width: 0;
 }
 
 .iconRed {
-  color: var(--primary-fatec, var(--app-color-primary));
+  color: var(
+    --primary-fatec,
+    var(--app-color-primary)
+  );
+
   flex-shrink: 0;
 }
 
 .menuRowLeft h3 {
-  font-size: 15px;
   margin: 0;
+
+  font-size: 1rem;
+
   color: var(--text-primary, #212529);
 }
 
 .menuRowLeft p {
-  font-size: 12px;
-  margin: 2px 0 0 0;
-  color: var(--text-secondary, #6c757d);
+  margin: 2px 0 0;
+
+  font-size: 0.8125rem;
+
+  color: var(--app-color-muted);
 }
 
 /* =========================================
    TOGGLE SWITCH PARA O MODO NOTURNO
    ========================================= */
+
 .toggleSwitch {
   width: 44px;
   height: 24px;
+
   background: var(--text-secondary);
+
   border-radius: 24px;
+
   position: relative;
-  transition: background 0.3s;
+
+  flex-shrink: 0;
+
+  transition: background 0.3s ease;
 }
 
 .toggleActive {
@@ -96,13 +180,20 @@
 .toggleThumb {
   width: 20px;
   height: 20px;
+
   background: #ffffff;
+
   border-radius: 50%;
+
   position: absolute;
+
   top: 2px;
   left: 2px;
-  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .toggleActive .toggleThumb {
@@ -110,132 +201,300 @@
 }
 
 /* =========================================
-   MODAIS E FORMULÁRIOS
+   MODAL
    ========================================= */
+
 .modalOverlay {
   position: fixed;
+
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+
+  z-index: 999;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+
   padding: 20px;
+
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .modalContent {
-  background: var(--background-card, #ffffff);
   width: 100%;
   max-width: 440px;
-  border-radius: 16px;
+
+  max-height: calc(100dvh - 40px);
+
   padding: 24px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
+  background: var(--background-card, #ffffff);
+
+  border: 1px solid var(--app-color-border);
+  border-radius: 16px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15);
+
+  overflow-y: auto;
 }
 
 .modalContent h3 {
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
+
   font-size: 18px;
+
   color: var(--text-primary, #1a1a1a);
 }
+
+/* =========================================
+   OPÇÕES DE ACESSIBILIDADE
+   ========================================= */
 
 .optionsList {
   display: flex;
   flex-direction: column;
+
   gap: 8px;
+
   margin-bottom: 20px;
+
   max-height: 50vh;
+
   overflow-y: auto;
 }
 
 .optionButton {
+  width: 100%;
+
+  padding: 12px 16px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+
   border: 1px solid var(--border-color, #dee2e6);
   border-radius: 8px;
+
   background: var(--background-card, #ffffff);
+
   color: var(--text-primary, #1a1a1a);
+
   cursor: pointer;
-  width: 100%;
-  transition: all 0.2s;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.optionButton:hover {
+  border-color: var(--app-color-primary);
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.06);
+
+  transform: translateY(-1px);
 }
 
 .activeOption {
   border-color: var(--primary-fatec);
+
   background: rgba(186, 26, 26, 0.04);
 }
 
 .optionDesc {
-  font-size: 11px;
-  color: var(--text-secondary, #6c757d);
-  margin: 2px 0 0 0;
+  margin: 2px 0 0;
+
+  font-size: 0.8125rem;
+
+  color: var(--app-color-muted);
 }
 
-.closeButton, .submitButton {
-  width: 100%;
-  background: var(--primary-fatec, var(--app-color-primary));
-  color: #ffffff;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.closeButton:hover, .submitButton:hover {
-  opacity: 0.9;
-}
+/* =========================================
+   FORMULÁRIO DE SENHA
+   ========================================= */
 
 .passwordForm {
   display: flex;
   flex-direction: column;
+
   gap: 14px;
+
+  width: 100%;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
+
   gap: 6px;
+
+  width: 100%;
 }
 
 .inputGroup label {
   font-size: 13px;
   font-weight: 600;
+
   color: var(--text-primary, #495057);
 }
 
 .inputGroup input {
+  width: 100%;
+  min-width: 0;
+
   padding: 10px;
-  border: 1px solid var(--border-color, #ced4da);
-  background: var(--background-page, #fff);
-  color: var(--text-primary, #000);
-  border-radius: 6px;
+
+  border: 1px solid var(--app-color-input-border);
+  border-radius: 12px;
+
+  background: var(--background-page, #ffffff);
+
+  color: var(--text-primary, #000000);
+
   font-size: 14px;
+
+  box-sizing: border-box;
 }
 
+/* =========================================
+   BOTÕES DO MODAL
+   ========================================= */
+
 .modalActions {
+  width: 100%;
+
   display: flex;
-  gap: 10px;
+  align-items: stretch;
+
+  gap: 12px;
+
   margin-top: 10px;
 }
 
-.cancelButton {
-  flex: 1;
-  background: var(--border-color, #e9ecef);
-  color: var(--text-primary, #495057);
-  border: none;
-  padding: 12px;
+/*
+  IMPORTANTE:
+  os dois ocupam metade da linha no desktop.
+  Isso evita o botão "Guardar senha"
+  ficar em cima do "Cancelar".
+*/
+.modalActions .cancelButton,
+.modalActions .submitButton {
+  flex: 1 1 0;
+
+  width: auto;
+  min-width: 0;
+
+  padding: 12px 16px;
+
   border-radius: 8px;
+
   font-weight: 700;
+
   cursor: pointer;
+
+  box-sizing: border-box;
 }
 
-.main { padding: 0; gap: 16px; }
-.menuRow { width: 100%; text-align: left; padding: 24px; border-color: var(--app-color-border); border-radius: var(--app-radius-card); box-shadow: var(--app-shadow); }
-.menuRowLeft h3 { font-size: 1rem; }
-.menuRowLeft p, .optionDesc { font-size: .8125rem; color: var(--app-color-muted); }
-.modalContent { max-height: none; padding: 0; box-shadow: none; border-radius: 0; }
-.inputGroup input { min-width: 0; border-color: var(--app-color-input-border); border-radius: 12px; }
-@media(max-width:540px) { .menuRow { padding: 16px; } .modalActions { flex-wrap: wrap; } }
+/* Cancelar */
+.cancelButton {
+  background: var(--border-color, #e9ecef);
+
+  color: var(--text-primary, #495057);
+
+  border: 1px solid var(--border-color, #e9ecef);
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.cancelButton:hover {
+  border-color: #c4c8cc;
+
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Guardar / Confirmar */
+.submitButton,
+.closeButton {
+  background: var(
+    --primary-fatec,
+    var(--app-color-primary)
+  );
+
+  color: #ffffff;
+
+  border: 1px solid transparent;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.closeButton {
+  width: 100%;
+
+  padding: 12px;
+
+  border-radius: 8px;
+}
+
+.submitButton:hover,
+.closeButton:hover {
+  opacity: 0.92;
+
+  box-shadow:
+    0 4px 12px rgba(186, 26, 26, 0.18);
+}
+
+.submitButton:active,
+.cancelButton:active,
+.closeButton:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 540px) {
+  .menuRow {
+    padding: 16px;
+  }
+
+  .modalOverlay {
+    padding: 16px;
+  }
+
+  .modalContent {
+    padding: 20px;
+
+    border-radius: 16px;
+  }
+
+  /*
+    No celular eles podem continuar
+    um abaixo do outro para ter mais espaço.
+  */
+  .modalActions {
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .modalActions .cancelButton,
+  .modalActions .submitButton {
+    width: 100%;
+
+    flex: none;
+  }
+}

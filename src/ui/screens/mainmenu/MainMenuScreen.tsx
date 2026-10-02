@@ -98,20 +98,22 @@ export default function MainMenuScreen() {
           <p className={styles.intro}>Acesse sua identificação, acompanhe eventos e consulte suas conquistas.</p>
 
           <div className={styles.gridContainer}>
+
+            <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => navigate("/DigitalStudentCard")}>
+              <IdCard className={styles.icon} strokeWidth={1.5} />
+              <p>Minha Carteirinha</p>
+            </button>
+
             <button className={styles.menuCard} onClick={() => navigate('/eventos')}>
               <CalendarDays className={styles.icon} strokeWidth={1.5} />
               <p>Eventos &amp; Palestras</p>
             </button>
+
             <button className={styles.menuCard} onClick={() => navigate('/certificados')}>
               <Award className={styles.icon} strokeWidth={1.5} />
               <p>Meus Certificados</p>
             </button>
              
-
-            <button className={`${styles.menuCard} ${styles.fullWidth}`} onClick={() => navigate("/DigitalStudentCard")}>
-              <IdCard className={styles.icon} strokeWidth={1.5} />
-              <p>Carteirinha</p>
-            </button>
             
             <button className={`${styles.menuCard} ${styles.menuCard}`} onClick={() => {
                 alert("Instruções: Fundo neutro, rosto centralizado, sem óculos escuros.");
