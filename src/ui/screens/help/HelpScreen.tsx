@@ -1,9 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import PageLayout from '../../components/page/PageLayout';
 // import { ArrowLeft, Phone, MessageCircle, Mail, WheatIcon } from 'lucide-react';
-import { ArrowLeft} from 'lucide-react';
 
 // Assets
-const logoFatecbranca = '/fatec_itaquera_logo.png';
+
 const logoCps = '/cps_logo_br.png';
 const iconWhats = '/whatsappIcon.png'
 const iconEmail = '/emailIcon.png'
@@ -13,24 +12,15 @@ const iconTele = '/phoneIcon.png'
 import styles from './style.module.css';
 
 export default function HelpScreen() {
-  const navigate = useNavigate();
+
 
   return (
-    <div className={styles.container}>
-      <div className={styles.redHeader}>
-        <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
-          <ArrowLeft size={28} color="#FFF" strokeWidth={2.5} />
-        </button>
-        <div className={styles.logoFatecContainer}>
-          <img src={logoFatecbranca} className={styles.logoFatec} alt="Logo Fatec" />
-        </div>
-      </div>
-
+    <PageLayout title="Como podemos ajudar?" subtitle="Encontre os canais de atendimento da sua instituição." backTo="/MainMenu">
       {/* Conteúdo que sobrepõe o fundo vermelho */}
       <div className={styles.contentWrapper}>
         <div className={styles.contactContainer}>
           <p className={styles.faleConoscoLabel}>FALE CONOSCO</p>
-          <h1 className={styles.mainTitle}>Contatos</h1>
+          <h2 className={styles.mainTitle}>Contatos</h2>
 
           <div className={styles.contactList}>
             {/* Card WhatsApp */}
@@ -78,6 +68,6 @@ export default function HelpScreen() {
             <img src={logoCps} alt="Logo CPS" className={styles.footerLogoImg} />
             {/* <img src={logoSaoPaulo} alt="Logo SP" className={styles.footerLogoImg} /> */}
           </footer>
-    </div>
+    </PageLayout>
   );
 }

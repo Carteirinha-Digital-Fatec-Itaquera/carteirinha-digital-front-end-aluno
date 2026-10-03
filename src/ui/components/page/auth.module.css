@@ -1,0 +1,2 @@
+.panel { padding: 32px; border: 1px solid var(--app-color-border); border-radius: var(--app-radius-card); background: var(--app-color-surface); box-shadow: var(--app-shadow); }
+@media (max-width: 540px) { .panel { padding: 24px 16px; } }

@@ -127,14 +127,14 @@ export default function PresencaConfirmacaoScreen() {
     >
       <div className={styles.container}>
         {loading && (
-          <div className={`${styles.card} ${styles.loadingState}`}>
+          <div role="status" className={`${styles.card} ${styles.loadingState}`}>
             <LoaderCircle size={44} className={styles.spin} />
             <p>Carregando informações do evento...</p>
           </div>
         )}
 
         {!loading && errorMessage && (
-          <div className={`${styles.card} ${styles.errorState}`}>
+          <div role="alert" className={`${styles.card} ${styles.errorState}`}>
             <AlertCircle size={48} color="#BA1A1A" />
             <h2 className={styles.errorTitle}>QR Code Inválido ou Expirado</h2>
             <p className={styles.errorMessage}>{errorMessage}</p>
@@ -168,7 +168,7 @@ export default function PresencaConfirmacaoScreen() {
             </div>
 
             <div className={styles.eventInfo}>
-              <h1 className={styles.title}>{preview.event.title}</h1>
+              <h2 className={styles.title}>{preview.event.title}</h2>
 
               <div className={styles.metaList}>
                 {preview.event.speaker && (

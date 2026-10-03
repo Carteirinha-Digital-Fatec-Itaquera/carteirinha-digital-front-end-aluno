@@ -62,7 +62,7 @@ export default function DigitalStudentQrCode() {
   }, []);
 
   if (!student) {
-    return <div className={styles.loadingContainer}>Carregando...</div>;
+    return <div role="status" className={styles.loadingContainer}>Carregando...</div>;
   }
 
   const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
@@ -83,7 +83,7 @@ export default function DigitalStudentQrCode() {
 
       <div className={styles.appWrapper}>
         <div className={styles.redHeader}>
-          <button className={styles.backButton} onClick={() => navigate("/MainMenu")}>
+          <button aria-label="Voltar ao menu" className={styles.backButton} onClick={() => navigate("/MainMenu")}>
             <ArrowLeft size={24} color="#FFF" strokeWidth={3} />
           </button>
           <img src={logoFatec} className={styles.logoTop} alt="Logo Fatec" />

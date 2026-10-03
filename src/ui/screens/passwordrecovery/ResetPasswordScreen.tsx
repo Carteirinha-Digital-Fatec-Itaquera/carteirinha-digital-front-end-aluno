@@ -1,3 +1,4 @@
+import AuthLayout from '../../components/page/AuthLayout';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -6,7 +7,6 @@ import { InputPasswordComp } from '../../components/inputpassword/InputPasswordC
 import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { ErrorModalComp } from '../../components/ErrorModal/ErrorModalComp';
 
-import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 import { apiClient } from '../../../api/config/apiClient';
 
 import styles from './style.module.css';
@@ -29,15 +29,15 @@ export default function ResetPasswordScreen() {
   // Trava de segurança caso abram o link errado
   if (!token || !id || !type) {
     return (
-      <div className={styles.container}>
+      <AuthLayout title="Redefinir senha" subtitle="Escolha uma nova senha para sua conta institucional.">
         <div className={styles.subcontainer} style={{ textAlign: 'center', paddingTop: '50px' }}>
           <h2>Link Inválido</h2>
           <p className={styles.infoText}>Este link de recuperação está incompleto ou inválido.</p>
           <SpacerComp />
           <button className={styles.button} onClick={() => navigate('/login')}>Ir para o Login</button>
         </div>
-      </div>
-    );
+    </AuthLayout>
+  );
   }
 
   const handleResetPassword = async () => {
@@ -69,7 +69,7 @@ export default function ResetPasswordScreen() {
         setMessage(data.message || "Erro ao redefinir. O link pode ter expirado.");
         setModalErrorVisible(true);
       }
-    } catch (error) {
+    } catch {
       setMessage("Erro de conexão com o servidor.");
       setModalErrorVisible(true);
     }
@@ -77,8 +77,7 @@ export default function ResetPasswordScreen() {
   };
 
   return (
-    <div className={styles.container}>
-      <img src={logoFatec} className={styles.logo} alt="Logo Fatec" />
+    <AuthLayout title="Redefinir senha" subtitle="Escolha uma nova senha para sua conta institucional.">
       
       <div className={styles.subcontainer}>
         <ErrorModalComp
@@ -114,6 +113,6 @@ export default function ResetPasswordScreen() {
           </button>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

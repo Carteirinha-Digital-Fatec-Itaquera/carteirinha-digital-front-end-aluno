@@ -1,7 +1,7 @@
+import AuthLayout from '../../components/page/AuthLayout';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 const logoCps = '/cps_logo_cor.png';
 
 import { ButtonComp } from '../../components/button/ButtonComp';
@@ -34,8 +34,7 @@ export default function LoginScreen() {
   const backgroundColor = "#BA1A1A";
 
   return (
-    <div className={styles.container}>
-      <img src={logoFatec} className={styles.logo} alt='Logo Fatec' />
+    <AuthLayout title="Bem-vindo de volta" subtitle="Sua vida acadêmica, em um só lugar. Acesse com seu e-mail institucional.">
       
       <div className={styles.subcontainer}>
         <InternetWatcher />
@@ -60,12 +59,7 @@ export default function LoginScreen() {
                 href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                style={{
-                  color: '#FFD700', // Amarelo para destacar do fundo cinza escuro
-                  fontWeight: 'bold',
-                  textDecoration: 'underline',
-                  cursor: 'pointer'
-                }}
+                
               >
                 Acesse o portal SIGA
               </a>
@@ -129,7 +123,7 @@ export default function LoginScreen() {
                   setErrorFields(result.errorFields ?? []);
                   setModalErrorVisible(true);
                 }
-              } catch (e) {
+              } catch {
                 setMessage("Erro de conexão.");
                 setModalErrorVisible(true);
               }
@@ -142,7 +136,7 @@ export default function LoginScreen() {
         <SpacerComp />
         <img src={logoCps} className={styles.logocps} alt="Logo CPS" />
       </div>
-    </div>
+    </AuthLayout>
   );
 }
 

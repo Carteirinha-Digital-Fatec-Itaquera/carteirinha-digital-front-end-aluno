@@ -1,6 +1,8 @@
+import PageLayout from '../../components/page/PageLayout';
+import Modal from '../../components/modal/Modal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, ShieldCheck, Check,Settings} from 'lucide-react';
+import { Eye, ShieldCheck, Check,Settings} from 'lucide-react';
 import { apiClient } from '../../../api/config/apiClient';
 import styles from './style.module.css';
 
@@ -73,7 +75,7 @@ export default function ConfigScreen() {
           alert("Erro ao atualizar a senha. Tenta novamente.");
         }
       }
-    } catch (error) {
+    } catch {
       alert("Não foi possível conectar ao servidor.");
     } finally {
       setOnLoading(false);
@@ -81,20 +83,13 @@ export default function ConfigScreen() {
   };
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <button className={styles.backButton} onClick={() => navigate(-1)}>
-          <ArrowLeft color="#ffffff" strokeWidth={3} size={24} />
-        </button>
-        <Settings color='white' strokeWidth={3}/>
-        {/* <strong><h1 className={styles.title}>CONFIGURAÇÕES</h1></strong> */}
-        <span className={styles.title}>CONFIGURAÇÕES</span>
-      </header>
+    <PageLayout title="Configurações" subtitle="Personalize sua experiência e gerencie suas preferências de acesso." backTo="/MainMenu" icon={<Settings size={22} />}>
 
-      <main className={styles.main}>
+
+      <div className={styles.main}>
         
         {/* Futura feature para aplicação do modo noturno */}
-        {/* <div className={styles.menuRow} onClick={toggleTheme}>
+        {/* <button type="button" className={styles.menuRow} onClick={toggleTheme}>
           <div className={styles.menuRowLeft}>
             <Moon className={styles.iconRed} />
             <div>
@@ -107,7 +102,7 @@ export default function ConfigScreen() {
           </div>
         </div> */}
 
-        <div className={styles.menuRow} onClick={() => setModalDaltonismo(true)}>
+        <button type="button" className={styles.menuRow} onClick={() => setModalDaltonismo(true)}>
           <div className={styles.menuRowLeft}>
             <Eye className={styles.iconRed} />
             <div>
@@ -115,9 +110,9 @@ export default function ConfigScreen() {
               <p>Ajustar cores para daltonismo</p>
             </div>
           </div>
-        </div>
+        </button>
 
-        <div className={styles.menuRow} onClick={() => setModalSenha(true)}>
+        <button type="button" className={styles.menuRow} onClick={() => setModalSenha(true)}>
           <div className={styles.menuRowLeft}>
             <ShieldCheck className={styles.iconRed} />
             <div>
@@ -125,12 +120,12 @@ export default function ConfigScreen() {
               <p>Modificar as credenciais de entrada</p>
             </div>
           </div>
-        </div>
-      </main>
+        </button>
+      </div>
 
       {/* MODAL: DALTONISMO */}
       {modalDaltonismo && (
-        <div className={styles.modalOverlay} onClick={() => setModalDaltonismo(false)}>
+        <Modal label="Acessibilidade visual" onClose={() => setModalDaltonismo(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h3>Selecione o Grau de Daltonismo</h3>
             <div className={styles.optionsList}>
@@ -150,18 +145,18 @@ export default function ConfigScreen() {
             </div>
             <button className={styles.closeButton} onClick={() => setModalDaltonismo(false)}>Concluir</button>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* MODAL: ALTERAR SENHA */}
       {modalSenha && (
-        <div className={styles.modalOverlay} onClick={() => setModalSenha(false)}>
+        <Modal label="Alterar senha" onClose={() => setModalSenha(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h3>Criar Nova Senha</h3>
             <form onSubmit={handlePasswordChange} className={styles.passwordForm}>
               <div className={styles.inputGroup}>
-                <label>Nova Senha</label>
-                <input 
+                <label htmlFor="config-new-password">Nova Senha</label>
+                <input id="config-new-password"
                   type="password" 
                   placeholder="Mínimo 6 caracteres" 
                   value={newPassword} 
@@ -170,8 +165,8 @@ export default function ConfigScreen() {
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label>Confirme a Nova Senha</label>
-                <input 
+                <label htmlFor="config-confirm-password">Confirme a Nova Senha</label>
+                <input id="config-confirm-password"
                   type="password" 
                   placeholder="Digite novamente" 
                   value={confirmPassword} 
@@ -187,8 +182,8 @@ export default function ConfigScreen() {
               </div>
             </form>
           </div>
-        </div>
+        </Modal>
       )}
-    </div>
+    </PageLayout>
   );
 }

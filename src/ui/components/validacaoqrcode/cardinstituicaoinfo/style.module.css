@@ -15,7 +15,7 @@
 }
 
 .titleInstituicao {
-  color: #BA1A1A; 
+  color: var(--app-color-primary); 
   font-size: 16px;
   font-weight: 600;
   width: 100%;
@@ -134,3 +134,5 @@ export const styles = StyleSheet.create({
     textAlign: 'right',
   }
 }) */
+.containerCardInstituicao { background: var(--app-color-surface); border-color: var(--app-color-border); border-radius: 16px; box-shadow: none; margin-bottom: 0; padding-bottom: 8px; }
+.containerTuplas { border-color: var(--app-color-border); padding: 16px; gap: 8px; flex-wrap: wrap; }

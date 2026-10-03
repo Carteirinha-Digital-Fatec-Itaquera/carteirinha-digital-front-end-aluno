@@ -1,5 +1,5 @@
 // import React from 'react'; 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { Dispatch, SetStateAction } from "react"
 import { Eye, EyeOff } from "lucide-react"; 
 import styles from "./style.module.css"; // Puxa do novo CSS
@@ -12,20 +12,21 @@ type InputPasswordProps = {
 };
 
 export const InputPasswordComp = ({ label, placeholder, value, onChangeText }: InputPasswordProps) => {
+  const id = useId();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{label}</label>
+      <label htmlFor={id} className={styles.label}>{label}</label>
       <div className={styles.inputField}>
-        <input
+        <input id={id}
           className={styles.inputText}
           placeholder={placeholder}
           type={showPassword ? "text" : "password"}
           value={value}
           onChange={(e) => onChangeText(e.target.value)}
         />
-        <button 
+        <button type="button" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} aria-pressed={showPassword} 
           onClick={() => setShowPassword(!showPassword)}
           style={{ background: 'none', border: 'none', cursor: 'pointer' }}
         >

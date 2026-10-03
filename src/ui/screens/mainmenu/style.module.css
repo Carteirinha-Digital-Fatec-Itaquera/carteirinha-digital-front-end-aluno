@@ -1,84 +1,77 @@
-.container {
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
+.container,
+.mobileWrapper {
+  width: 100%;
+  min-height: 100dvh;
+  background: var(--app-color-background);
 }
 
 .mobileWrapper {
-  width: 100%;
-  max-width: 100%;
-  background-color: #BA1A1A;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
 }
 
 .redHeader {
   width: 100%;
-  height: 280px;
-  background-color: #BA1A1A;
+  padding: 32px 24px 80px;
+  background: var(--app-color-primary);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: max(45px, env(safe-area-inset-top, 45px));
-  margin-bottom: 25px;
 }
 
 .logo {
-  width: 200px;
+  width: 180px;
+  height: 100px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
 
 .subcontainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 90%;
-  max-width: 900px;
-  background-color: #FFFFFF;
-  border-radius: 50px;
-  padding: 0 50px 50px 50px;
-  margin-top: -50px;
   position: relative;
-  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.08);
-  margin-bottom: 50px;
+  width: calc(100% - 48px);
+  max-width: 820px;
+  margin: -32px auto 40px;
+  padding: 32px;
+  background: var(--app-color-surface);
+  border: 1px solid var(--app-color-border);
+  border-radius: var(--app-radius-card);
+  box-shadow: var(--app-shadow);
 }
 
 .avatarWrapper {
-  width: 190px;
-  height: 190px;
+  width: 88px;
+  height: 88px;
+  padding: 4px;
+  margin: -72px 0 20px;
   border-radius: 50%;
-  background-color: #FFFFFF;
-  padding: 6px;
-  margin-top: -60px;
-  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.12);
-  margin-bottom: 25px;
+  background: var(--app-color-surface);
+  box-shadow: var(--app-shadow);
 }
 
 .avatar {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .welcomeText {
-  font-size: 26px;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 40px;
-  text-align: center;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.intro {
+  margin: 12px 0 24px;
+  color: var(--app-color-muted);
+  max-width: 550px;
+  font-size: 0.9375rem;
 }
 
 .gridContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .menuCard {
@@ -86,340 +79,96 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
-  border: 1.5px solid #eaeaea;
-  border-radius: 16px;
-  padding: 24px 20px;
-  min-width: 44px;
-  min-height: 44px;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease-in-out,
-    background-color 0.2s ease-in-out,
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
-  color: #1a1a1a;
-  font-family: inherit;
-}
 
-/* =========================================
-   CARTEIRINHA - PRIMEIRO ACESSO PRINCIPAL
-   ========================================= */
-   .cardCarteirinha {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  
-    min-height: 64px;
-    padding: 18px 24px;
-  
-    background-color: #BA1A1A;
-    border-color: #BA1A1A;
-    color: #FFFFFF;
-  
-    box-shadow: 0 8px 18px rgba(186, 26, 26, 0.18);
-  }
-  
-  .cardCarteirinha .icon {
-    width: 28px;
-    height: 28px;
-    color: #FFFFFF;
-    flex-shrink: 0;
-  }
-  
-  .cardCarteirinha p {
-    margin: 0 !important;
-    padding: 0;
-    font-size: 18px;
-    font-weight: 800;
-    line-height: 28px;
-    text-align: left;
-  }
+  gap: 16px;
+
+  min-height: 120px;
+  padding: 24px;
+
+  border: 1px solid var(--app-color-border);
+  border-radius: 16px;
+
+  background: var(--app-color-surface);
+  color: var(--app-color-text);
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
 
 .menuCard:hover {
-  background-color: #fafafa;
-  transform: translateY(-3px);
-  border-color: #BA1A1A;
-  box-shadow: 0px 8px 15px rgba(186, 26, 26, 0.08);
-}
-
-.cardCarteirinha:hover {
-  background-color: #a91616;
-  border-color: #a91616;
-  box-shadow: 0 10px 20px rgba(186, 26, 26, 0.22);
-}
-
-.menuCard:focus-visible {
-  outline: 3px solid #1a1a1a;
-  outline-offset: 3px;
-}
-
-.cardCarteirinha:focus-visible {
-  outline: 3px solid #000000;
-  outline-offset: 4px;
+  border-color: var(--app-color-primary);
+  box-shadow: var(--app-shadow);
 }
 
 .menuCard p {
-  margin-top: 15px;
-  margin-bottom: 0;
+  margin: 0;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 0.9375rem;
+  text-align: center;
 }
 
 .icon {
-  width: 32px;
-  height: 32px;
-  color: #BA1A1A;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
+  color: var(--app-color-primary);
 }
 
 .fullWidth {
   grid-column: span 2;
-  flex-direction: row;
-  justify-content: center;
+
+  flex-direction: column;
   align-items: center;
-  gap: 20px;
-}
+  justify-content: center;
 
-.fullWidth p {
-  margin-top: 0 !important;
-  font-size: 18px !important;
-}
+  min-height: 120px;
 
-/* =========================================
-   BOTÃO DESLOGAR
-   ========================================= */
+  background: var(--app-color-primary-soft);
+  border-color: #edbdbd;
+}
 
 .logoutCotainerButton {
-  margin-top: 10px;
-  background-color: #BA1A1A;
-  width: 150px;
-  min-height: 44px;
   display: flex;
-  justify-content: space-between;
-  text-align: center;
-  align-content: center;
   align-items: center;
-  border: none;
-  border-radius: 12px;
-  padding-left: 9px;
-  padding-right: 9px;
-  color: white;
-  cursor: pointer;
-  font-family: inherit;
-}
+  justify-content: center;
 
-.logoutCotainerButton:focus-visible {
-  outline: 3px solid #1a1a1a;
-  outline-offset: 3px;
+  gap: 12px;
+
+  margin: 24px 0 0 auto;
+  padding: 12px 16px;
+
+  background: transparent;
+
+  border: 1px solid var(--app-color-border);
+  border-radius: 12px;
+
+  color: var(--app-color-primary);
+  font-weight: 600;
+
+  cursor: pointer;
 }
 
 .iconLogout {
-  margin: 5px;
-  color: white;
-  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
-.logoutButton {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  text-decoration: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.logoutButton:hover {
-  opacity: 0.7;
-}
-
-/* =========================================
-   TABLET / CELULAR
-   ========================================= */
-
-@media (max-width: 768px) {
-  .redHeader {
-    height: 200px;
-    padding-top: max(25px, env(safe-area-inset-top, 25px));
-    margin-bottom: 0;
-    background-color: #BA1A1A;
-  }
-
-  .logo {
-    width: 170px;
-  }
-
+@media (max-width: 540px) {
   .subcontainer {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 0;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    padding: 0 20px;
-    padding-bottom: max(
-      40px,
-      calc(20px + env(safe-area-inset-bottom, 0px))
-    );
-    margin-top: 10px;
-    margin-bottom: 0;
-    min-height: calc(100vh - 140px);
-    min-height: calc(100dvh - 140px);
-    box-shadow: none;
-  }
-
-  .avatarWrapper {
-    width: 140px;
-    height: 140px;
-    margin-top: -45px;
-    margin-bottom: 18px;
-  }
-
-  .welcomeText {
-    font-size: 24px;
-    margin-top: 0;
-    margin-bottom: 24px;
+    width: calc(100% - 32px);
+    padding: 24px 16px;
   }
 
   .gridContainer {
-    gap: 16px;
+    gap: 12px;
   }
 
   .menuCard {
-    padding: 18px 14px;
-    min-height: 80px;
-  }
-
-  .cardCarteirinha {
-    min-height: 64px;
-    padding: 16px 20px;
-    gap: 10px;
-  }
-
-  .cardCarteirinha .icon {
-    width: 27px;
-    height: 27px;
-  }
-
-  .cardCarteirinha p {
-    margin: 0 !important;
-    font-size: 17px;
-    line-height: 27px;
-  }
-
-  .fullWidth {
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-  }
-
-  .fullWidth p {
-    margin-top: 15px !important;
-    font-size: 16px !important;
-  }
-}
-
-/* =========================================
-   CELULARES PEQUENOS
-   360 x 640
-   ========================================= */
-
-@media (max-width: 380px) {
-  .redHeader {
-    height: 150px;
-    padding-top: max(20px, env(safe-area-inset-top, 20px));
-  }
-
-  .logo {
-    width: 145px;
-  }
-
-  .subcontainer {
-    margin-top: 8px;
-    padding-left: 14px;
-    padding-right: 14px;
-    padding-bottom: 32px;
-  }
-
-  .avatarWrapper {
-    width: 105px;
-    height: 105px;
-    padding: 5px;
-    margin-top: -35px;
-    margin-bottom: 12px;
-  }
-
-  .welcomeText {
-    font-size: 21px;
-    margin-bottom: 18px;
-  }
-
-  .gridContainer {
-    gap: 10px;
-  }
-
-  .menuCard {
-    min-height: 72px;
-    padding: 12px 8px;
-    border-radius: 14px;
-  }
-
-  .menuCard p {
-    margin-top: 8px;
-    font-size: 14px;
-  }
-
-  .icon {
-    width: 27px;
-    height: 27px;
-  }
-
-  /* CARTEIRINHA NO CELULAR */
-  .cardCarteirinha {
-    min-height: 58px;
-    padding: 12px 14px;
-  }
-
-  .cardCarteirinha p {
-    margin: 0;
-    font-size: 16px;
-  }
-
-  .cardCarteirinha .icon {
-    width: 28px;
-    height: 28px;
-    left: calc(50% - 70px);
-  }
-
-  .fullWidth p {
-    margin-top: 8px !important;
-    font-size: 14px !important;
-  }
-
-  .logoutCotainerButton {
-    width: 140px;
-    margin-top: 8px;
-  }
-}
-
-/* =========================================
-   ACESSIBILIDADE
-   ========================================= */
-
-@media (max-width: 380px) {
-  :global([data-accessibility='large']) .redHeader {
-    height: 165px;
-  }
-
-  :global([data-accessibility='large']) .subcontainer {
-    overflow: visible;
-  }
-
-  :global([data-accessibility='large']) .gridContainer {
-    overflow: visible;
+    padding: 16px;
   }
 }

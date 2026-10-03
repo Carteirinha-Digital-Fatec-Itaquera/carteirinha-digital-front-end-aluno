@@ -1,3 +1,6 @@
+import type { ReactNode } from 'react';
+import PageLayout from '../../components/page/PageLayout';
+import { LoadingState } from '../events/ResourceState';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Importado para pegar o token da URL
 import styles from './style.module.css';
@@ -14,6 +17,10 @@ import { GLOBAL_VAR } from "../../../api/config/globalVar";
 import { formatDateBR } from "../../../utils/dateProcessing";
 const logoFatec = '/fatec_itaquera_logo.png'
 
+
+function ValidationLayout({ children }: { children: ReactNode }) {
+  return <PageLayout title="Validar carteirinha" subtitle="Consulta pública da identificação estudantil." backTo="/login" backLabel="Acessar Carteirinha Digital" brand={<img src={logoFatec} alt="Fatec Itaquera" />}>{children}</PageLayout>;
+}
 
 export default function TelaQrcode() {
   const { qrcodeToken } = useParams(); 
@@ -53,25 +60,20 @@ export default function TelaQrcode() {
     loadData();
   }, [qrcodeToken]);
 
-  if (loading) return <div className={styles.loading}>Validando carteirinha...</div>;
+  if (loading) return <ValidationLayout><LoadingState text="Validando carteirinha..." /></ValidationLayout>;
   
   if (error || !student) {
     return (
-      <div className={styles.loading}>
-        <p>{error || "Perfil não encontrado."}</p>
-      </div>
+      <ValidationLayout><div role="alert" className={styles.errorState}>
+        <h2>Não foi possível validar</h2><p>{error || "Perfil não encontrado."}</p>
+      </div></ValidationLayout>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <header className={styles.redHeader}>
-        <div className={styles.headerContent}>
-          <img src={logoFatec} alt="Logo Fatec" style={{width: 100}}/>
-        </div>
-      </header>
+    <ValidationLayout>
 
-      <main className={styles.mainContent}>
+      <section className={styles.mainContent}>
         <section className={styles.card}>
           <h3 className={styles.cardHeaderTitle}>Aluno</h3>
           <div className={styles.studentInfoSection}>
@@ -111,11 +113,11 @@ export default function TelaQrcode() {
         <p className={styles.timestamp}>
           Verificado em {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
         </p>
-      </main>
+      </section>
 
       <footer className={styles.redFooter}>
         <img src={logoCps} className={styles.govLogo} alt="Centro Paula Souza" />
       </footer>
-    </div>
+    </ValidationLayout>
   );
 }
