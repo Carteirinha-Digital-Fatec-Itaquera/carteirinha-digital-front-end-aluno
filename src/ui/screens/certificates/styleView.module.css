@@ -1,43 +1,835 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+}
 
-.content { display:flex; flex-direction:column; align-items:stretch; gap:20px; }
-.certificate { background:#fff; border:3px solid #ba1a1a; border-radius:8px; padding:12px; box-shadow:0 8px 28px #1720330a; }
-.certBorder { border:1px solid #dfb5b5; padding:36px 30px; }
-.certHeader { text-align:center; }
-.institution { font-size:.95rem; font-weight:700; letter-spacing:.08em; line-height:1.6; margin:0; }
-.cps { font-size:.85rem; color:#666; margin:7px 0 0; }
-.certTitle { text-align:center; color:#ba1a1a; letter-spacing:4px; font-size:2rem; margin:32px 0; }
-.certBody { margin:0 auto; max-width:640px; }
-.certText { text-align:center; font-size:1.05rem; line-height:2; color:#444; margin:0; overflow-wrap:anywhere; }
-.certText strong { color:#252525; }
-.certFooter { display:flex; align-items:center; justify-content:space-between; gap:32px; margin-top:44px; }
-.certQr { text-align:center; max-width:240px; }
-.certQr svg { display:block; margin:auto; }
-.certCode { font-size:.7rem; line-height:1.6; color:#555; margin:8px 0 0; overflow-wrap:anywhere; }
-.certCode span { display:block; font-family:monospace; }
-.certSignature { text-align:center; flex:1; max-width:260px; font-size:.8rem; color:#666; }
-.certSignature p { margin:6px 0; }
-.signatureLine { height:1px; background:#777; margin:0 0 10px; }
-.watermark { color:#ba1a1a; font-weight:700; font-size:.8rem; text-align:center; border:1px dashed #ba1a1a; padding:10px; }
-.actions { display:flex; flex-direction:column; gap:12px; }
-.downloadBtn { display:flex; align-items:center; justify-content:center; gap:10px; border:0; border-radius:12px; background:#ba1a1a; color:#fff; padding:16px 24px; font:inherit; font-weight:700; cursor:pointer; }
-.downloadBtn:hover:not(:disabled) { background:#9e1616; }
-.downloadBtn:disabled { opacity:.55; cursor:not-allowed; }
-.downloadBtn:focus-visible,.verifyLink:focus-visible { outline:3px solid #ba1a1a; outline-offset:4px; }
-.error { background:#fff0f0; border:1px solid #efc1c1; color:#922222; padding:14px 16px; border-radius:10px; line-height:1.6; margin:0; }
-.downloadHint { background:#f0f6ff; border-radius:10px; padding:14px; color:#334761; font-size:.9rem; line-height:1.6; margin:0; }
-.downloadHint a { color:inherit; font-weight:700; }
-.verifyLink { align-self:center; display:inline-flex; align-items:center; gap:8px; color:#ba1a1a; font-size:.9rem; font-weight:600; text-align:center; }
-.privacyNote { text-align:center; font-size:.8rem; color:#666; line-height:1.6; margin:0; }
-.verification { background:white; border:1px solid #e3e5e9; border-radius:16px; padding:28px; text-align:center; }
-.verification h2 { font-size:1.4rem; margin:16px 0 12px; }
-.verification p { color:#555; line-height:1.6; }
-.validIcon { color:#15803d; }.invalidIcon { color:#ba1a1a; }
-.verification dl { text-align:left; margin:24px 0; }
-.verification dl div { padding:12px 0; border-bottom:1px solid #eee; }
-.verification dt { color:#666; font-size:.8rem; margin-bottom:6px; }
-.verification dd { margin:0; font-weight:600; overflow-wrap:anywhere; line-height:1.5; }
-.verification code { overflow-wrap:anywhere; }
-@media(max-width:540px) { .certificate { padding:8px; } .certBorder { padding:26px 14px; } .institution { font-size:.76rem; } .certTitle { font-size:1.35rem; letter-spacing:3px; margin:26px 0; } .certText { font-size:.95rem; line-height:1.9; } .certFooter { flex-direction:column; gap:30px; margin-top:28px; } .certSignature { width:100%; max-width:220px; } .verification { padding:20px; } }
+/* =========================================================
+   CERTIFICADO
+   ========================================================= */
 
-.verifyLink { min-height: 44px; }
-.verification { border-color: var(--app-color-border); border-radius: var(--app-radius-card); box-shadow: var(--app-shadow); }
+.certificate {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 8px 28px #1720330a;
+  overflow: hidden;
+}
+
+.certBorder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  min-height: 610px;
+
+  padding: 18px 26px 20px;
+
+  border: 3px solid #ba1a1a;
+
+  box-shadow:
+    inset 0 0 0 7px #fff,
+    inset 0 0 0 8px #e2e2e2;
+
+  background: #fff;
+}
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.certHeader {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(260px, 2fr) minmax(120px, 1fr);
+  align-items: center;
+  gap: 20px;
+
+  min-height: 82px;
+
+  padding: 4px 4px 10px;
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logoAreaRight {
+  justify-content: flex-end;
+}
+
+.fatecLogo {
+  display: block;
+  width: 128px;
+  max-width: 100%;
+  height: 72px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.cpsLogo {
+  display: block;
+  width: 95px;
+  max-width: 100%;
+  height: 68px;
+  object-fit: contain;
+  object-position: right center;
+}
+
+.institutionArea {
+  min-width: 0;
+  text-align: center;
+}
+
+.institution {
+  margin: 0;
+
+  color: #202124;
+
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  line-height: 1.35;
+  letter-spacing: 0.025em;
+}
+
+.cpsInstitution {
+  margin: 7px 0 0;
+
+  color: #687078;
+
+  font-size: 0.65rem;
+  line-height: 1.4;
+}
+
+.headerDivider {
+  width: 100%;
+  height: 1px;
+
+  margin: 0 0 9px;
+
+  background:
+    linear-gradient(
+      to right,
+      #ba1a1a 0,
+      #ba1a1a 115px,
+      #dddddd 115px,
+      #dddddd 100%
+    );
+}
+
+/* =========================================================
+   CONTEÚDO CENTRAL
+   ========================================================= */
+
+.certMain {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+
+  padding: 4px 28px 12px;
+
+  text-align: center;
+}
+
+.certTitle {
+  margin: 0;
+
+  color: #ba1a1a;
+
+  font-size: clamp(1.8rem, 4vw, 2.3rem);
+  font-weight: 800;
+
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+}
+
+.certSubtitle {
+  margin: 8px 0 18px;
+
+  color: #626a72;
+
+  font-size: 0.67rem;
+  font-weight: 800;
+
+  line-height: 1.2;
+  letter-spacing: 0.32em;
+}
+
+.introText,
+.eventIntro {
+  margin: 0;
+
+  color: #666d75;
+
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.studentName {
+  width: 100%;
+  max-width: 650px;
+
+  margin: 3px 0 0;
+
+  color: #191c20;
+
+  font-size: clamp(1.45rem, 3.5vw, 1.9rem);
+  font-weight: 800;
+
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
+}
+
+.studentDivider {
+  width: min(260px, 55%);
+  height: 1px;
+
+  margin: 16px 0 8px;
+
+  background: #dddddd;
+}
+
+.studentDetails {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 0 17px;
+
+  color: #5e6670;
+
+  font-size: 0.68rem;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+.detailSeparator {
+  margin: 0 9px;
+
+  color: #7c838a;
+}
+
+.eventTitle {
+  width: 100%;
+  max-width: 660px;
+
+  margin: 3px 0 0;
+
+  color: #ba1a1a;
+
+  font-size: clamp(1.08rem, 2.8vw, 1.4rem);
+  font-weight: 800;
+
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
+}
+
+.speaker {
+  width: 100%;
+  max-width: 640px;
+
+  margin: 24px 0 0;
+
+  color: #616870;
+
+  font-size: 0.72rem;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   DATA / CARGA HORÁRIA
+   ========================================================= */
+
+.certMeta {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) 1px minmax(140px, 1fr);
+  align-items: stretch;
+
+  width: min(440px, 100%);
+
+  margin-top: 23px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+
+  padding: 0 18px;
+}
+
+.metaLabel {
+  color: #656d75;
+
+  font-size: 0.61rem;
+  font-weight: 800;
+
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+}
+
+.metaValue {
+  margin-top: 5px;
+
+  color: #171a1e;
+
+  font-size: 0.79rem;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+}
+
+.metaDivider {
+  width: 1px;
+  min-height: 45px;
+
+  background: #d8d8d8;
+}
+
+/* =========================================================
+   AUTENTICAÇÃO
+   ========================================================= */
+
+.certFooter {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+
+  width: 100%;
+
+  margin-top: auto;
+  padding: 10px 14px;
+
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+
+  background: #f8f8f8;
+}
+
+.certQr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.certQr svg {
+  display: block;
+
+  width: 76px;
+  height: 76px;
+
+  background: #fff;
+}
+
+.verificationInfo {
+  min-width: 0;
+
+  text-align: left;
+}
+
+.verificationTitle {
+  margin: 0 0 6px;
+
+  color: #1e2226;
+
+  font-size: 0.66rem;
+  font-weight: 800;
+
+  line-height: 1.4;
+  letter-spacing: 0.055em;
+}
+
+.verificationRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  margin: 3px 0;
+
+  color: #626970;
+
+  font-size: 0.59rem;
+  line-height: 1.45;
+}
+
+.verificationRow strong {
+  color: #3f464d;
+}
+
+.verificationCode {
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  overflow-wrap: anywhere;
+}
+
+.verificationUrl {
+  min-width: 0;
+
+  color: #ba1a1a;
+
+  text-decoration: none;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.verificationUrl:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   DEMONSTRAÇÃO / REVOGADO
+   ========================================================= */
+
+.watermark {
+  position: relative;
+  z-index: 2;
+
+  margin: 0 0 12px;
+
+  padding: 8px 12px;
+
+  border: 1px dashed #ba1a1a;
+  border-radius: 6px;
+
+  background: #fff5f5;
+
+  color: #ba1a1a;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+
+  line-height: 1.4;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: #ba1a1a;
+  color: #fff;
+
+  padding: 16px 24px;
+
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.downloadBtn:hover:not(:disabled) {
+  background: #9e1616;
+}
+
+.downloadBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.downloadBtn:focus-visible,
+.verifyLink:focus-visible,
+.verificationUrl:focus-visible {
+  outline: 3px solid #ba1a1a;
+  outline-offset: 4px;
+}
+
+.error {
+  margin: 0;
+
+  padding: 14px 16px;
+
+  border: 1px solid #efc1c1;
+  border-radius: 10px;
+
+  background: #fff0f0;
+  color: #922222;
+
+  line-height: 1.6;
+}
+
+.downloadHint {
+  margin: 0;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background: #f0f6ff;
+  color: #334761;
+
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.downloadHint a {
+  color: inherit;
+  font-weight: 700;
+}
+
+.verifyLink {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 8px;
+
+  min-height: 44px;
+
+  color: #ba1a1a;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+.privacyNote {
+  margin: 0;
+
+  color: #666;
+
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* =========================================================
+   ABRIR ONLINE
+   ========================================================= */
+.downloadHint {
+  margin: 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f0f6ff;
+  color: #334761;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.downloadHint a {
+  color: inherit;
+  font-weight: 700;
+}
+/* =========================================================
+   VERIFICAÇÃO PÚBLICA
+   ========================================================= */
+
+.verification {
+  padding: 28px;
+
+  border: 1px solid var(--app-color-border);
+  border-radius: var(--app-radius-card);
+
+  background: white;
+
+  box-shadow: var(--app-shadow);
+
+  text-align: center;
+}
+
+.verification h2 {
+  margin: 16px 0 12px;
+
+  font-size: 1.4rem;
+}
+
+.verification p {
+  color: #555;
+  line-height: 1.6;
+}
+
+.validIcon {
+  color: #15803d;
+}
+
+.invalidIcon {
+  color: #ba1a1a;
+}
+
+.verification dl {
+  margin: 24px 0;
+
+  text-align: left;
+}
+
+.verification dl div {
+  padding: 12px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.verification dt {
+  margin-bottom: 6px;
+
+  color: #666;
+
+  font-size: 0.8rem;
+}
+
+.verification dd {
+  margin: 0;
+
+  font-weight: 600;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+.verification code {
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .certificate {
+    padding: 7px;
+  }
+
+  .certBorder {
+    min-height: auto;
+
+    padding: 14px 18px 18px;
+
+    border-width: 2px;
+  }
+
+  .certHeader {
+    grid-template-columns: 92px minmax(0, 1fr) 76px;
+    gap: 10px;
+
+    min-height: 67px;
+  }
+
+  .fatecLogo {
+    width: 92px;
+    height: 56px;
+  }
+
+  .cpsLogo {
+    width: 70px;
+    height: 52px;
+  }
+
+  .institution {
+    font-size: 0.64rem;
+  }
+
+  .cpsInstitution {
+    font-size: 0.55rem;
+  }
+
+  .certMain {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 540px) {
+  .certificate {
+    padding: 5px;
+
+    border-radius: 6px;
+  }
+
+  .certBorder {
+    padding: 12px 10px 14px;
+  }
+
+  .certHeader {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "fatec cps"
+      "institution institution";
+
+    gap: 7px 12px;
+  }
+
+  .logoArea:first-child {
+    grid-area: fatec;
+  }
+
+  .logoAreaRight {
+    grid-area: cps;
+  }
+
+  .institutionArea {
+    grid-area: institution;
+  }
+
+  .fatecLogo {
+    width: 90px;
+    height: 55px;
+  }
+
+  .cpsLogo {
+    width: 68px;
+    height: 50px;
+  }
+
+  .institution {
+    font-size: 0.62rem;
+  }
+
+  .cpsInstitution {
+    display: none;
+  }
+
+  .headerDivider {
+    margin-top: 5px;
+  }
+
+  .certMain {
+    padding: 5px 4px 18px;
+  }
+
+  .certTitle {
+    font-size: 1.55rem;
+    letter-spacing: 0.09em;
+  }
+
+  .certSubtitle {
+    margin-bottom: 17px;
+
+    font-size: 0.58rem;
+    letter-spacing: 0.24em;
+  }
+
+  .studentName {
+    font-size: 1.3rem;
+  }
+
+  .studentDetails {
+    flex-direction: column;
+    gap: 2px;
+
+    font-size: 0.65rem;
+  }
+
+  .detailSeparator {
+    display: none;
+  }
+
+  .eventTitle {
+    font-size: 1.08rem;
+  }
+
+  .speaker {
+    margin-top: 20px;
+
+    font-size: 0.68rem;
+  }
+
+  .certMeta {
+    grid-template-columns: 1fr 1px 1fr;
+
+    margin-top: 20px;
+  }
+
+  .metaItem {
+    padding: 0 8px;
+  }
+
+  .metaLabel {
+    font-size: 0.54rem;
+  }
+
+  .metaValue {
+    font-size: 0.7rem;
+  }
+
+  .certFooter {
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 10px;
+
+    padding: 9px;
+  }
+
+  .certQr svg {
+    width: 66px;
+    height: 66px;
+  }
+
+  .verificationTitle {
+    font-size: 0.58rem;
+  }
+
+  .verificationRow {
+    display: block;
+
+    margin: 2px 0;
+
+    font-size: 0.53rem;
+  }
+
+  .verificationRow span {
+    margin-right: 3px;
+  }
+
+  .verificationUrl {
+    display: block;
+
+    margin-top: 1px;
+  }
+
+  .verification {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .certFooter {
+    grid-template-columns: 1fr;
+
+    text-align: center;
+  }
+
+  .verificationInfo {
+    text-align: center;
+  }
+
+  .verificationRow {
+    text-align: center;
+  }
+}
