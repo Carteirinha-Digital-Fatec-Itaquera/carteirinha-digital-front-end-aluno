@@ -1,6 +1,6 @@
 import AuthLayout from '../../components/page/AuthLayout';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const logoCps = '/cps_logo_cor.png';
 
@@ -134,6 +134,9 @@ export default function LoginScreen() {
 
         {/* <TextClickableComp text="Este é seu primeiro acesso? Clique aqui" action={() => navigate("/SignUp")} /> */}
         <SpacerComp />
+        <Link to="/creditos" className={styles.projectCreditsLink}>
+          Conheça quem constrói este projeto
+        </Link>
         <img src={logoCps} className={styles.logocps} alt="Logo CPS" />
       </div>
     </AuthLayout>

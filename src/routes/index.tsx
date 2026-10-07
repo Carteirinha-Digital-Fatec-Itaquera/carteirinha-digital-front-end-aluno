@@ -23,6 +23,7 @@ import ConfigScreen from "../ui/screens/config/ConfigScreen";
 
 
 import PresencaConfirmacaoScreen from '../ui/screens/attendance/PresencaConfirmacaoScreen';
+import ProjectCreditsScreen from '../ui/screens/credits/ProjectCreditsScreen';
 
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
 const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
@@ -63,6 +64,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/certificado/verificar/:code" element={<CertificadoVerificarScreen />} />
+        <Route path="/creditos" element={<ProjectCreditsScreen />} />
         <Route path="/p/:reference" element={<PresencaConfirmacaoScreen />} />
         <Route element={<StudentRoute />}>
           <Route path="/eventos" element={<AlunoEventosScreen />} />
