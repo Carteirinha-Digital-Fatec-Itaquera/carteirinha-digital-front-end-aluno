@@ -13,7 +13,8 @@
     "test:scanner:browser": "node tests/scanner.browser.mjs",
     "test:certificates": "node --import ./tests/register.mjs --test tests/certificates.test.mjs",
     "test:certificates:browser": "node --import ./tests/register.mjs tests/certificates.browser.mjs",
-    "test:qr-projection:browser": "node tests/qr-projection.browser.mjs"
+    "test:qr-projection:browser": "node tests/qr-projection.browser.mjs",
+    "test:credits": "node --import ./tests/register.mjs --test tests/project-credits.test.mjs"
   },
   "dependencies": {
     "html5-qrcode": "^2.3.8",

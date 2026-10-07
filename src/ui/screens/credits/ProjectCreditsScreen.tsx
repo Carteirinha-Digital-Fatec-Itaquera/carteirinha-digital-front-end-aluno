@@ -24,6 +24,43 @@ function sortSemesters(semesters: string[]): string[] {
   );
 }
 
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].substring(0, 2).toLocaleUpperCase("pt-BR");
+  return (parts[0][0] + parts[parts.length - 1][0]).toLocaleUpperCase("pt-BR");
+}
+
+function ContributorAvatar({
+  name,
+  photoUrl,
+}: {
+  name: string;
+  photoUrl?: string | null;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (photoUrl && !failed) {
+    return (
+      <div className={styles.avatar}>
+        <img
+          src={photoUrl}
+          alt={"Foto de " + name}
+          className={styles.avatarImage}
+          onError={() => setFailed(true)}
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.avatar} aria-hidden="true">
+      {getInitials(name)}
+    </div>
+  );
+}
+
 function ProjectsCreditsList({
   contributors,
   semester,
@@ -62,9 +99,7 @@ function ProjectsCreditsList({
 
         return (
           <article className={styles.card} key={person.id}>
-            <div className={styles.avatar} aria-hidden="true">
-              {person.name.trim().charAt(0).toLocaleUpperCase("pt-BR")}
-            </div>
+            <ContributorAvatar name={person.name} photoUrl={person.photoUrl} />
             <div className={styles.cardContent}>
               <h2>{person.name}</h2>
               {participations.map((participation) => (
@@ -73,6 +108,11 @@ function ProjectsCreditsList({
                   key={participation.semester}
                 >
                   <h3>{formatSemester(participation.semester)}</h3>
+                  {participation.course && (
+                    <span className={styles.courseText}>
+                      {participation.course}
+                    </span>
+                  )}
                   <ul className={styles.roles} aria-label="Papéis no projeto">
                     {participation.roles.map((role) => (
                       <li key={role}>{role}</li>

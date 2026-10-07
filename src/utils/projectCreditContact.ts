@@ -1,42 +1,45 @@
 import type { ProjectCreditContact } from "../domains/ProjectCredits";
 
-const EMAIL_HREF = /^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i;
-const LINKEDIN_HOSTS = new Set(["linkedin.com", "www.linkedin.com"]);
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function isApprovedProjectCreditHref(
   contact: ProjectCreditContact,
 ): boolean {
-  if (contact.kind === "email") return EMAIL_HREF.test(contact.href);
+  if (!contact || !contact.href || typeof contact.href !== "string") {
+    return false;
+  }
+
+  // Reject CRLF characters
+  if (/[\r\n]/.test(contact.href) || (contact.label && /[\r\n]/.test(contact.label))) {
+    return false;
+  }
+
+  if (contact.kind === "email") {
+    let raw = contact.href.trim();
+    if (raw.toLowerCase().startsWith("mailto:")) {
+      raw = raw.slice(7);
+    }
+    return EMAIL_REGEX.test(raw);
+  }
 
   let url: URL;
   try {
-    url = new URL(contact.href);
+    url = new URL(contact.href.trim());
   } catch {
     return false;
   }
 
-  if (
-    url.protocol !== "https:" ||
-    url.username ||
-    url.password ||
-    url.search ||
-    url.hash
-  ) {
+  // Only allow HTTPS protocol
+  if (url.protocol !== "https:") {
     return false;
   }
 
-  if (contact.kind === "portfolio") return url.protocol === "https:";
-
-  if (contact.kind === "github") {
-    return (
-      url.hostname === "github.com" &&
-      url.pathname.split("/").filter(Boolean).length === 1
-    );
+  // Reject embedded credentials
+  if (url.username || url.password) {
+    return false;
   }
 
-  return (
-    contact.kind === "linkedin" &&
-    LINKEDIN_HOSTS.has(url.hostname) &&
-    url.pathname.startsWith("/in/")
-  );
+  // Disallow forbidden protocols/schemes (e.g. javascript:, data:, file: - already prevented by protocol === https:)
+  return true;
 }
+

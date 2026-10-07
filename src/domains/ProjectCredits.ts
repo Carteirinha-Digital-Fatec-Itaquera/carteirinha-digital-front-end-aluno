@@ -2,7 +2,8 @@ export type ProjectCreditContactKind =
   | "github"
   | "linkedin"
   | "portfolio"
-  | "email";
+  | "email"
+  | "external";
 
 export interface ProjectCreditContact {
   kind: ProjectCreditContactKind;
@@ -12,13 +13,15 @@ export interface ProjectCreditContact {
 
 export interface ProjectCreditParticipation {
   semester: string;
+  course?: string | null;
   roles: string[];
-  contribution?: string;
+  contribution?: string | null;
 }
 
 export interface ProjectCreditContributor {
   id: string;
   name: string;
+  photoUrl?: string | null;
   participations: ProjectCreditParticipation[];
   contacts: ProjectCreditContact[];
 }
