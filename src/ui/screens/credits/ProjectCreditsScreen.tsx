@@ -31,35 +31,7 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toLocaleUpperCase("pt-BR");
 }
 
-function ContributorAvatar({
-  name,
-  photoUrl,
-}: {
-  name: string;
-  photoUrl?: string | null;
-}) {
-  const [failed, setFailed] = useState(false);
-
-  if (photoUrl && !failed) {
-    return (
-      <div className={styles.avatar}>
-        <img
-          src={photoUrl}
-          alt={"Foto de " + name}
-          className={styles.avatarImage}
-          onError={() => setFailed(true)}
-          loading="lazy"
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.avatar} aria-hidden="true">
-      {getInitials(name)}
-    </div>
-  );
-}
+function ContributorAvatar({ name }: { name: string }) { return <div className={styles.avatar} aria-hidden="true">{getInitials(name)}</div>; }
 
 function ProjectsCreditsList({
   contributors,
@@ -99,7 +71,7 @@ function ProjectsCreditsList({
 
         return (
           <article className={styles.card} key={person.id}>
-            <ContributorAvatar name={person.name} photoUrl={person.photoUrl} />
+            <ContributorAvatar name={person.name} />
             <div className={styles.cardContent}>
               <h2>{person.name}</h2>
               {participations.map((participation) => (

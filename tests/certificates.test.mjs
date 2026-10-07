@@ -44,7 +44,7 @@ test('datas não mudam de dia pelo fuso; URL e nome de arquivo são codificados'
 });
 test('documento usa snapshot e contém QR e código textual, com marca de revogação',()=>{
  const html=renderToStaticMarkup(h(CertificateDocument,{certificate:details,verificationUrl:'https://aluno.example/certificado/verificar/'+details.verificationCode}));
- for(const value of ['Pessoa Exemplo','05/10/2026','2 horas',details.verificationCode,'certificate-qr','Coordenação de Eventos'])assert.ok(html.includes(value));
+ for(const value of ['Pessoa Exemplo','05/10/2026','2 horas',details.verificationCode,'certificate-qr','Centro Estadual de Educação Tecnológica Paula Souza'])assert.ok(html.includes(value));
  const revoked=renderToStaticMarkup(h(CertificateDocument,{certificate:{...details,revokedAt:details.issuedAt},verificationUrl:'https://example.com'}));assert.match(revoked,/CERTIFICADO REVOGADO/);
 });
 test('download cria link blob, remove link e libera URL com atraso',()=>{
