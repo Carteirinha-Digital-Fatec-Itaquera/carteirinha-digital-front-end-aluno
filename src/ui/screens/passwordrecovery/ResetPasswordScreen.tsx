@@ -6,6 +6,7 @@ import { TitleComp } from '../../components/title/TitleComp';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { ErrorModalComp } from '../../components/ErrorModal/ErrorModalComp';
+import MessageModal from '../../components/MessageModal/MessageModal';
 
 import { apiClient } from '../../../api/config/apiClient';
 
@@ -24,6 +25,7 @@ export default function ResetPasswordScreen() {
 
   const [message, setMessage] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
+  const [successVisible, setSuccessVisible] = useState(false);
   const [onLoading, setOnLoading] = useState(false);
 
   // Trava de segurança caso abram o link errado
@@ -62,8 +64,7 @@ export default function ResetPasswordScreen() {
       });
 
       if (response.ok) {
-        alert("Senha redefinida com sucesso! Você já pode fazer login.");
-        navigate('/login');
+        setSuccessVisible(true);
       } else {
         const data = await response.json();
         setMessage(data.message || "Erro ao redefinir. O link pode ter expirado.");
@@ -85,6 +86,18 @@ export default function ResetPasswordScreen() {
           error={message}
           fields={[]}
           onClose={() => setModalErrorVisible(false)}
+        />
+
+        <MessageModal
+          visible={successVisible}
+          tone="success"
+          title="Senha redefinida com sucesso"
+          message="Sua nova senha já está ativa. Agora você pode entrar novamente na sua conta."
+          confirmText="Ir para o login"
+          onConfirm={() => {
+            setSuccessVisible(false);
+            navigate('/login');
+          }}
         />
 
         <div className={styles.stepContainer}>

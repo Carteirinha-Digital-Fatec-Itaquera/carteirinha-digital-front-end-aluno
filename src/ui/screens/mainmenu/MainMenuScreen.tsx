@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
+import MessageModal from '../../components/MessageModal/MessageModal';
 
 // import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 const logoFatec = '/fatec_itaquera_logo.png'
@@ -19,6 +20,7 @@ import { useMockEvents } from '../../../services/eventService';
 export default function MainMenuScreen() {
   const navigate = useNavigate();
   const [student, setStudent] = useState<Student | null>(null);
+  const [messageDialog, setMessageDialog] = useState<'logout' | 'photo' | null>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -53,14 +55,13 @@ export default function MainMenuScreen() {
   //   }
   // };
   const handleLogout = () => {
-    if (window.confirm("Sair do app?")) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('@Carteirinha:profile');
-      localStorage.removeItem('@Carteirinha:photoOffline');
-      localStorage.removeItem('@Carteirinha:accessibility')
-      window.location.href = "/login"
-      // navigate("/");
-    }
+    setMessageDialog(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('@Carteirinha:profile');
+    localStorage.removeItem('@Carteirinha:photoOffline');
+    localStorage.removeItem('@Carteirinha:accessibility')
+    window.location.href = "/login"
+    // navigate("/");
   };
   return (
     <div className={styles.container}>
@@ -115,10 +116,7 @@ export default function MainMenuScreen() {
             </button>
              
             
-            <button className={`${styles.menuCard} ${styles.menuCard}`} onClick={() => {
-                alert("Instruções: Fundo neutro, rosto centralizado, sem óculos escuros.");
-                navigate("/UploadImage");
-              }}>
+            <button className={`${styles.menuCard} ${styles.menuCard}`} onClick={() => setMessageDialog('photo')}>
                 <Camera className={styles.icon} strokeWidth={1.5} />
                 <p>Enviar Foto</p>
               </button>
@@ -145,12 +143,41 @@ export default function MainMenuScreen() {
             </button>
           </div>
 
-          <button type="button" className={styles.logoutCotainerButton} onClick={()=>{handleLogout()}}>
+          <button type="button" className={styles.logoutCotainerButton} onClick={() => setMessageDialog('logout')}>
             {/* <button className={styles.logoutButton} onClick={handleLogout}> */}
             Deslogar
           {/* </button> */}
           <LogOut className={styles.iconLogout}></LogOut>
           </button>
+
+          {messageDialog === 'photo' && (
+            <MessageModal
+              visible
+              tone="info"
+              title="Antes de enviar sua foto"
+              message="Para uma boa identificação, use fundo neutro, mantenha o rosto centralizado e evite óculos escuros."
+              confirmText="Continuar"
+              cancelText="Cancelar"
+              onCancel={() => setMessageDialog(null)}
+              onConfirm={() => {
+                setMessageDialog(null);
+                navigate('/UploadImage');
+              }}
+            />
+          )}
+
+          {messageDialog === 'logout' && (
+            <MessageModal
+              visible
+              tone="warning"
+              title="Deseja sair do app?"
+              message="Sua sessão será encerrada neste dispositivo. Para acessar a carteirinha novamente, será necessário fazer login."
+              confirmText="Sair"
+              cancelText="Cancelar"
+              onCancel={() => setMessageDialog(null)}
+              onConfirm={handleLogout}
+            />
+          )}
         </div>
       </div>
     </div>

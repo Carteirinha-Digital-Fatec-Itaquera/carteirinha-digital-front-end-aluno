@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextInfoComp } from "../../components/textinfo/TextInfoComp";
 import { SpacerComp } from "../../components/spacer/SpacerComp";
 import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
+import MessageModal, { type MessageTone } from "../../components/MessageModal/MessageModal";
 import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
 
 import { uploadImage } from "../../../api/student/uploadImage";
@@ -30,6 +31,7 @@ export default function UploadImageScreen() {
   const [message, setMessage] = useState("");
   const [errorFields, setErrorFields] = useState<ErrorField[]>([]);
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
+  const [notice, setNotice] = useState<{ tone: MessageTone; title: string; message: string; confirmText?: string; onConfirm?: () => void } | null>(null);
   const [onLoading, setOnLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -70,12 +72,20 @@ export default function UploadImageScreen() {
 
   const handleUpload = async () => {
     if (!imageFile) {
-      alert("Por favor, selecione uma imagem primeiro!");
+      setNotice({
+        tone: 'warning',
+        title: 'Selecione uma foto',
+        message: 'Escolha uma imagem antes de confirmar o envio.',
+      });
       return;
     }
 
     if (!studentRa) {
-      alert("Carregando informações do aluno. Tente novamente em alguns segundos.");
+      setNotice({
+        tone: 'info',
+        title: 'Carregando informações',
+        message: 'As informações do aluno ainda estão sendo carregadas. Aguarde alguns segundos e tente novamente.',
+      });
       return;
     }
 
@@ -90,8 +100,13 @@ export default function UploadImageScreen() {
       const result = await uploadImage(compressedFile, studentRa); 
       
       if ('ok' in result) {
-        alert("Imagem enviada com sucesso!"); 
-        navigate('/MainMenu');
+        setNotice({
+          tone: 'success',
+          title: 'Foto enviada com sucesso',
+          message: 'Sua foto foi enviada corretamente.',
+          confirmText: 'OK',
+          onConfirm: () => navigate('/MainMenu'),
+        });
       } else {
         setMessage(result.message || "Erro ao enviar imagem.");
         setErrorFields(result.errorFields ?? []);
@@ -118,6 +133,21 @@ export default function UploadImageScreen() {
         }}
       />
       <InternetWatcher />
+
+      {notice && (
+        <MessageModal
+          visible
+          tone={notice.tone}
+          title={notice.title}
+          message={notice.message}
+          confirmText={notice.confirmText ?? 'OK'}
+          onConfirm={() => {
+            const action = notice.onConfirm;
+            setNotice(null);
+            action?.();
+          }}
+        />
+      )}
       
 
       
