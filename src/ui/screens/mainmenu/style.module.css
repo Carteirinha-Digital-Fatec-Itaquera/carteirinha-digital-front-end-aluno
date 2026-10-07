@@ -158,6 +158,25 @@
   height: 18px;
 }
 
+.projectCreditsLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: var(--app-space-16);
+  color: var(--app-color-primary);
+  font-size: .875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.projectCreditsLink:focus-visible {
+  outline: 3px solid #966100;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 @media (max-width: 540px) {
   .subcontainer {
     width: calc(100% - 32px);

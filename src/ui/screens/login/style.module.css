@@ -1,5 +1,7 @@
 
 .subcontainer { display: flex; flex-direction: column; }
+.projectCreditsLink { display: inline-flex; min-height: 44px; align-items: center; align-self: center; margin: 8px 0 12px; color: var(--app-color-primary); font-size: .875rem; text-underline-offset: 3px; }
+.projectCreditsLink:focus-visible { outline: 3px solid #966100; outline-offset: 3px; border-radius: 4px; }
 .logocps { display: block; align-self: center; width: 140px; height: 50px; object-fit: contain; }
 .firstAccessTooltip { display: flex; align-items: flex-start; gap: 12px; margin: 24px 0 8px; padding: 16px; border: 1px solid #efd0d0; border-radius: 12px; background: var(--app-color-primary-soft); }
 .firstAccessTooltip svg { flex-shrink: 0; margin-top: 3px; }
