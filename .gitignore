@@ -28,3 +28,7 @@ dev-dist
 # Documentation
 /docs
 
+# Keep Markdown documentation local; README files remain versionable.
+*.[mM][dD]
+![rR][eE][aA][dD][mM][eE].[mM][dD]
+
