@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 import MessageModal from '../../components/MessageModal/MessageModal';
@@ -142,6 +142,10 @@ export default function MainMenuScreen() {
               <p>Ajuda</p>
             </button>
           </div>
+
+          <Link className={styles.projectCreditsLink} to="/creditos" state={{ from: '/MainMenu' }}>
+            Créditos de quem constrói o projeto
+          </Link>
 
           <button type="button" className={styles.logoutCotainerButton} onClick={() => setMessageDialog('logout')}>
             {/* <button className={styles.logoutButton} onClick={handleLogout}> */}
