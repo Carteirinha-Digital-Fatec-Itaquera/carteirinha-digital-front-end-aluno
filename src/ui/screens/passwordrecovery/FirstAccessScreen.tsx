@@ -5,6 +5,7 @@ import { InputComp } from '../../components/input/InputComp';
 import { InputPasswordComp } from '../../components/inputpassword/InputPasswordComp';
 import { SpacerComp } from '../../components/spacer/SpacerComp';
 import { ErrorModalComp } from '../../components/ErrorModal/ErrorModalComp';
+import MessageModal from '../../components/MessageModal/MessageModal';
 
 import { apiClient } from '../../../api/config/apiClient';
 
@@ -18,6 +19,7 @@ export default function FirstAccessScreen() {
 
   const [message, setMessage] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
+  const [successVisible, setSuccessVisible] = useState(false);
   const [onLoading, setOnLoading] = useState(false);
 
   const handleCpfChange: React.Dispatch<React.SetStateAction<string>> = (valueOrFn) => {
@@ -85,16 +87,9 @@ export default function FirstAccessScreen() {
       });
 
       if (response.ok) {
-        alert("Dados registrados com sucesso! Bem-vindo(a).");
         // localStorage.setItem("mustChangePassword", "true");
         localStorage.removeItem("mustChangePassword");
-        const returnUrl = sessionStorage.getItem("returnUrl");
-        if (returnUrl && returnUrl.startsWith("/p/")) {
-          sessionStorage.removeItem("returnUrl");
-          window.location.href = returnUrl;
-        } else {
-          window.location.href = "/MainMenu";
-        }
+        setSuccessVisible(true);
       } else {
         const data = await response.json();
         setMessage(data.message || "Erro ao atualizar seus dados de primeiro acesso.");
@@ -116,6 +111,24 @@ export default function FirstAccessScreen() {
           error={message}
           fields={[]}
           onClose={() => setModalErrorVisible(false)}
+        />
+
+        <MessageModal
+          visible={successVisible}
+          tone="success"
+          title="Cadastro concluído"
+          message="Seus dados foram registrados com sucesso. Bem-vindo(a) à Carteirinha Digital."
+          confirmText="Continuar"
+          onConfirm={() => {
+            setSuccessVisible(false);
+            const returnUrl = sessionStorage.getItem("returnUrl");
+            if (returnUrl && returnUrl.startsWith("/p/")) {
+              sessionStorage.removeItem("returnUrl");
+              window.location.href = returnUrl;
+            } else {
+              window.location.href = "/MainMenu";
+            }
+          }}
         />
 
         <div className={styles.stepContainer}>

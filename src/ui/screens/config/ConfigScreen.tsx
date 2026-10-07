@@ -1,16 +1,26 @@
 import PageLayout from '../../components/page/PageLayout';
 import Modal from '../../components/modal/Modal';
+import MessageModal, { type MessageTone } from '../../components/MessageModal/MessageModal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, ShieldCheck, Check,Settings} from 'lucide-react';
 import { apiClient } from '../../../api/config/apiClient';
 import styles from './style.module.css';
 
+type FeedbackMessage = {
+  tone: MessageTone;
+  title: string;
+  message: string;
+  confirmText?: string;
+  onConfirm?: () => void;
+};
+
 export default function ConfigScreen() {
   const navigate = useNavigate();
 
   const [modalDaltonismo, setModalDaltonismo] = useState(false);
   const [modalSenha, setModalSenha] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackMessage | null>(null);
 
   const [currentFilter, setCurrentFilter] = useState(localStorage.getItem('@Carteirinha:accessibility') || 'normal');
   //const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('@Carteirinha:theme') === 'dark');
@@ -45,11 +55,19 @@ export default function ConfigScreen() {
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      alert("As senhas não coincidem.");
+      setFeedback({
+        tone: 'warning',
+        title: 'As senhas não coincidem',
+        message: 'Digite a mesma senha nos dois campos para continuar.',
+      });
       return;
     }
     if (newPassword.length < 6) {
-      alert("A senha deve ter no mínimo 6 caracteres.");
+      setFeedback({
+        tone: 'warning',
+        title: 'Senha muito curta',
+        message: 'A senha deve ter no mínimo 6 caracteres.',
+      });
       return;
     }
 
@@ -62,21 +80,41 @@ export default function ConfigScreen() {
       });
 
       if (response.ok) {
-        alert("Senha atualizada com sucesso!");
         setModalSenha(false);
         setNewPassword("");
         setConfirmPassword("");
+        setFeedback({
+          tone: 'success',
+          title: 'Senha alterada com sucesso',
+          message: 'Sua nova senha já está ativa e será utilizada nos próximos acessos.',
+        });
       } else {
         if (response.status === 401) {
-          alert("A tua sessão expirou. Por favor, faz login novamente.");
-          localStorage.clear();
-          navigate('/login');
+          setModalSenha(false);
+          setFeedback({
+            tone: 'warning',
+            title: 'Sessão expirada',
+            message: 'Sua sessão expirou. Faça login novamente para continuar.',
+            confirmText: 'Ir para o login',
+            onConfirm: () => {
+              localStorage.clear();
+              navigate('/login');
+            },
+          });
         } else {
-          alert("Erro ao atualizar a senha. Tenta novamente.");
+          setFeedback({
+            tone: 'error',
+            title: 'Não foi possível alterar a senha',
+            message: 'O servidor não conseguiu concluir a alteração. Tente novamente.',
+          });
         }
       }
     } catch {
-      alert("Não foi possível conectar ao servidor.");
+      setFeedback({
+        tone: 'error',
+        title: 'Falha de conexão',
+        message: 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.',
+      });
     } finally {
       setOnLoading(false);
     }
@@ -183,6 +221,21 @@ export default function ConfigScreen() {
             </form>
           </div>
         </Modal>
+      )}
+
+      {feedback && (
+        <MessageModal
+          visible
+          tone={feedback.tone}
+          title={feedback.title}
+          message={feedback.message}
+          confirmText={feedback.confirmText ?? 'OK'}
+          onConfirm={() => {
+            const action = feedback.onConfirm;
+            setFeedback(null);
+            action?.();
+          }}
+        />
       )}
     </PageLayout>
   );
