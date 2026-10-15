@@ -33,6 +33,8 @@ export function errorFeedback(error: unknown): ScanFeedback {
   const status = String(value.status ?? '');
   const message = typeof value.message === 'string' ? value.message : '';
   const result = (title: string, text: string): ScanFeedback => ({ tone: 'error', title, message: text });
+  if (String(code).startsWith('LOCATION_')) return result('Localização não confirmada', message || 'Permita a localização e tente novamente. Se houver dificuldade no prédio, procure a Secretaria presencialmente.');
+  if (code === 'WINDOW_CLOSED') return result('Janela de presença encerrada', 'O período de 15 minutos terminou. Procure a Secretaria presencialmente.');
   if (status === '401') return { ...result('Sua sessão expirou', 'Entre novamente para registrar presença.'), login: true };
   if (status === '403') return result('Acesso não autorizado', 'Use uma conta de aluno ativa para registrar presença.');
   // V1 ainda não fixa código para saída sem entrada; suporte ao texto NestJS até a #26.

@@ -22,7 +22,8 @@ import ConfigScreen from "../ui/screens/config/ConfigScreen";
 
 
 
-import PresencaConfirmacaoScreen from '../ui/screens/attendance/PresencaConfirmacaoScreen';
+import PublicPresenceGateway from '../ui/screens/attendance/PublicPresenceGateway';
+import PublicEventsScreen from '../ui/screens/events/PublicEventsScreen';
 import ProjectCreditsScreen from '../ui/screens/credits/ProjectCreditsScreen';
 
 const Home = () => <div style={{ padding: 20 }}>Tela Home</div>;
@@ -65,7 +66,8 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/certificado/verificar/:code" element={<CertificadoVerificarScreen />} />
         <Route path="/creditos" element={<ProjectCreditsScreen />} />
-        <Route path="/p/:reference" element={<PresencaConfirmacaoScreen />} />
+        <Route path="/p/:reference" element={<PublicPresenceGateway />} />
+        <Route path="/visitantes" element={<PublicEventsScreen />} />
         <Route element={<StudentRoute />}>
           <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<AlunoScannerScreen />} />
