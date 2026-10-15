@@ -23,6 +23,7 @@ export default function PublicEventsScreen({
   const [series, setSeries] = useState<Series[]>([]),
     [session, setSession] = useState<Visitor | null>(null),
     [preview, setPreview] = useState<PublicQr | null>(null);
+  const eventIdParam = search.get("evento") || search.get("id");
   const [selected, setSelected] = useState(search.get("edicao") || ""),
     [registration, setRegistration] = useState(""),
     [certificates, setCertificates] = useState<VisitorCertificate[]>([]);
@@ -30,7 +31,7 @@ export default function PublicEventsScreen({
     [message, setMessage] = useState(""),
     [failure, setFailure] = useState(""),
     [loading, setLoading] = useState(true);
-  const current = series.find((s) => s.id === selected);
+  const current = series.find((s) => s.id === (preview?.seriesId || selected));
   const loadCertificates = async () =>
     setCertificates(
       await visitorRequest<VisitorCertificate[]>("visitor/certificates"),
@@ -60,6 +61,37 @@ export default function PublicEventsScreen({
               error instanceof Error
                 ? error.message
                 : "Faça uma nova leitura do QR.",
+            );
+          }
+        } else if (eventIdParam) {
+          try {
+            const ev = await visitorRequest<{
+              event: { id: string; title: string; speaker: string; location: string };
+              seriesId: string | null;
+              visitorsAllowed: boolean;
+              locationRequired: boolean;
+              serverTime: string;
+            }>(
+              `public/events/${encodeURIComponent(eventIdParam)}`,
+              undefined,
+              controller.signal,
+            );
+            qr = {
+              checkpoint: { type: "CHECK_IN" },
+              event: ev.event,
+              seriesId: ev.seriesId,
+              visitorsAllowed: ev.visitorsAllowed,
+              locationRequired: ev.locationRequired,
+              expiresAt: "",
+              serverTime: ev.serverTime,
+            };
+            setPreview(qr);
+          } catch (error) {
+            if (controller.signal.aborted) throw error;
+            setFailure(
+              error instanceof Error
+                ? error.message
+                : "Evento não encontrado ou indisponível.",
             );
           }
         }
@@ -94,7 +126,7 @@ export default function PublicEventsScreen({
       }
     })();
     return () => controller.abort();
-  }, [reference]);
+  }, [reference, eventIdParam]);
   useEffect(() => {
     if (!session) return;
     const id = window.setInterval(() => {
@@ -131,10 +163,15 @@ export default function PublicEventsScreen({
   const register = (form: HTMLFormElement) =>
     act(async () => {
       const data = new FormData(form);
+      const targetSeriesId = preview?.seriesId || selected;
+      if (!targetSeriesId) {
+        setFailure("Selecione uma edição para continuar.");
+        return;
+      }
       const result = await visitorRequest<{ registrationId: string }>(
         "visitor/registration",
         {
-          seriesId: selected,
+          seriesId: targetSeriesId,
           name: String(data.get("name")),
           email: String(data.get("email")),
           course: String(data.get("course") || "") || undefined,
@@ -218,22 +255,29 @@ export default function PublicEventsScreen({
             {failure}
           </p>
         )}
-        {reference && preview && (
+        {preview && (
           <section className={styles.card}>
             <h2>{preview.event.title}</h2>
             <p>
               {preview.event.speaker} · {preview.event.location}
             </p>
-            <p>
-              {preview.checkpoint.type === "CHECK_IN" ? "Entrada" : "Saída"} ·
-              QR de validade curta. Uma nova leitura será necessária se expirar.
-            </p>
+            {reference ? (
+              <p>
+                {preview.checkpoint.type === "CHECK_IN" ? "Entrada" : "Saída"} ·
+                QR de validade curta. Uma nova leitura será necessária se expirar.
+              </p>
+            ) : (
+              <p>
+                Atividade com acesso de visitantes. Para registrar presença, faça a leitura do QR Code no telão do evento.
+              </p>
+            )}
             {!preview.visitorsAllowed ? (
               <p>
                 Esta atividade exige acesso de aluno.{" "}
                 <Link
                   to="/login"
                   onClick={() =>
+                    reference &&
                     sessionStorage.setItem("returnUrl", `/p/${reference}`)
                   }
                 >
@@ -242,25 +286,55 @@ export default function PublicEventsScreen({
               </p>
             ) : session?.seriesId === preview.seriesId ? (
               <>
-                <p>{session.name}</p>
-                {preview.locationRequired && (
+                <p>Participante: <strong>{session.name}</strong></p>
+                {reference ? (
+                  <>
+                    {preview.locationRequired && (
+                      <p>
+                        Sua localização será solicitada para comprovar proximidade.
+                        Em caso de dificuldade, procure a Secretaria
+                        presencialmente.
+                      </p>
+                    )}
+                    <button
+                      disabled={busy || confirmedReference === reference}
+                      onClick={() => void confirm()}
+                    >
+                      {busy
+                        ? "Confirmando..."
+                        : confirmedReference === reference
+                          ? "Presença registrada"
+                          : "Confirmar presença"}
+                    </button>
+                  </>
+                ) : (
                   <p>
-                    Sua localização será solicitada para comprovar proximidade.
-                    Em caso de dificuldade, procure a Secretaria
-                    presencialmente.
+                    Acesso confirmado. Aponte a câmera para o QR Code de presença no telão da atividade para registrar entrada ou saída.
                   </p>
                 )}
-                <button
-                  disabled={busy || confirmedReference === reference}
-                  onClick={() => void confirm()}
-                >
-                  {busy
-                    ? "Confirmando..."
-                    : confirmedReference === reference
-                      ? "Presença registrada"
-                      : "Confirmar presença"}
-                </button>
               </>
+            ) : session && session.seriesId !== preview.seriesId ? (
+              <div className={styles.contextSwitchAlert} role="region" aria-label="Aviso de troca de atividade">
+                <p>
+                  Você possui sessão ativa em outro evento ({session.name}).
+                </p>
+                <p>
+                  Para participar de <strong>{preview.event.title}</strong>, confirme sua identificação nesta atividade. Seus certificados anteriores continuam seguros e acessíveis na consulta por e-mail.
+                </p>
+                <button
+                  type="button"
+                  className={styles.secondary}
+                  disabled={busy}
+                  onClick={() => {
+                    setSession(null);
+                    setRegistration("");
+                    if (preview.seriesId) setSelected(preview.seriesId);
+                    setMessage("Informe seus dados para participar desta atividade.");
+                  }}
+                >
+                  Participar desta atividade
+                </button>
+              </div>
             ) : (
               <p>
                 Identifique-se abaixo antes de confirmar. Nenhuma presença é
@@ -269,7 +343,7 @@ export default function PublicEventsScreen({
             )}
           </section>
         )}
-        {!session && (!preview || preview.visitorsAllowed) && (
+        {(!session || (preview && session.seriesId !== preview.seriesId)) && (!preview || preview.visitorsAllowed) && (
           <section className={styles.card}>
             <h2>Identificação do visitante</h2>
             {registration ? (
@@ -307,21 +381,30 @@ export default function PublicEventsScreen({
                   void register(e.currentTarget);
                 }}
               >
-                <label>
-                  Edição
-                  <select
-                    required
-                    value={selected}
-                    onChange={(e) => setSelected(e.target.value)}
-                  >
-                    <option value="">Selecione</option>
-                    {series.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.title}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                {preview ? (
+                  <div className={styles.eventContext}>
+                    <p>
+                      Atividade: <strong>{preview.event.title}</strong>
+                      {preview.event.speaker ? ` · ${preview.event.speaker}` : ""}
+                    </p>
+                  </div>
+                ) : (
+                  <label>
+                    Edição
+                    <select
+                      required
+                      value={selected}
+                      onChange={(e) => setSelected(e.target.value)}
+                    >
+                      <option value="">Selecione a edição</option>
+                      {series.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.title}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
                 <label>
                   Nome completo
                   <input
@@ -373,7 +456,7 @@ export default function PublicEventsScreen({
                   temporário serão eliminados após o prazo da edição; o nome e o
                   certificado permanecerão no histórico mínimo.
                 </p>
-                <button disabled={busy || !selected}>
+                <button disabled={busy || !(preview?.seriesId || selected)}>
                   {busy ? "Enviando..." : "Receber código de acesso"}
                 </button>
               </form>

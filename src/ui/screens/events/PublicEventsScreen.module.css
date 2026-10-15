@@ -103,6 +103,22 @@
   outline: 3px solid #136fc3;
   outline-offset: 3px;
 }
+.eventContext {
+  background: #f8fafc;
+  border: 1px solid #d9dfe5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+.contextSwitchAlert {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  display: grid;
+  gap: 12px;
+}
 @media (max-width: 600px) {
   .card {
     padding: 20px;
@@ -115,3 +131,4 @@
     flex-direction: column;
   }
 }
+
