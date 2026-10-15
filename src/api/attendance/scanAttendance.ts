@@ -1,5 +1,6 @@
 import { apiClient, buildApiError } from '../config/apiClient';
 import type { Attendance } from '../../domains/Attendance';
+import { locate } from '../events/visitor';
 
 export type ScanResponse = {
   success: true;
@@ -31,6 +32,7 @@ export function presenceEventId(token: string): string | null {
 }
 
 export interface QrPreviewResponse {
+  locationRequired?: boolean;
   event: {
     id: string;
     title: string;
@@ -105,12 +107,14 @@ export async function getAttendanceQrPreview(
 export async function confirmAttendanceReference(
   qrReference: string,
   signal?: AbortSignal,
+  locationRequired = false,
 ): Promise<ScanResponse> {
   if (!localStorage.getItem('token')) throw { status: '401' };
+  const position = locationRequired ? await studentPosition({ reference: qrReference }) : undefined;
   const response = await apiClient('/attendances/scan-reference', {
     method: 'POST',
     authenticated: true,
-    body: { qrReference },
+    body: { qrReference, ...(position ? { position } : {}) },
     signal,
   });
   if (!response.ok) {
@@ -138,13 +142,26 @@ export async function confirmAttendanceReference(
   return data;
 }
 
+async function studentPosition(qr: { reference?: string; qrToken?: string }) {
+  const challenge = await apiClient('/attendances/location-challenge', { method: 'POST', authenticated: true, body: qr });
+  if (!challenge.ok) throw await buildApiError(challenge, '/attendances/location-challenge');
+  const { challengeId } = await challenge.json();
+  return { ...await locate(), challengeId };
+}
+
 export async function scanAttendance(qrToken: string, signal?: AbortSignal): Promise<ScanResponse> {
   if (!presenceEventId(qrToken)) throw { code: 'INVALID_QR_TOKEN' };
   if (!localStorage.getItem('token')) throw { status: '401' };
-  const response = await apiClient('/attendances/scan', {
+  let response = await apiClient('/attendances/scan', {
     method: 'POST', authenticated: true, body: { qrToken }, signal,
   });
-  if (!response.ok) throw { ...await buildApiError(response, '/attendances/scan'), status: String(response.status) };
+  if (!response.ok) {
+    const error = await buildApiError(response, '/attendances/scan');
+    if (error.code !== 'LOCATION_REQUIRED') throw { ...error, status: String(response.status) };
+    const position = await studentPosition({ qrToken });
+    response = await apiClient('/attendances/scan', { method: 'POST', authenticated: true, body: { qrToken, position }, signal });
+    if (!response.ok) throw { ...await buildApiError(response, '/attendances/scan'), status: String(response.status) };
+  }
   const data: ScanResponse = await response.json();
   if (!data || typeof data.message !== 'string' || !Number.isFinite(Date.parse(data.timestamp)) ||
     !(data.success === true && typeof data.eventTitle === 'string' &&

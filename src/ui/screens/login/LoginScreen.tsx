@@ -137,6 +137,7 @@ export default function LoginScreen() {
         <Link to="/creditos" className={styles.projectCreditsLink}>
           Conheça quem constrói este projeto
         </Link>
+          <Link to="/visitantes" className={styles.projectCreditsLink}>Eventos e certificados para visitantes</Link>
         <img src={logoCps} className={styles.logocps} alt="Logo CPS" />
       </div>
     </AuthLayout>

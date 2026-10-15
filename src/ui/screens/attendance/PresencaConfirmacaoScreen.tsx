@@ -91,7 +91,7 @@ export default function PresencaConfirmacaoScreen() {
 
     try {
       setSubmitting(true);
-      const data = await confirmAttendanceReference(reference);
+      const data = await confirmAttendanceReference(reference, undefined, preview.locationRequired);
       const feedback = responseFeedback(data);
       setResult(feedback);
     } catch (err: unknown) {
@@ -192,6 +192,7 @@ export default function PresencaConfirmacaoScreen() {
                 Para registrar sua presença com segurança, clique no botão abaixo para confirmar sua participação.
               </span>
             </div>
+            {preview.locationRequired && <p>Sua localização será solicitada para confirmar a proximidade. Se não funcionar, procure a Secretaria presencialmente.</p>}
 
             <div className={styles.actions}>
               <button
