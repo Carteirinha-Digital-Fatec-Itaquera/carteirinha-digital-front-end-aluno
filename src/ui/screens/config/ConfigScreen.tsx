@@ -121,7 +121,7 @@ export default function ConfigScreen() {
   };
 
   return (
-    <PageLayout title="Configurações" subtitle="Personalize sua experiência e gerencie suas preferências de acesso." backTo="/MainMenu" icon={<Settings size={22} />}>
+    <PageLayout title="Configurações" subtitle="Personalize sua experiência e gerencie suas preferências de acesso." backTo="/MainMenu" icon={<Settings size={22} />} roundedHeader>
 
 
       <div className={styles.main}>

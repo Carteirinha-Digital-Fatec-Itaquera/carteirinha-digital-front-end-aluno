@@ -15,7 +15,7 @@ export default function HelpScreen() {
 
 
   return (
-    <PageLayout title="Como podemos ajudar?" subtitle="Encontre os canais de atendimento da sua instituição." backTo="/MainMenu">
+    <PageLayout title="Como podemos ajudar?" subtitle="Encontre os canais de atendimento da sua instituição." backTo="/MainMenu" roundedHeader>
       {/* Conteúdo que sobrepõe o fundo vermelho */}
       <div className={styles.contentWrapper}>
         <div className={styles.contactContainer}>

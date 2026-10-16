@@ -1,2 +1,92 @@
 .panel { padding: 32px; border: 1px solid var(--app-color-border); border-radius: var(--app-radius-card); background: var(--app-color-surface); box-shadow: var(--app-shadow); }
 @media (max-width: 540px) { .panel { padding: 24px 16px; } }
+
+/* Login clássico: somente o FUNDO ocupa a viewport. As outras telas não são afetadas. */
+.classicPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--app-color-background, #f8f9fa);
+}
+
+.classicHeader {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 260px;
+  flex-shrink: 0;
+  padding: 26px 20px 80px;
+  border-radius: 0 0 56px 56px;
+  background: var(--app-color-primary);
+}
+
+.classicBrand {
+  display: block;
+  width: 240px;
+  max-width: 70vw;
+  height: 110px;
+  object-fit: contain;
+}
+
+/* Card flutuante: título, inputs, Entrar, orientação e logo CPS continuam dentro. */
+.classicPanel {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 40px, 500px);
+  margin: -78px auto 48px;
+  padding: 34px 38px 28px;
+  border: 1px solid rgba(45, 47, 56, .07);
+  border-radius: 30px;
+  background: var(--app-color-surface, #fff);
+  box-shadow: 0 24px 58px rgba(35, 30, 40, .13), 0 4px 16px rgba(35, 30, 40, .05);
+}
+
+.panel {
+  width: min(100%, 460px);
+  margin: 0 auto;
+  padding: 34px 24px 28px;
+  border: 1px solid #ece6ea;
+  border-radius: 36px;
+  background: #f7f7f7;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 540px) {
+  .panel {
+    width: 100%;
+    padding: 32px 22px 24px;
+    border-radius: 34px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .classicHeader { min-height: 274px; border-radius: 0 0 68px 68px; }
+  .classicPanel { margin-top: -82px; }
+}
+
+@media (max-width: 767px) {
+  .classicHeader {
+    min-height: 190px;
+    padding: 10px 16px 64px;
+    border-radius: 0 0 42px 42px;
+  }
+  .classicBrand { width: 206px; height: 92px; }
+  .classicPanel {
+    width: calc(100% - 28px);
+    max-width: 460px;
+    margin-top: -46px;
+    margin-bottom: 24px;
+    padding: 28px 24px 22px;
+    border-radius: 26px;
+    box-shadow: 0 14px 34px rgba(35, 30, 40, .11);
+  }
+}
+
+@media (max-width: 390px) {
+  .classicBrand { width: 196px; }
+  .classicPanel { padding-inline: 20px; border-radius: 24px; }
+}
