@@ -1,0 +1,134 @@
+.page {
+  min-height: 100dvh;
+  background: #f4f5f7;
+  color: #202124;
+}
+.header {
+  background: #ba1a1a;
+  color: white;
+  padding: 32px max(24px, calc((100vw - 960px) / 2));
+}
+.header a {
+  color: white;
+}
+.header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  margin: 16px 0;
+}
+.content {
+  max-width: 960px;
+  margin: auto;
+  padding: 28px 20px 70px;
+  display: grid;
+  gap: 24px;
+}
+.card {
+  background: white;
+  border: 1px solid #d9dfe5;
+  border-radius: 16px;
+  padding: 28px;
+}
+.card h2 {
+  margin: 0 0 20px;
+}
+.card form {
+  display: grid;
+  gap: 20px;
+}
+.card label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+.card input,
+.card select {
+  font: inherit;
+  padding: 12px;
+  border: 1px solid #68717c;
+  border-radius: 8px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.card p {
+  line-height: 1.6;
+}
+.card button {
+  font: inherit;
+  font-weight: 600;
+  background: #ba1a1a;
+  color: white;
+  border: 1px solid #ba1a1a;
+  border-radius: 8px;
+  padding: 12px 20px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.card .secondary {
+  background: white;
+  color: #941313;
+}
+.card a {
+  color: #941313;
+}
+.actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.activity {
+  padding: 20px 0;
+  border-top: 1px solid #d9dfe5;
+}
+.success,
+.error {
+  padding: 16px;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+.success {
+  background: #e9f6ed;
+  color: #18562a;
+}
+.error {
+  background: #fff0ee;
+  color: #921c13;
+}
+.page :focus-visible {
+  outline: 3px solid #136fc3;
+  outline-offset: 3px;
+}
+.eventContext {
+  background: #f8fafc;
+  border: 1px solid #d9dfe5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+.contextSwitchAlert {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  display: grid;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .card {
+    padding: 20px;
+  }
+  .content {
+    padding: 20px 14px 60px;
+  }
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+

@@ -9,6 +9,11 @@ import { responseFeedback, errorFeedback, cameraErrorMessage } from '../src/ui/s
 import ScanResultCard from '../src/ui/screens/scanner/ScanResultCard.tsx';
 
 const id = '11111111-1111-4111-8111-111111111111';
+test('falha de GPS orienta atendimento presencial e janela encerrada não vira erro de conexão', () => {
+  assert.equal(errorFeedback({ code: 'LOCATION_INCONCLUSIVE', status: '400', message: 'Procure a Secretaria presencialmente.' }).title, 'Localização não confirmada');
+  assert.match(errorFeedback({ code: 'LOCATION_UNAVAILABLE' }).message, /Secretaria presencialmente/);
+  assert.equal(errorFeedback({ code: 'WINDOW_CLOSED', status: '400' }).title, 'Janela de presença encerrada');
+});
 const claims = { eventId: id, checkpoint: 'CHECK_IN', checkpointVersion: 2, jti: 'test-id', iat: 1, exp: 21 };
 const encode = data => Buffer.from(JSON.stringify(data)).toString('base64url');
 const token = payload => encode({alg:'HS256',typ:'JWT'}) + '.' + encode(payload) + '.signature';
