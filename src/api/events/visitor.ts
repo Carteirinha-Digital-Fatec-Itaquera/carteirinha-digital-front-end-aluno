@@ -8,9 +8,12 @@ export interface Series {
   events: {
     id: string;
     title: string;
+    description?: string | null;
     speaker: string;
     location: string;
     startsAt: string;
+    endsAt?: string | null;
+    workloadMinutes?: number | null;
   }[];
 }
 export interface Visitor {
@@ -21,13 +24,38 @@ export interface Visitor {
   retentionAt: string;
 }
 export interface PublicQr {
-  event: { id: string; title: string; speaker: string; location: string };
+  event: {
+    id: string;
+    title: string;
+    description?: string | null;
+    speaker: string;
+    location: string;
+    startsAt?: string;
+    endsAt?: string;
+    workloadMinutes?: number;
+  };
   checkpoint: { type: string };
   seriesId: string | null;
   visitorsAllowed: boolean;
   locationRequired: boolean;
   expiresAt: string;
   serverTime: string;
+}
+export interface VisitorAttendance {
+  id: string;
+  eventId: string;
+  checkInAt: string | null;
+  checkOutAt: string | null;
+  status: 'CHECKED_IN' | 'CONFIRMED';
+  event: {
+    id: string;
+    title: string;
+    speaker: string;
+    location: string;
+    startsAt: string;
+    endsAt: string;
+    workloadMinutes?: number;
+  };
 }
 export interface VisitorCertificate {
   id: string;

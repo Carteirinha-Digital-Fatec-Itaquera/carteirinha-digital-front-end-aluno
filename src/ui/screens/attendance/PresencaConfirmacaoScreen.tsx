@@ -32,9 +32,14 @@ export default function PresencaConfirmacaoScreen() {
   const requestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    // 1. Verificação de autenticação: redireciona para login preservando o destino
+    // 1. Verificação de autenticação de aluno
     const token = localStorage.getItem('token');
-    if (!token) {
+    const profile = localStorage.getItem('@Carteirinha:profile');
+    if (!token || !profile) {
+      if (reference) {
+        navigate(`/visitantes?ref=${encodeURIComponent(reference)}`, { replace: true });
+        return;
+      }
       sessionStorage.setItem('returnUrl', window.location.pathname);
       navigate('/login', { replace: true });
       return;
@@ -67,8 +72,14 @@ export default function PresencaConfirmacaoScreen() {
             'O checkpoint de presença para este evento foi encerrado ou alterado.',
           );
         } else if (errObj.status === '401') {
-          sessionStorage.setItem('returnUrl', window.location.pathname);
-          navigate('/login', { replace: true });
+          localStorage.removeItem('token');
+          localStorage.removeItem('@Carteirinha:profile');
+          if (reference) {
+            navigate(`/visitantes?ref=${encodeURIComponent(reference)}`, { replace: true });
+          } else {
+            sessionStorage.setItem('returnUrl', window.location.pathname);
+            navigate('/login', { replace: true });
+          }
         } else {
           setErrorMessage(
             errObj.message || 'Não foi possível carregar os dados deste evento.',
