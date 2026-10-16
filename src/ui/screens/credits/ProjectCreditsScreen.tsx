@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { UsersRound } from "lucide-react";
+import { ChevronDown, UsersRound } from "lucide-react";
 import { getProjectCredits } from "../../../api/projectCredits/projectCreditsService";
 import type {
   ProjectCreditContributor,
@@ -10,6 +10,7 @@ import { isApprovedProjectCreditHref } from "../../../utils/projectCreditContact
 import EventsPageLayout from "../events/EventsPageLayout";
 import { ErrorState, LoadingState } from "../events/ResourceState";
 import eventStyles from "../events/style.module.css";
+import { groupParticipationPeriods } from "./participationPeriods";
 import styles from "./styleProjectCredits.module.css";
 
 function formatSemester(semester: string): string {
@@ -64,9 +65,11 @@ function ProjectsCreditsList({
   return (
     <div className={styles.list}>
       {visibleContributors.map((person) => {
-        const participations = person.participations.filter(
-          (participation) =>
-            semester === "all" || participation.semester === semester,
+        const participations = groupParticipationPeriods(
+          person.participations.filter(
+            (participation) =>
+              semester === "all" || participation.semester === semester,
+          ),
         );
 
         return (
@@ -77,9 +80,13 @@ function ProjectsCreditsList({
               {participations.map((participation) => (
                 <section
                   className={styles.participation}
-                  key={participation.semester}
+                  key={`${participation.startSemester}-${participation.endSemester}-${participation.roles.join("-")}`}
                 >
-                  <h3>{formatSemester(participation.semester)}</h3>
+                  <h3>
+                    {formatSemester(participation.startSemester)}
+                    {participation.startSemester !== participation.endSemester &&
+                      ` a ${formatSemester(participation.endSemester)}`}
+                  </h3>
                   {participation.course && (
                     <span className={styles.courseText}>
                       {participation.course}
@@ -90,9 +97,9 @@ function ProjectsCreditsList({
                       <li key={role}>{role}</li>
                     ))}
                   </ul>
-                  {participation.contribution && (
-                    <p>{participation.contribution}</p>
-                  )}
+                  {participation.contributions.map((contribution) => (
+                    <p key={contribution}>{contribution}</p>
+                  ))}
                 </section>
               ))}
               {person.contacts.some(isApprovedProjectCreditHref) && (
@@ -201,28 +208,26 @@ export default function ProjectCreditsScreen() {
       </section>
 
       {semesters.length > 0 && (
-        <div
-          className={styles.filters}
-          role="group"
-          aria-label="Filtrar créditos por semestre"
-        >
-          <button
-            type="button"
-            aria-pressed={semester === "all"}
-            onClick={() => setSemester("all")}
-          >
-            Todos os semestres
-          </button>
-          {semesters.map((value) => (
-            <button
-              type="button"
-              key={value}
-              aria-pressed={semester === value}
-              onClick={() => setSemester(value)}
+        <div className={styles.filters}>
+          <label className={styles.visuallyHidden} htmlFor="credits-semester-filter">
+            Filtrar créditos por semestre
+          </label>
+          <div className={styles.selectWrapper}>
+            <select
+              id="credits-semester-filter"
+              className={styles.semesterSelect}
+              value={semester}
+              onChange={(event) => setSemester(event.target.value)}
             >
-              {formatSemester(value)}
-            </button>
-          ))}
+              <option value="all">Todos os semestres</option>
+              {semesters.map((value) => (
+                <option key={value} value={value}>
+                  {formatSemester(value)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className={styles.selectArrow} size={20} aria-hidden="true" />
+          </div>
         </div>
       )}
 
