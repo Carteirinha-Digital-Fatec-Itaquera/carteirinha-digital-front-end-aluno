@@ -121,7 +121,7 @@ export default function UploadImageScreen() {
   };
 
   return (
-    <PageLayout title="Enviar fotografia" subtitle="Use uma foto com fundo neutro, rosto centralizado e sem óculos escuros." backTo="/MainMenu" narrow><div className={styles.container}>
+    <PageLayout title="Enviar fotografia" subtitle="Use uma foto com fundo neutro, rosto centralizado e sem óculos escuros." backTo="/MainMenu" narrow roundedHeader><div className={styles.container}>
       <ErrorModalComp
         visible={modalErrorVisible}
         error={message}

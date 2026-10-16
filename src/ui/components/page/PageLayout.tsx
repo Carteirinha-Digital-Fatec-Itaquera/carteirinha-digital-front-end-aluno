@@ -13,12 +13,17 @@ export interface PageLayoutProps {
   className?: string;
   brand?: ReactNode;
   narrow?: boolean;
+  roundedHeader?: boolean;
 }
 
 /** Presentation only: route/session decisions belong to the existing screens. */
-export default function PageLayout({ title, subtitle, backTo, backLabel = 'Voltar ao menu', icon, children, className = '', brand, narrow = false }: PageLayoutProps) {
+export default function PageLayout({ title, subtitle, backTo, backLabel = 'Voltar ao menu', icon, children, className = '', brand, narrow = false, roundedHeader = false }: PageLayoutProps) {
   return <main className={styles.page + ' ' + className}>
-    <header className={styles.headerArea}>
+    <header
+      className={`${styles.headerArea} ${
+        roundedHeader ? styles.roundedHeader : ''
+      }`}>
+    
       <div className={styles.header + (narrow ? ' ' + styles.narrow : '')}>
         {backTo && <Link to={backTo} className={styles.backLink}><ArrowLeft size={18} aria-hidden="true" />{backLabel}</Link>}
         {brand && <div className={styles.brand}>{brand}</div>}

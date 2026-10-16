@@ -13,4 +13,17 @@
 .narrow { max-width: 520px; }
 .brand { margin-bottom: 24px; }
 .brand img { width: 160px; height: 88px; object-fit: contain; }
+
+/* Cabeçalho com cantos inferiores arredondados */
+.roundedHeader {
+  border-radius: 0 0 48px 48px;
+}
+
+/* Ajuste para dispositivos móveis */
+@media (max-width: 540px) {
+  .roundedHeader {
+    border-radius: 0 0 36px 36px;
+  }
+}
+
 @media (max-width: 540px) { .headerArea { padding: 24px 16px 64px; } .content { width: calc(100% - 32px); margin-top: -32px; padding-bottom: 32px; } .backLink { margin-bottom: 16px; } }

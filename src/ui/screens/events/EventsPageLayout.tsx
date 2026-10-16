@@ -2,5 +2,5 @@ import PageLayout, { type PageLayoutProps } from '../../components/page/PageLayo
 
 /** Keep the Events/Certificates API while sharing the visual shell. */
 export default function EventsPageLayout({ backTo = '/MainMenu', ...props }: PageLayoutProps) {
-  return <PageLayout backTo={backTo} {...props} />;
+  return <PageLayout backTo={backTo} {...props} roundedHeader />;
 }

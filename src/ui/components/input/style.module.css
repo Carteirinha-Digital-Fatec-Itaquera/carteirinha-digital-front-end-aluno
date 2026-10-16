@@ -1,5 +1,29 @@
+.container {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-.container { width: 100%; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-.label { color: var(--app-color-text); font-size: .875rem; font-weight: 600; }
-.inputField { width: 100%; min-width: 0; min-height: 48px; padding: 12px 16px; border: 1px solid var(--app-color-input-border); border-radius: var(--app-radius-control); background: var(--app-color-surface); color: var(--app-color-text); }
-.inputField::placeholder { color: var(--app-color-muted); opacity: 1; }
+.label {
+  color: var(--app-color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.inputField {
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 0 18px;
+  border: 1.5px solid #2f2f2f;
+  border-radius: 999px;
+  background: var(--app-color-surface);
+  color: var(--app-color-text);
+}
+
+.inputField::placeholder {
+  color: var(--app-color-muted);
+  opacity: 1;
+}
