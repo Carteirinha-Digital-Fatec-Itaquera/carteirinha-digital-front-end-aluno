@@ -29,6 +29,10 @@ registerHooks({
       format: 'module', shortCircuit: true,
       source: 'export default new Proxy({}, { get: (_, name) => String(name) });',
     };
+    if (/\.(png|jpe?g|svg|gif|webp)$/.test(pathname)) return {
+      format: 'module', shortCircuit: true,
+      source: 'export default "";',
+    };
     if (/\.tsx?$/.test(pathname)) {
       const source = readFileSync(new URL(url), 'utf8').replaceAll('import.meta.env', 'process.env');
       return { format: 'module', shortCircuit: true, source: ts.transpileModule(source, {

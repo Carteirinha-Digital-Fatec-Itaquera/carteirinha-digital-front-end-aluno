@@ -1,5 +1,21 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  User,
+  QrCode,
+  Camera,
+  CheckCircle2,
+  AlertCircle,
+  Download,
+  ExternalLink,
+  RefreshCw,
+  X,
+  Sparkles,
+} from "lucide-react";
+const logoFatec = "/fatec_itaquera_logo.png";
 import {
   visitorRequest,
   VisitorApiError,
@@ -7,9 +23,36 @@ import {
   type Series,
   type Visitor,
   type PublicQr,
+  type VisitorAttendance,
   type VisitorCertificate,
 } from "../../../api/events/visitor";
+import { parsePresenceUrlOrToken } from "../../../api/attendance/scanAttendance";
+import CameraReader from "../scanner/CameraReader";
 import styles from "./PublicEventsScreen.module.css";
+
+function formatEventTime(startsAt?: string | null, endsAt?: string | null) {
+  if (!startsAt) return "";
+  const start = new Date(startsAt);
+  const startStr = start.toLocaleTimeString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  if (!endsAt) return startStr;
+  const end = new Date(endsAt);
+  const endStr = end.toLocaleTimeString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${startStr} às ${endStr}`;
+}
+
+function formatWorkload(minutes?: number | null) {
+  if (!minutes || minutes <= 0) return null;
+  if (minutes % 60 === 0) return `${minutes / 60}h de carga horária`;
+  return `${minutes} min de carga horária`;
+}
 
 export default function PublicEventsScreen({
   reference,
@@ -17,25 +60,47 @@ export default function PublicEventsScreen({
   reference?: string;
 }) {
   const [search] = useSearchParams();
-  const [confirmedReference, setConfirmedReference] = useState<string | null>(
-    null,
-  );
-  const [series, setSeries] = useState<Series[]>([]),
-    [session, setSession] = useState<Visitor | null>(null),
-    [preview, setPreview] = useState<PublicQr | null>(null);
+  const activeReferenceParam = reference || search.get("ref") || search.get("reference") || "";
   const eventIdParam = search.get("evento") || search.get("id");
-  const [selected, setSelected] = useState(search.get("edicao") || ""),
-    [registration, setRegistration] = useState(""),
-    [certificates, setCertificates] = useState<VisitorCertificate[]>([]);
-  const [busy, setBusy] = useState(false),
-    [message, setMessage] = useState(""),
-    [failure, setFailure] = useState(""),
-    [loading, setLoading] = useState(true);
+
+  const [confirmedReference, setConfirmedReference] = useState<string | null>(null);
+  const [activeReference, setActiveReference] = useState<string>(activeReferenceParam);
+  const [series, setSeries] = useState<Series[]>([]);
+  const [session, setSession] = useState<Visitor | null>(null);
+  const [attendances, setAttendances] = useState<VisitorAttendance[]>([]);
+  const [certificates, setCertificates] = useState<VisitorCertificate[]>([]);
+  const [preview, setPreview] = useState<PublicQr | null>(null);
+
+  const [selected, setSelected] = useState(search.get("edicao") || "");
+  const [registration, setRegistration] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [failure, setFailure] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [cameraActive, setCameraActive] = useState(false);
+
+  const eventCardRef = useRef<HTMLDivElement | null>(null);
+
   const current = series.find((s) => s.id === (preview?.seriesId || selected));
-  const loadCertificates = async () =>
-    setCertificates(
-      await visitorRequest<VisitorCertificate[]>("visitor/certificates"),
-    );
+
+  const loadCertificates = useCallback(async () => {
+    try {
+      const list = await visitorRequest<VisitorCertificate[]>("visitor/certificates");
+      setCertificates(list);
+    } catch {
+      // Ignora falhas se não logado
+    }
+  }, []);
+
+  const loadAttendances = useCallback(async () => {
+    try {
+      const list = await visitorRequest<VisitorAttendance[]>("visitor/attendances");
+      setAttendances(list);
+    } catch {
+      // Endpoint opcional caso visitante não esteja autenticado
+    }
+  }, []);
+
   useEffect(() => {
     const controller = new AbortController();
     void (async () => {
@@ -46,27 +111,38 @@ export default function PublicEventsScreen({
           controller.signal,
         );
         setSeries(rows);
+
         let qr: PublicQr | null = null;
-        if (reference) {
+        if (activeReferenceParam) {
           try {
             qr = await visitorRequest<PublicQr>(
-              `public/events/qr/${encodeURIComponent(reference)}`,
+              `public/events/qr/${encodeURIComponent(activeReferenceParam)}`,
               undefined,
               controller.signal,
             );
             setPreview(qr);
+            setActiveReference(activeReferenceParam);
           } catch (error) {
             if (controller.signal.aborted) throw error;
             setFailure(
               error instanceof Error
                 ? error.message
-                : "Faça uma nova leitura do QR.",
+                : "QR Code expirado ou inválido. Faça uma nova leitura no telão.",
             );
           }
         } else if (eventIdParam) {
           try {
             const ev = await visitorRequest<{
-              event: { id: string; title: string; speaker: string; location: string };
+              event: {
+                id: string;
+                title: string;
+                description?: string | null;
+                speaker: string;
+                location: string;
+                startsAt?: string;
+                endsAt?: string;
+                workloadMinutes?: number;
+              };
               seriesId: string | null;
               visitorsAllowed: boolean;
               locationRequired: boolean;
@@ -95,9 +171,9 @@ export default function PublicEventsScreen({
             );
           }
         }
-        setSelected(
-          (previous) => qr?.seriesId || previous || rows[0]?.id || "",
-        );
+
+        setSelected((previous) => qr?.seriesId || previous || rows[0]?.id || "");
+
         try {
           const visitor = await visitorRequest<Visitor>(
             "visitor/session",
@@ -105,44 +181,44 @@ export default function PublicEventsScreen({
             controller.signal,
           );
           setSession(visitor);
-          setCertificates(
-            await visitorRequest<VisitorCertificate[]>(
-              "visitor/certificates",
-              undefined,
-              controller.signal,
-            ),
-          );
+          await Promise.all([loadCertificates(), loadAttendances()]);
         } catch (error) {
-          if (!(error instanceof VisitorApiError && error.status === 401))
+          if (!(error instanceof VisitorApiError && error.status === 401)) {
             throw error;
+          }
         }
       } catch (error) {
-        if (!controller.signal.aborted)
+        if (!controller.signal.aborted) {
           setFailure(
-            error instanceof Error ? error.message : "Falha de conexão.",
+            error instanceof Error ? error.message : "Falha de conexão com o servidor.",
           );
+        }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [reference, eventIdParam]);
+  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances]);
+
   useEffect(() => {
     if (!session) return;
     const id = window.setInterval(() => {
-      if (!document.hidden)
+      if (!document.hidden) {
         void visitorRequest<Visitor>("visitor/session")
           .then(setSession)
           .catch((error) => {
             if (error instanceof VisitorApiError && error.status === 401) {
               setSession(null);
               setCertificates([]);
-              setMessage("Seu acesso expirou. Confirme seu e-mail novamente.");
+              setAttendances([]);
+              setMessage("Seu acesso temporário expirou. Identifique-se novamente.");
             }
           });
+      }
     }, 30000);
     return () => window.clearInterval(id);
   }, [session]);
+
   async function act(action: () => Promise<void>) {
     if (busy) return;
     setBusy(true);
@@ -155,11 +231,13 @@ export default function PublicEventsScreen({
       if (error instanceof VisitorApiError && error.status === 401) {
         setSession(null);
         setCertificates([]);
+        setAttendances([]);
       }
     } finally {
       setBusy(false);
     }
   }
+
   const register = (form: HTMLFormElement) =>
     act(async () => {
       const data = new FormData(form);
@@ -179,44 +257,140 @@ export default function PublicEventsScreen({
         },
       );
       setRegistration(result.registrationId);
-      setMessage("Código enviado. Verifique também o spam.");
+      setMessage("Código de 6 dígitos enviado ao seu e-mail. Verifique também o spam.");
     });
+
   const verify = (form: HTMLFormElement) =>
     act(async () => {
       await visitorRequest("visitor/verify", {
         registrationId: registration,
         code: String(new FormData(form).get("code")),
       });
-      setSession(await visitorRequest<Visitor>("visitor/session"));
-      await loadCertificates();
+      const currentVisitor = await visitorRequest<Visitor>("visitor/session");
+      setSession(currentVisitor);
+      await Promise.all([loadCertificates(), loadAttendances()]);
       setRegistration("");
       setMessage(
-        reference
-          ? "Acesso confirmado. Se o QR venceu, faça uma nova leitura no telão."
-          : "Acesso confirmado. Inscreva-se na atividade ou leia o QR no local.",
+        activeReference
+          ? "Identificação concluída! Clique em Confirmar presença abaixo ou faça nova leitura."
+          : "Identificação confirmada! Selecione uma atividade para escanear a presença.",
       );
     });
-  const confirm = () =>
+
+  const confirmPresence = (refToConfirm: string) =>
     act(async () => {
-      if (!reference || !preview) return;
-      // Atualiza a validade antes de pedir o GPS; o servidor valida novamente na gravação.
-      await visitorRequest(`public/events/qr/${encodeURIComponent(reference)}`);
+      const targetRef = refToConfirm || activeReference;
+      if (!targetRef) return;
+
+      const latestQr = await visitorRequest<PublicQr>(`public/events/qr/${encodeURIComponent(targetRef)}`);
+      setPreview(latestQr);
+
       let position;
-      if (preview.locationRequired) {
+      if (latestQr.locationRequired) {
         const challenge = await visitorRequest<{ challengeId: string }>(
           "visitor/challenge",
-          { reference },
+          { reference: targetRef },
         );
         position = { ...(await locate()), challengeId: challenge.challengeId };
       }
-      const result = await visitorRequest<{ message: string }>(
+
+      const result = await visitorRequest<{ message: string; type?: string }>(
         "visitor/attendance",
-        { reference, position },
+        { reference: targetRef, position },
       );
-      setConfirmedReference(reference);
-      setMessage(result.message);
-      await loadCertificates();
+
+      setConfirmedReference(targetRef);
+      setMessage(
+        result.message ||
+          (latestQr.checkpoint.type === "CHECK_IN"
+            ? "Entrada (Check-in) registrada com sucesso! ✓"
+            : "Saída (Check-out) confirmada com sucesso! ✓ Seu certificado está liberado."),
+      );
+      await Promise.all([loadCertificates(), loadAttendances()]);
     });
+
+  const handleCameraScan = useCallback(
+    async (rawToken: string) => {
+      setCameraActive(false);
+      setBusy(true);
+      setMessage("");
+      setFailure("");
+
+      const parsed = parsePresenceUrlOrToken(rawToken);
+      const scannedRef = parsed?.type === "reference" ? parsed.reference : rawToken.trim();
+
+      if (!scannedRef || !/^[A-Za-z0-9_-]{10,64}$/.test(scannedRef)) {
+        setFailure("QR Code não reconhecido. Certifique-se de escanear o QR Code exibido no telão.");
+        setBusy(false);
+        return;
+      }
+
+      try {
+        const qr = await visitorRequest<PublicQr>(`public/events/qr/${encodeURIComponent(scannedRef)}`);
+        setPreview(qr);
+        setActiveReference(scannedRef);
+        setConfirmedReference(null);
+
+        // Se o visitante já tem sessão válida nesta edição, confirma presença imediatamente
+        if (session && qr.seriesId === session.seriesId) {
+          let position;
+          if (qr.locationRequired) {
+            const challenge = await visitorRequest<{ challengeId: string }>(
+              "visitor/challenge",
+              { reference: scannedRef },
+            );
+            position = { ...(await locate()), challengeId: challenge.challengeId };
+          }
+
+          const result = await visitorRequest<{ message: string }>(
+            "visitor/attendance",
+            { reference: scannedRef, position },
+          );
+
+          setConfirmedReference(scannedRef);
+          setMessage(
+            result.message ||
+              (qr.checkpoint.type === "CHECK_IN"
+                ? "Entrada (Check-in) registrada com sucesso! ✓"
+                : "Saída (Check-out) confirmada com sucesso! ✓ Seu certificado está liberado."),
+          );
+          await Promise.all([loadCertificates(), loadAttendances()]);
+        } else if (session && qr.seriesId !== session.seriesId) {
+          setMessage("Atividade de outra edição. Confirme sua participação nesta atividade abaixo.");
+        } else {
+          setMessage("QR Code do evento escaneado! Identifique-se rapidamente abaixo para registrar sua presença.");
+          if (qr.seriesId) setSelected(qr.seriesId);
+        }
+      } catch (error) {
+        setFailure(error instanceof Error ? error.message : "Erro ao processar QR Code.");
+      } finally {
+        setBusy(false);
+      }
+    },
+    [session, loadCertificates, loadAttendances],
+  );
+
+  const selectEventAndScan = (event: { id: string; title: string; speaker: string; location: string; startsAt: string; description?: string | null }) => {
+    setPreview({
+      checkpoint: { type: "CHECK_IN" },
+      event: {
+        id: event.id,
+        title: event.title,
+        speaker: event.speaker,
+        location: event.location,
+        startsAt: event.startsAt,
+        description: event.description,
+      },
+      seriesId: current?.id || null,
+      visitorsAllowed: true,
+      locationRequired: false,
+      expiresAt: "",
+      serverTime: new Date().toISOString(),
+    });
+    setCameraActive(true);
+    eventCardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   async function download(id: string) {
     const response = await fetch(
       `/api/visitor/certificates/${encodeURIComponent(id)}/pdf`,
@@ -235,95 +409,233 @@ export default function PublicEventsScreen({
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+
+  // Identifica a presença atual para o evento selecionado
+  const currentEventId = preview?.event.id;
+  const currentAttendance = attendances.find((a) => a.eventId === currentEventId);
+  const hasCheckIn = Boolean(currentAttendance?.checkInAt);
+  const hasCheckOut = Boolean(currentAttendance?.checkOutAt);
+
   return (
     <main className={styles.page}>
+      {/* Cabeçalho no padrão visual arredondado do Arthur */}
       <header className={styles.header}>
-        <Link to="/login">Acesso de aluno</Link>
-        <p>FATEC ITAQUERA</p>
-        <h1>Eventos e certificados</h1>
-        <p>Participe como visitante, sem criar uma conta na carteirinha.</p>
+        <div className={styles.headerTop}>
+          <img src={logoFatec} alt="Fatec Itaquera" className={styles.brandLogo} />
+          <Link to="/login" className={styles.studentLink}>
+            <User size={15} />
+            Acesso de aluno
+          </Link>
+        </div>
+
+        <div className={styles.headerBadge}>
+          <Sparkles size={13} />
+          Carteirinha Digital · Visitantes
+        </div>
+
+        <h1 className={styles.headerTitle}>Eventos e certificados</h1>
+        <p className={styles.headerSubtitle}>
+          Participe como visitante, sem criar uma conta na carteirinha.
+        </p>
       </header>
+
       <div className={styles.content}>
-        {loading && <p role="status">Carregando eventos...</p>}
+        {loading && (
+          <div className={styles.card} role="status">
+            <p>Carregando eventos...</p>
+          </div>
+        )}
+
         {message && (
-          <p className={styles.success} role="status">
-            {message}
-          </p>
+          <div className={styles.success} role="status">
+            <CheckCircle2 size={20} />
+            <span>{message}</span>
+          </div>
         )}
+
         {failure && (
-          <p className={styles.error} role="alert">
-            {failure}
-          </p>
+          <div className={styles.error} role="alert">
+            <AlertCircle size={20} />
+            <span>{failure}</span>
+          </div>
         )}
+
+        {/* Detalhes completos do Evento & Fluxo de Check-in/Check-out */}
         {preview && (
-          <section className={styles.card}>
-            <h2>{preview.event.title}</h2>
-            <p>
-              {preview.event.speaker} · {preview.event.location}
-            </p>
-            {reference ? (
-              <p>
-                {preview.checkpoint.type === "CHECK_IN" ? "Entrada" : "Saída"} ·
-                QR de validade curta. Uma nova leitura será necessária se expirar.
-              </p>
-            ) : (
-              <p>
-                Atividade com acesso de visitantes. Para registrar presença, faça a leitura do QR Code no telão do evento.
-              </p>
+          <section className={styles.eventDetailCard} ref={eventCardRef}>
+            <div className={styles.eventHeaderRow}>
+              <div>
+                <span className={`${styles.badge} ${hasCheckOut ? styles.badgeSuccess : hasCheckIn ? styles.badgeWarning : styles.badgeInfo}`}>
+                  {hasCheckOut ? "Presença Concluída" : hasCheckIn ? "Check-in Realizado" : "Check-in Disponível"}
+                </span>
+                <h2 className={styles.eventTitle}>{preview.event.title}</h2>
+              </div>
+            </div>
+
+            {/* Metadados detalhados com ícones */}
+            <div className={styles.metaGrid}>
+              <div className={styles.metaItem}>
+                <User size={18} />
+                <span><strong>Palestrante:</strong> {preview.event.speaker}</span>
+              </div>
+              <div className={styles.metaItem}>
+                <MapPin size={18} />
+                <span><strong>Local:</strong> {preview.event.location}</span>
+              </div>
+              {preview.event.startsAt && (
+                <div className={styles.metaItem}>
+                  <Clock size={18} />
+                  <span><strong>Horário:</strong> {formatEventTime(preview.event.startsAt, preview.event.endsAt)}</span>
+                </div>
+              )}
+              {preview.event.workloadMinutes && (
+                <div className={styles.metaItem}>
+                  <Calendar size={18} />
+                  <span><strong>Carga horária:</strong> {formatWorkload(preview.event.workloadMinutes)}</span>
+                </div>
+              )}
+            </div>
+
+            {preview.event.description && (
+              <div className={styles.eventDescription}>
+                <p>{preview.event.description}</p>
+              </div>
             )}
+
             {!preview.visitorsAllowed ? (
-              <p>
-                Esta atividade exige acesso de aluno.{" "}
-                <Link
-                  to="/login"
-                  onClick={() =>
-                    reference &&
-                    sessionStorage.setItem("returnUrl", `/p/${reference}`)
-                  }
-                >
-                  Entrar como aluno
-                </Link>
-              </p>
+              <div className={styles.error} role="alert">
+                <AlertCircle size={20} />
+                <div>
+                  <p>Esta atividade é restrita a alunos cadastrados.</p>
+                  <Link
+                    to="/login"
+                    onClick={() =>
+                      activeReference &&
+                      sessionStorage.setItem("returnUrl", `/p/${activeReference}`)
+                    }
+                    className={styles.btnSecondary}
+                    style={{ marginTop: 8 }}
+                  >
+                    Entrar como aluno
+                  </Link>
+                </div>
+              </div>
             ) : session?.seriesId === preview.seriesId ? (
               <>
-                <p>Participante: <strong>{session.name}</strong></p>
-                {reference ? (
-                  <>
-                    {preview.locationRequired && (
-                      <p>
-                        Sua localização será solicitada para comprovar proximidade.
-                        Em caso de dificuldade, procure a Secretaria
-                        presencialmente.
+                {/* Stepper do Processo Completo de Presença */}
+                <div className={styles.presenceProcess}>
+                  <h3 className={styles.processTitle}>
+                    <QrCode size={20} />
+                    Processo de Presença do Visitante
+                  </h3>
+
+                  <div className={styles.processSteps}>
+                    {/* Passo 1: Check-in */}
+                    <div className={`${styles.stepBox} ${hasCheckIn ? styles.stepBoxCompleted : styles.stepBoxActive}`}>
+                      <span className={styles.stepLabel}>Passo 1: Entrada</span>
+                      <span className={styles.stepStatus}>
+                        {hasCheckIn ? (
+                          <>
+                            <CheckCircle2 size={16} color="#2e7d32" />
+                            Confirmado {currentAttendance?.checkInAt ? `às ${new Date(currentAttendance.checkInAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : ""}
+                          </>
+                        ) : (
+                          "Check-in pendente"
+                        )}
+                      </span>
+                    </div>
+
+                    {/* Passo 2: Check-out */}
+                    <div className={`${styles.stepBox} ${hasCheckOut ? styles.stepBoxCompleted : hasCheckIn ? styles.stepBoxActive : ""}`}>
+                      <span className={styles.stepLabel}>Passo 2: Saída</span>
+                      <span className={styles.stepStatus}>
+                        {hasCheckOut ? (
+                          <>
+                            <CheckCircle2 size={16} color="#2e7d32" />
+                            Confirmado {currentAttendance?.checkOutAt ? `às ${new Date(currentAttendance.checkOutAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : ""}
+                          </>
+                        ) : hasCheckIn ? (
+                          "Aguardando término da atividade"
+                        ) : (
+                          "Disponível após check-in"
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Leitor de Câmera Inline */}
+                  {cameraActive && (
+                    <div className={styles.scannerWrapper}>
+                      <div className={styles.scannerHeader}>
+                        <h3>Leitor de QR Code</h3>
+                        <button
+                          type="button"
+                          className={styles.closeScannerBtn}
+                          onClick={() => setCameraActive(false)}
+                        >
+                          <X size={16} /> Fechar câmera
+                        </button>
+                      </div>
+                      <CameraReader onRead={handleCameraScan} />
+                      <p className={styles.scannerHint}>
+                        Aponte a câmera para o QR Code rotativo exibido no telão do evento.
                       </p>
+                    </div>
+                  )}
+
+                  {/* Ações de Presença (Botão de confirmação e botão de escanear) */}
+                  <div className={styles.btnActionGroup}>
+                    {activeReference && !hasCheckOut && (
+                      <button
+                        className={styles.btnPrimary}
+                        disabled={busy || confirmedReference === activeReference}
+                        onClick={() => void confirmPresence(activeReference)}
+                      >
+                        <CheckCircle2 size={18} />
+                        {busy
+                          ? "Confirmando presença..."
+                          : confirmedReference === activeReference
+                            ? "Presença confirmada ✓"
+                            : preview.checkpoint.type === "CHECK_IN"
+                              ? "Confirmar Entrada (Check-in)"
+                              : "Confirmar Saída (Check-out)"}
+                      </button>
                     )}
-                    <button
-                      disabled={busy || confirmedReference === reference}
-                      onClick={() => void confirm()}
-                    >
-                      {busy
-                        ? "Confirmando..."
-                        : confirmedReference === reference
-                          ? "Presença registrada"
-                          : "Confirmar presença"}
-                    </button>
-                  </>
-                ) : (
-                  <p>
-                    Acesso confirmado. Aponte a câmera para o QR Code de presença no telão da atividade para registrar entrada ou saída.
-                  </p>
-                )}
+
+                    {!cameraActive && !hasCheckOut && (
+                      <button
+                        type="button"
+                        className={activeReference ? styles.btnSecondary : styles.btnPrimary}
+                        disabled={busy}
+                        onClick={() => setCameraActive(true)}
+                      >
+                        <Camera size={18} />
+                        {!hasCheckIn
+                          ? "Escanear QR Code de Check-in no telão"
+                          : "Escanear QR Code de Check-out no telão"}
+                      </button>
+                    )}
+
+                    {hasCheckOut && (
+                      <div className={styles.success} style={{ width: "100%" }}>
+                        <CheckCircle2 size={20} />
+                        <span>Sua presença foi 100% concluída neste evento! O certificado está liberado para download abaixo.</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </>
             ) : session && session.seriesId !== preview.seriesId ? (
               <div className={styles.contextSwitchAlert} role="region" aria-label="Aviso de troca de atividade">
                 <p>
-                  Você possui sessão ativa em outro evento ({session.name}).
+                  Você possui sessão ativa em outra edição ({session.name}).
                 </p>
                 <p>
-                  Para participar de <strong>{preview.event.title}</strong>, confirme sua identificação nesta atividade. Seus certificados anteriores continuam seguros e acessíveis na consulta por e-mail.
+                  Para participar de <strong>{preview.event.title}</strong>, confirme sua identificação nesta edição. Seus certificados anteriores continuam seguros.
                 </p>
                 <button
                   type="button"
-                  className={styles.secondary}
+                  className={styles.btnSecondary}
                   disabled={busy}
                   onClick={() => {
                     setSession(null);
@@ -336,16 +648,25 @@ export default function PublicEventsScreen({
                 </button>
               </div>
             ) : (
-              <p>
-                Identifique-se abaixo antes de confirmar. Nenhuma presença é
-                registrada apenas ao abrir este link.
-              </p>
+              <div className={styles.eventContext}>
+                <p>
+                  Identifique-se abaixo para registrar sua presença. Você não precisará criar senha nem conta de aluno.
+                </p>
+              </div>
             )}
           </section>
         )}
+
+        {/* Cadastro rápido e Identificação do visitante */}
         {(!session || (preview && session.seriesId !== preview.seriesId)) && (!preview || preview.visitorsAllowed) && (
           <section className={styles.card}>
-            <h2>Identificação do visitante</h2>
+            <div className={styles.cardHeader}>
+              <div>
+                <h2>Identificação rápida do visitante</h2>
+                <p>Informe seus dados uma única vez para registrar presença e emitir certificados.</p>
+              </div>
+            </div>
+
             {registration ? (
               <form
                 onSubmit={(e) => {
@@ -354,7 +675,7 @@ export default function PublicEventsScreen({
                 }}
               >
                 <label>
-                  Código recebido por e-mail
+                  Código de 6 dígitos recebido por e-mail
                   <input
                     name="code"
                     required
@@ -362,17 +683,23 @@ export default function PublicEventsScreen({
                     autoComplete="one-time-code"
                     pattern="[0-9]{6}"
                     maxLength={6}
+                    placeholder="Ex: 123456"
                   />
                 </label>
-                <button disabled={busy}>Confirmar e-mail</button>
-                <button
-                  type="button"
-                  disabled={busy}
-                  className={styles.secondary}
-                  onClick={() => setRegistration("")}
-                >
-                  Solicitar outro código
-                </button>
+                <div className={styles.btnActionGroup}>
+                  <button className={styles.btnPrimary} disabled={busy}>
+                    <CheckCircle2 size={18} />
+                    Confirmar e-mail e entrar
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    className={styles.btnSecondary}
+                    onClick={() => setRegistration("")}
+                  >
+                    Solicitar outro código
+                  </button>
+                </div>
               </form>
             ) : (
               <form
@@ -384,13 +711,13 @@ export default function PublicEventsScreen({
                 {preview ? (
                   <div className={styles.eventContext}>
                     <p>
-                      Atividade: <strong>{preview.event.title}</strong>
+                      Atividade selecionada: <strong>{preview.event.title}</strong>
                       {preview.event.speaker ? ` · ${preview.event.speaker}` : ""}
                     </p>
                   </div>
                 ) : (
                   <label>
-                    Edição
+                    Edição do evento
                     <select
                       required
                       value={selected}
@@ -405,6 +732,7 @@ export default function PublicEventsScreen({
                     </select>
                   </label>
                 )}
+
                 <label>
                   Nome completo
                   <input
@@ -413,8 +741,10 @@ export default function PublicEventsScreen({
                     minLength={3}
                     maxLength={160}
                     autoComplete="name"
+                    placeholder="Seu nome completo para o certificado"
                   />
                 </label>
+
                 <label>
                   E-mail
                   <input
@@ -423,20 +753,25 @@ export default function PublicEventsScreen({
                     required
                     maxLength={254}
                     autoComplete="email"
+                    placeholder="exemplo@email.com"
                   />
                 </label>
+
                 <label>
-                  Curso ou vínculo
+                  Vínculo ou curso
                   <select name="course">
-                    <option value="">Visitante — Participante/ouvinte</option>
+                    <option value="">Visitante — Participante/ouvinte externo</option>
                     {current?.courses.map((course) => (
-                      <option key={course}>{course}</option>
+                      <option key={course} value={course}>
+                        {course}
+                      </option>
                     ))}
                   </select>
                 </label>
+
                 {current?.cpfRequired && (
                   <label>
-                    CPF solicitado pela organização
+                    CPF (solicitado pela organização desta edição)
                     <input
                       name="cpf"
                       required
@@ -444,130 +779,162 @@ export default function PublicEventsScreen({
                       minLength={11}
                       maxLength={14}
                       autoComplete="off"
+                      placeholder="Somente números"
                     />
-                    <span>
-                      Usado somente para conferir duplicidade; não será impresso
-                      no certificado.
-                    </span>
                   </label>
                 )}
-                <p>
-                  Usaremos seus dados para presença e emissão. Contatos e acesso
-                  temporário serão eliminados após o prazo da edição; o nome e o
-                  certificado permanecerão no histórico mínimo.
-                </p>
-                <button disabled={busy || !(preview?.seriesId || selected)}>
-                  {busy ? "Enviando..." : "Receber código de acesso"}
-                </button>
+
+                <div className={styles.btnActionGroup}>
+                  <button
+                    className={styles.btnPrimary}
+                    disabled={busy || !(preview?.seriesId || selected)}
+                  >
+                    {busy ? "Enviando..." : "Receber código de acesso por e-mail"}
+                  </button>
+                </div>
               </form>
             )}
           </section>
         )}
+
+        {/* Painel do Visitante logado: Certificados e Sessão */}
         {session && (
           <section className={styles.card}>
-            <h2>Olá, {session.name}</h2>
-            <p>
-              Baixe seus certificados até{" "}
-              {new Date(session.retentionAt).toLocaleString("pt-BR", {
-                timeZone: "America/Sao_Paulo",
-              })}{" "}
-              (horário de Brasília). A verificação por código continuará
-              disponível.
-            </p>
-            <div className={styles.actions}>
-              <button
-                className={styles.secondary}
-                disabled={busy}
-                onClick={() => void act(loadCertificates)}
-              >
-                Atualizar certificados
-              </button>
-              <button
-                className={styles.secondary}
-                disabled={busy}
-                onClick={() =>
-                  void act(async () => {
-                    await visitorRequest("visitor/logout", {});
-                    setSession(null);
-                    setCertificates([]);
-                  })
-                }
-              >
-                Sair do acesso de visitante
-              </button>
-            </div>
-            {!certificates.length && (
-              <p>Seus certificados aparecerão após a confirmação de saída.</p>
-            )}
-            {certificates.map((cert) => (
-              <article className={styles.activity} key={cert.id}>
-                <h3>{cert.event.title}</h3>
+            <div className={styles.cardHeader}>
+              <div>
+                <h2>Olá, {session.name}</h2>
                 <p>
-                  {cert.revokedAt
-                    ? "Revogado"
-                    : cert.artifact?.state === "READY"
-                      ? "Disponível"
-                      : "Em processamento"}
+                  Seus certificados ficam disponíveis até{" "}
+                  {new Date(session.retentionAt).toLocaleString("pt-BR", {
+                    timeZone: "America/Sao_Paulo",
+                  })}.
                 </p>
-                <div className={styles.actions}>
-                  <button
-                    disabled={
-                      busy ||
-                      Boolean(cert.revokedAt) ||
-                      cert.artifact?.state !== "READY"
-                    }
-                    onClick={() => void act(() => download(cert.id))}
-                  >
-                    Baixar PDF
-                  </button>
-                  <Link to={`/certificado/verificar/${cert.verificationCode}`}>
-                    Verificar certificado
-                  </Link>
-                </div>
-              </article>
-            ))}
+              </div>
+              <div className={styles.actions}>
+                <button
+                  className={styles.btnSecondary}
+                  disabled={busy}
+                  onClick={() => void act(async () => {
+                    await Promise.all([loadCertificates(), loadAttendances()]);
+                  })}
+                >
+                  <RefreshCw size={16} />
+                  Atualizar
+                </button>
+                <button
+                  className={styles.btnSecondary}
+                  disabled={busy}
+                  onClick={() =>
+                    void act(async () => {
+                      await visitorRequest("visitor/logout", {});
+                      setSession(null);
+                      setCertificates([]);
+                      setAttendances([]);
+                    })
+                  }
+                >
+                  Sair
+                </button>
+              </div>
+            </div>
+
+            {!certificates.length ? (
+              <p>Seus certificados aparecerão aqui após a confirmação de saída (Check-out) das atividades.</p>
+            ) : (
+              certificates.map((cert) => (
+                <article className={styles.activity} key={cert.id}>
+                  <div className={styles.activityHeader}>
+                    <h3>{cert.event.title}</h3>
+                    <span className={`${styles.badge} ${cert.revokedAt ? styles.badgeWarning : cert.artifact?.state === "READY" ? styles.badgeSuccess : styles.badgeInfo}`}>
+                      {cert.revokedAt ? "Revogado" : cert.artifact?.state === "READY" ? "Disponível para download" : "Em processamento"}
+                    </span>
+                  </div>
+                  <div className={styles.actions}>
+                    <button
+                      className={styles.btnPrimary}
+                      disabled={busy || Boolean(cert.revokedAt) || cert.artifact?.state !== "READY"}
+                      onClick={() => void act(() => download(cert.id))}
+                    >
+                      <Download size={16} />
+                      Baixar PDF do Certificado
+                    </button>
+                    <Link
+                      to={`/certificado/verificar/${cert.verificationCode}`}
+                      className={styles.btnSecondary}
+                    >
+                      <ExternalLink size={16} />
+                      Verificar código
+                    </Link>
+                  </div>
+                </article>
+              ))
+            )}
           </section>
         )}
+
+        {/* Programação completa de atividades com botão de entrar e escanear */}
         <section className={styles.card}>
-          <h2>Programação</h2>
+          <div className={styles.cardHeader}>
+            <div>
+              <h2>Programação de Atividades</h2>
+              <p>Explore as palestras e atividades. Você pode entrar em qualquer atividade e escanear sua presença no telão.</p>
+            </div>
+          </div>
+
           {!series.length && !loading && (
             <p>Nenhuma edição aberta no momento.</p>
           )}
+
           {series.map((s) => (
-            <section key={s.id}>
-              <h3>{s.title}</h3>
-              {s.events.map((event) => (
-                <article key={event.id} className={styles.activity}>
-                  <h3>{event.title}</h3>
-                  <p>
-                    {new Date(event.startsAt).toLocaleString("pt-BR", {
-                      timeZone: "America/Sao_Paulo",
-                    })}{" "}
-                    · {event.location}
-                  </p>
-                  <p>{event.speaker}</p>
-                  {session?.seriesId === s.id && (
-                    <button
-                      disabled={busy}
-                      className={styles.secondary}
-                      onClick={() =>
-                        void act(async () => {
-                          await visitorRequest(
-                            `visitor/enroll/${event.id}`,
-                            {},
-                          );
-                          setMessage(
-                            "Inscrição salva. Registre entrada e saída pelos QR Codes no local.",
-                          );
-                        })
-                      }
-                    >
-                      Inscrever-se nesta atividade
-                    </button>
-                  )}
-                </article>
-              ))}
-            </section>
+            <div key={s.id} style={{ marginBottom: 24 }}>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "16px 0 12px", color: "var(--app-color-primary, #ba1a1a)" }}>
+                {s.title}
+              </h3>
+
+              {s.events.map((event) => {
+                const eventAttendance = attendances.find((a) => a.eventId === event.id);
+
+                return (
+                  <article key={event.id} className={styles.activity}>
+                    <div className={styles.activityHeader}>
+                      <div>
+                        <h3>{event.title}</h3>
+                        <div className={styles.activityMeta}>
+                          <span><Clock size={15} /> {formatEventTime(event.startsAt, event.endsAt)}</span>
+                          <span><MapPin size={15} /> {event.location}</span>
+                          <span><User size={15} /> {event.speaker}</span>
+                          {event.workloadMinutes && (
+                            <span><Calendar size={15} /> {formatWorkload(event.workloadMinutes)}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {eventAttendance && (
+                        <span className={`${styles.badge} ${eventAttendance.checkOutAt ? styles.badgeSuccess : styles.badgeWarning}`}>
+                          {eventAttendance.checkOutAt ? "Presença Concluída ✓" : "Check-in Realizado"}
+                        </span>
+                      )}
+                    </div>
+
+                    {session?.seriesId === s.id && (
+                      <div className={styles.btnActionGroup}>
+                        <button
+                          type="button"
+                          className={styles.btnPrimary}
+                          disabled={busy}
+                          onClick={() => selectEventAndScan(event)}
+                        >
+                          <Camera size={16} />
+                          {eventAttendance?.checkInAt && !eventAttendance.checkOutAt
+                            ? "Escanear QR de Saída (Check-out)"
+                            : "Entrar no evento e já escanear"}
+                        </button>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
           ))}
         </section>
       </div>

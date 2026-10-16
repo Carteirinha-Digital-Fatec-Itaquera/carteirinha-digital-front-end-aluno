@@ -1,134 +1,550 @@
 .page {
+  min-height: 100vh;
   min-height: 100dvh;
-  background: #f4f5f7;
-  color: #202124;
+  background: var(--app-color-background, #f8f9fa);
+  color: var(--app-color-text, #20242c);
+  font-family: var(--app-font, 'Poppins', sans-serif);
 }
+
+/* Cabeçalho estilo Login Novo do Arthur: fundo vermelho com bordas inferiores curvas */
 .header {
-  background: #ba1a1a;
+  background: var(--app-color-primary, #ba1a1a);
   color: white;
-  padding: 32px max(24px, calc((100vw - 960px) / 2));
+  padding: 24px 20px 84px;
+  border-radius: 0 0 56px 56px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(186, 26, 26, 0.2);
 }
-.header a {
+
+.headerTop {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.brandLogo {
+  height: 64px;
+  max-width: 180px;
+  object-fit: contain;
+}
+
+.studentLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   color: white;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
 }
-.header h1 {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  margin: 16px 0;
+
+.studentLink:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
+
+.headerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.headerTitle {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 800;
+  margin: 0 0 8px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.headerSubtitle {
+  max-width: 620px;
+  margin: 0 auto;
+  font-size: 0.9375rem;
+  opacity: 0.92;
+  line-height: 1.5;
+}
+
+/* Painel de conteúdo que sobe por cima do cabeçalho arredondado */
 .content {
-  max-width: 960px;
-  margin: auto;
-  padding: 28px 20px 70px;
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: -60px auto 48px;
+  padding: 0 20px;
   display: grid;
-  gap: 24px;
+  gap: 22px;
 }
+
+/* Cards com cantos bem arredondados no estilo do login do Arthur */
 .card {
-  background: white;
-  border: 1px solid #d9dfe5;
+  background: var(--app-color-surface, #ffffff);
+  border: 1px solid rgba(45, 47, 56, 0.08);
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 0 16px 42px rgba(35, 30, 40, 0.08);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.cardHeader h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--app-color-text, #20242c);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* Detalhes ricos do Evento */
+.eventDetailCard {
+  background: #ffffff;
+  border: 2px solid #f0e6e6;
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 0 20px 48px rgba(35, 30, 40, 0.1);
+}
+
+.eventHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.eventTitle {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background: #f8f9fb;
   border-radius: 16px;
-  padding: 28px;
+  border: 1px solid #e7ebf0;
 }
-.card h2 {
-  margin: 0 0 20px;
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #434852;
 }
+
+.metaItem svg {
+  color: var(--app-color-primary, #ba1a1a);
+  flex-shrink: 0;
+}
+
+.eventDescription {
+  margin: 16px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4a5160;
+  padding: 12px 16px;
+  background: #fafbfc;
+  border-left: 3px solid var(--app-color-primary, #ba1a1a);
+  border-radius: 0 10px 10px 0;
+}
+
+/* Stepper / Processo de Presença (Check-in e Check-out) */
+.presenceProcess {
+  margin: 24px 0 16px;
+  padding: 22px;
+  border-radius: 20px;
+  background: #fdfaf9;
+  border: 1.5px solid #f3e5e5;
+}
+
+.processTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 14px;
+  color: #2b2e36;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.processSteps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.stepBox {
+  padding: 16px;
+  border-radius: 16px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.stepBoxActive {
+  border-color: var(--app-color-primary, #ba1a1a);
+  background: #fff8f8;
+  box-shadow: 0 4px 14px rgba(186, 26, 26, 0.08);
+}
+
+.stepBoxCompleted {
+  border-color: #2e7d32;
+  background: #f4fbf5;
+}
+
+.stepLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.stepBoxActive .stepLabel {
+  color: var(--app-color-primary, #ba1a1a);
+}
+
+.stepBoxCompleted .stepLabel {
+  color: #2e7d32;
+}
+
+.stepStatus {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Scanner inline */
+.scannerWrapper {
+  margin: 20px 0;
+  padding: 20px;
+  background: #11141a;
+  border-radius: 22px;
+  color: white;
+  text-align: center;
+}
+
+.scannerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.scannerHeader h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.closeScannerBtn {
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scannerHint {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 10px;
+}
+
+/* Formulários */
 .card form {
   display: grid;
-  gap: 20px;
+  gap: 18px;
 }
+
 .card label {
   display: grid;
-  gap: 8px;
+  gap: 6px;
+  font-size: 0.9rem;
   font-weight: 600;
+  color: #333944;
 }
+
 .card input,
 .card select {
   font: inherit;
-  padding: 12px;
-  border: 1px solid #68717c;
-  border-radius: 8px;
+  font-size: 0.95rem;
+  padding: 13px 16px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  background: #ffffff;
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
+
+.card input:focus,
+.card select:focus {
+  border-color: var(--app-color-primary, #ba1a1a);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(186, 26, 26, 0.15);
+}
+
 .card p {
   line-height: 1.6;
+  color: #4b5563;
+  font-size: 0.92rem;
 }
-.card button {
+
+/* Botões no padrão do login do Arthur */
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font: inherit;
-  font-weight: 600;
-  background: #ba1a1a;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: var(--app-color-primary, #ba1a1a);
   color: white;
-  border: 1px solid #ba1a1a;
-  border-radius: 8px;
-  padding: 12px 20px;
-  min-height: 44px;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 24px;
+  min-height: 50px;
   cursor: pointer;
+  box-shadow: 0 6px 18px rgba(186, 26, 26, 0.26);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-.card button:disabled {
+
+.btnPrimary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(186, 26, 26, 0.35);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #ffffff;
+  color: var(--app-color-primary, #ba1a1a);
+  border: 1.5px solid var(--app-color-primary, #ba1a1a);
+  border-radius: 999px;
+  padding: 13px 22px;
+  min-height: 50px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background: #fff5f5;
+}
+
+.btnSecondary:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
-.card .secondary {
-  background: white;
-  color: #941313;
+
+.btnActionGroup {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
 }
-.card a {
-  color: #941313;
-}
+
 .actions {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
   flex-wrap: wrap;
 }
+
+/* Badges e Pílulas */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badgeSuccess {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badgeWarning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badgeInfo {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* Atividades na programação */
 .activity {
-  padding: 20px 0;
-  border-top: 1px solid #d9dfe5;
+  padding: 22px 0;
+  border-top: 1px solid #e7ebf0;
 }
-.success,
-.error {
-  padding: 16px;
-  border-radius: 8px;
-  line-height: 1.5;
+
+.activity:first-of-type {
+  border-top: none;
 }
-.success {
-  background: #e9f6ed;
-  color: #18562a;
-}
-.error {
-  background: #fff0ee;
-  color: #921c13;
-}
-.page :focus-visible {
-  outline: 3px solid #136fc3;
-  outline-offset: 3px;
-}
-.eventContext {
-  background: #f8fafc;
-  border: 1px solid #d9dfe5;
-  border-radius: 8px;
-  padding: 12px 16px;
+
+.activityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 8px;
 }
+
+.activity h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+}
+
+.activityMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.88rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.activityMeta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Avisos */
+.success,
+.error {
+  padding: 16px 20px;
+  border-radius: 16px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.success {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
 .contextSwitchAlert {
-  background: #fff8e1;
-  border: 1px solid #ffe082;
-  border-radius: 8px;
-  padding: 16px;
+  background: #fffbeb;
+  border: 1.5px solid #fef3c7;
+  border-radius: 18px;
+  padding: 20px;
   margin: 16px 0;
   display: grid;
   gap: 12px;
 }
-@media (max-width: 600px) {
-  .card {
-    padding: 20px;
-  }
-  .content {
-    padding: 20px 14px 60px;
-  }
-  .actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
+
+.eventContext {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
 }
 
+@media (max-width: 640px) {
+  .header {
+    padding: 20px 16px 72px;
+    border-radius: 0 0 42px 42px;
+  }
+  .brandLogo {
+    height: 52px;
+    max-width: 140px;
+  }
+  .content {
+    margin-top: -50px;
+    padding: 0 14px;
+  }
+  .card, .eventDetailCard {
+    padding: 20px;
+    border-radius: 22px;
+  }
+  .processSteps {
+    grid-template-columns: 1fr;
+  }
+  .actions, .btnActionGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btnPrimary, .btnSecondary {
+    width: 100%;
+  }
+}
