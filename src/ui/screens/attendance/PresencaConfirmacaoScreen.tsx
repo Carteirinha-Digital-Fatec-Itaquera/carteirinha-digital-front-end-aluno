@@ -104,6 +104,9 @@ export default function PresencaConfirmacaoScreen() {
       setSubmitting(true);
       const data = await confirmAttendanceReference(reference, undefined, preview.locationRequired);
       const feedback = responseFeedback(data);
+      if (preview.event?.id) {
+        feedback.eventId = preview.event.id;
+      }
       setResult(feedback);
     } catch (err: unknown) {
       setResult(errorFeedback(err));

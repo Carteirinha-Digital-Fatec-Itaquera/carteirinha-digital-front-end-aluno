@@ -5,6 +5,7 @@ export interface ScanFeedback {
   title: string;
   message: string;
   eventTitle?: string;
+  eventId?: string;
   checkInAt?: string | null;
   checkOutAt?: string | null;
   certificates?: boolean;

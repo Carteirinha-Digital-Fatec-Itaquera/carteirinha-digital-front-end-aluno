@@ -3,6 +3,7 @@ import AlunoEventosScreen from '../ui/screens/events/AlunoEventosScreen';
 import AlunoCertificadosScreen from '../ui/screens/certificates/AlunoCertificadosScreen';
 import AlunoCertificadoViewScreen from '../ui/screens/certificates/AlunoCertificadoViewScreen';
 import CertificadoVerificarScreen from '../ui/screens/certificates/CertificadoVerificarScreen';
+import EventFeedbackScreen from '../ui/screens/events/EventFeedbackScreen';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 
 import LoginScreen from "../ui/screens/login/LoginScreen";
@@ -68,6 +69,7 @@ export default function AppRoutes() {
         <Route path="/creditos" element={<ProjectCreditsScreen />} />
         <Route path="/p/:reference" element={<PublicPresenceGateway />} />
         <Route path="/visitantes" element={<PublicEventsScreen />} />
+        <Route path="/eventos/:id/avaliacao" element={<EventFeedbackScreen />} />
         <Route element={<StudentRoute />}>
           <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<AlunoScannerScreen />} />

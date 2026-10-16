@@ -25,6 +25,16 @@ export default function ScanResultCard({ result, onRetry }: { result: ScanFeedba
       {time(result.checkOutAt) && <div><dt>Saída</dt><dd>{time(result.checkOutAt)}</dd></div>}
     </dl>}
     <div className={styles.actions}>
+      {result.eventId && (result.checkOutAt || result.certificates) && (
+        <Link
+          className={styles.primary}
+          style={{ background: '#005c6d', color: '#ffffff' }}
+          to={`/eventos/${encodeURIComponent(result.eventId)}/avaliacao?title=${encodeURIComponent(result.eventTitle || '')}`}
+          state={{ eventTitle: result.eventTitle }}
+        >
+          Avaliar palestra (Pesquisa de Satisfação)
+        </Link>
+      )}
       <Link className={styles.primary} to={result.login ? '/login' : '/eventos'}>{result.login ? 'Entrar novamente' : 'Voltar aos eventos'}</Link>
       {result.certificates && <Link className={styles.secondary} to="/certificados">Ver certificados</Link>}
       {result.tone === 'error' && !result.login && <Link className={styles.secondary} to="/eventos?aba=participacoes">Minhas participações</Link>}

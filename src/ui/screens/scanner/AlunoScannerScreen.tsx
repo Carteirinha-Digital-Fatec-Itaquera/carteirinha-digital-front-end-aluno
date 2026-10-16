@@ -65,12 +65,14 @@ export default function AlunoScannerScreen() {
         if (!isCurrent()) return;
         if (controller.signal.aborted) throw new Error("Timeout");
         const feedback = responseFeedback(data);
-        setResult(feedback); setBusy(false);
         const eventId = presenceEventId(qrToken);
+        if (eventId) feedback.eventId = eventId;
+        setResult(feedback); setBusy(false);
         if (eventId && (feedback.certificates || !data.success)) {
           try {
             const attendance = await getScanAttendance(eventId, controller.signal);
             if (attendance && isCurrent() && !controller.signal.aborted) setResult({ ...feedback,
+              eventId,
               checkInAt: attendance.checkInAt, checkOutAt: attendance.checkOutAt });
           } catch { /* Sucesso do scan permanece válido se detalhes falharem. */ }
         }
