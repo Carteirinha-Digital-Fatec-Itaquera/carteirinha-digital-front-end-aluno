@@ -14,6 +14,7 @@ import {
   RefreshCw,
   X,
   Sparkles,
+  Star,
 } from "lucide-react";
 const logoFatec = "/fatec_itaquera_logo.png";
 import {
@@ -617,10 +618,20 @@ export default function PublicEventsScreen({
                     )}
 
                     {hasCheckOut && (
-                      <div className={styles.success} style={{ width: "100%" }}>
-                        <CheckCircle2 size={20} />
-                        <span>Sua presença foi 100% concluída neste evento! O certificado está liberado para download abaixo.</span>
-                      </div>
+                      <>
+                        <div className={styles.success} style={{ width: "100%" }}>
+                          <CheckCircle2 size={20} />
+                          <span>Sua presença foi 100% concluída neste evento! O certificado está liberado para download abaixo.</span>
+                        </div>
+                        <Link
+                          to={`/eventos/${preview.event.id}/avaliacao?title=${encodeURIComponent(preview.event.title)}`}
+                          state={{ eventTitle: preview.event.title }}
+                          className={styles.btnPrimary}
+                          style={{ width: "100%", textAlign: "center", textDecoration: "none", boxSizing: "border-box" }}
+                        >
+                          <Star size={18} /> Avaliar palestra (Pesquisa de Satisfação)
+                        </Link>
+                      </>
                     )}
                   </div>
                 </div>
