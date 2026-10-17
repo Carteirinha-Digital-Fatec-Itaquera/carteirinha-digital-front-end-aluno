@@ -59,9 +59,9 @@ export default function LoginScreen() {
 
         <div className={styles.loginAction}>
           {onLoading ? (
-            <div className={styles.loginLoading} role="status">
-              Carregando...
-            </div>
+            <p className={styles.loginLoading} role="status" aria-live="polite">
+              Fazendo login...
+            </p>
           ) : (
             <ButtonComp
               text="Entrar"
