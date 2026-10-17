@@ -6,12 +6,12 @@
   font-family: var(--app-font, 'Poppins', sans-serif);
 }
 
-/* Cabeçalho estilo Login Novo do Arthur: fundo vermelho com bordas inferiores curvas */
+/* Cabeçalho vermelho com bordas retas, consistente com as demais telas. */
 .header {
   background: var(--app-color-primary, #ba1a1a);
   color: white;
   padding: 24px 20px 84px;
-  border-radius: 0 0 56px 56px;
+  border-radius: 0;
   text-align: center;
   position: relative;
   box-shadow: 0 10px 30px rgba(186, 26, 26, 0.2);
@@ -523,7 +523,7 @@
 @media (max-width: 640px) {
   .header {
     padding: 20px 16px 72px;
-    border-radius: 0 0 42px 42px;
+    border-radius: 0;
   }
   .brandLogo {
     height: 52px;

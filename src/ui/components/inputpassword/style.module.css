@@ -34,6 +34,18 @@
   opacity: 1;
 }
 
+/* Destaca a capsula completa (campo e botao de mostrar senha), nao apenas o input. */
+.inputField:focus-within {
+  outline: 3px solid #165dba;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 2px white;
+}
+
+.inputText:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .inputField button {
   display: grid;
   place-items: center;

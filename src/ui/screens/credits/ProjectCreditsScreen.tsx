@@ -16,7 +16,7 @@ import styles from "./styleProjectCredits.module.css";
 function formatSemester(semester: string): string {
   const match = /^(\d{4})\.([12])$/.exec(semester);
   if (!match) return semester;
-  return match[2] + "º semestre de " + match[1];
+  return match[2] + "º sem de " + match[1];
 }
 
 function sortSemesters(semesters: string[]): string[] {
@@ -32,7 +32,32 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toLocaleUpperCase("pt-BR");
 }
 
-function ContributorAvatar({ name }: { name: string }) { return <div className={styles.avatar} aria-hidden="true">{getInitials(name)}</div>; }
+function ContributorAvatar({
+  name,
+  photoUrl,
+}: {
+  name: string;
+  photoUrl?: string | null;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const usablePhoto = Boolean(photoUrl?.trim()) && !imageFailed;
+
+  return (
+    <div className={styles.avatar}>
+      {usablePhoto ? (
+        <img
+          className={styles.avatarImage}
+          src={photoUrl!}
+          alt={`Foto de ${name}`}
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        <span aria-hidden="true">{getInitials(name)}</span>
+      )}
+    </div>
+  );
+}
 
 function ProjectsCreditsList({
   contributors,
@@ -74,7 +99,7 @@ function ProjectsCreditsList({
 
         return (
           <article className={styles.card} key={person.id}>
-            <ContributorAvatar name={person.name} />
+            <ContributorAvatar name={person.name} photoUrl={person.photoUrl} />
             <div className={styles.cardContent}>
               <h2>{person.name}</h2>
               {participations.map((participation) => (
