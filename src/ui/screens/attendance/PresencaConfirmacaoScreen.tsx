@@ -34,8 +34,7 @@ export default function PresencaConfirmacaoScreen() {
   useEffect(() => {
     // 1. Verificação de autenticação de aluno
     const token = localStorage.getItem('token');
-    const profile = localStorage.getItem('@Carteirinha:profile');
-    if (!token || !profile) {
+    if (!token) {
       const returnTarget = reference ? `/p/${reference}/aluno` : '/eventos';
       sessionStorage.setItem('returnUrl', returnTarget);
       navigate('/login', { replace: true });

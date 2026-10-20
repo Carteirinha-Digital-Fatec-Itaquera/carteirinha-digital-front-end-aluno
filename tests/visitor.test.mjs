@@ -89,3 +89,35 @@ test('PublicPresenceGateway renderiza seletor explícito de perfil (estudante e 
   assert.ok(html.includes('Sou estudante da Fatec Itaquera'));
   assert.ok(html.includes('Sou visitante'));
 });
+
+
+test('visitorRequest propaga HTTP 503 com mensagem do servidor', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ message: 'Falha simulada 503 ao carregar eventos.' }), { status: 503 });
+
+  try {
+    await assert.rejects(
+      visitorRequest('public/events/series'),
+      (err) => err instanceof VisitorApiError && err.status === 503 && err.message === 'Falha simulada 503 ao carregar eventos.'
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('visitorRequest propaga erro de rede quando a conexão falha', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    throw new Error('Falha de conexão com o servidor.');
+  };
+
+  try {
+    await assert.rejects(
+      visitorRequest('public/events/series'),
+      (err) => err instanceof Error && err.message.includes('conexão')
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

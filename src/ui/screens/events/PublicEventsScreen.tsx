@@ -309,9 +309,7 @@ export default function PublicEventsScreen({
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          setFailure(
-            error instanceof Error ? error.message : "Falha de conexão com o servidor.",
-          );
+          handleError(error);
         }
       } finally {
         if (!controller.signal.aborted) setLoading(false);

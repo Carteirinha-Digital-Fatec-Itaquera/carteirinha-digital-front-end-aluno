@@ -38,11 +38,18 @@ const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 const getAuthState = () => {
   const token = localStorage.getItem('token');
   const profile = localStorage.getItem('@Carteirinha:profile');
+  if (!token) {
+    if (profile) localStorage.removeItem('@Carteirinha:profile');
+    return {
+      isAuthenticated: false,
+      mustChange: false,
+    };
+  }
   const mustChange = localStorage.getItem('mustChangePassword') === 'false';
-  
+
   return {
-    isAuthenticated: Boolean(token && profile),
-    mustChange: mustChange
+    isAuthenticated: true,
+    mustChange: mustChange,
   };
 };
 
