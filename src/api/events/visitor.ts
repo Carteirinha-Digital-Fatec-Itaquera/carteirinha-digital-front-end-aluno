@@ -66,9 +66,11 @@ export interface VisitorCertificate {
 }
 export class VisitorApiError extends Error {
   status: number;
-  constructor(message: string, status: number) {
+  code?: string;
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.status = status;
+    this.code = code;
   }
 }
 export async function visitorRequest<T>(
@@ -92,6 +94,7 @@ export async function visitorRequest<T>(
         ? data.message
         : "Não foi possível concluir. Tente novamente.",
       response.status,
+      typeof data.code === "string" ? data.code : undefined,
     );
   }
   return response.json();
@@ -107,15 +110,18 @@ export async function locate() {
   const position = await new Promise<GeolocationPosition>((resolve, reject) =>
     navigator.geolocation.getCurrentPosition(
       resolve,
-      () =>
-        reject(
-          Object.assign(
-            new Error(
-              "Não foi possível obter sua localização. Permita o acesso ou procure a Secretaria presencialmente.",
-            ),
-            { code: "LOCATION_UNAVAILABLE" },
-          ),
-        ),
+      (geoError) => {
+        let code = 'LOCATION_UNAVAILABLE';
+        let msg = 'Não foi possível obter sua localização. Permita o acesso ou procure a Secretaria presencialmente.';
+        if (geoError && geoError.code === 1) {
+          code = 'PERMISSION_DENIED';
+          msg = 'Permita o acesso à localização nas configurações do navegador e tente novamente.';
+        } else if (geoError && geoError.code === 3) {
+          code = 'TIMEOUT';
+          msg = 'Não conseguimos obter sua localização agora. Confira o GPS e a conexão.';
+        }
+        reject(Object.assign(new Error(msg), { code }));
+      },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     ),
   );

@@ -77,7 +77,7 @@ export default function LoginScreen() {
 
                     const returnUrl = sessionStorage.getItem("returnUrl");
                     const safeReturn =
-                      returnUrl && returnUrl.startsWith("/p/") ? returnUrl : null;
+                      returnUrl && /^\/p\/[A-Za-z0-9_-]{10,64}(\/aluno)?$/.test(returnUrl) ? returnUrl : null;
 
                     if (result.mustChangePassword) {
                       // alert(`${result.mustChangePassword}\n\n${String(result.mustChangePassword)}`)

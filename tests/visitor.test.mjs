@@ -80,24 +80,12 @@ test('PublicEventsScreen renderiza cabeçalho arredondado e badge de visitantes 
   assert.ok(html.includes('Identificação rápida do visitante'));
 });
 
-test('PublicPresenceGateway renderiza tela pública de visitantes quando não há perfil de aluno', async () => {
+test('PublicPresenceGateway renderiza seletor explícito de perfil (estudante e visitante)', async () => {
   const { default: PublicPresenceGateway } = await import('../src/ui/screens/attendance/PublicPresenceGateway.tsx');
-  // Simula ausência de sessão de aluno
-  const originalGetItem = globalThis.localStorage?.getItem;
-  try {
-    globalThis.localStorage = {
-      getItem: (key) => (key === 'token' ? 'stale-token' : null),
-      setItem: () => {},
-      removeItem: () => {},
-    };
-    const html = renderToStaticMarkup(
-      h(MemoryRouter, { initialEntries: ['/p/test-ref-12345'] }, h(PublicPresenceGateway, {}))
-    );
-    // Não redireciona para login nem quebra: renderiza a tela pública
-    assert.ok(html.includes('Eventos e certificados'));
-    assert.ok(html.includes('Participe como visitante'));
-  } finally {
-    if (originalGetItem) globalThis.localStorage.getItem = originalGetItem;
-  }
+  const html = renderToStaticMarkup(
+    h(MemoryRouter, { initialEntries: ['/p/test-ref-12345'] }, h(PublicPresenceGateway, {}))
+  );
+  assert.ok(html.includes('Como deseja registrar sua presença?'));
+  assert.ok(html.includes('Sou estudante da Fatec Itaquera'));
+  assert.ok(html.includes('Sou visitante'));
 });
-

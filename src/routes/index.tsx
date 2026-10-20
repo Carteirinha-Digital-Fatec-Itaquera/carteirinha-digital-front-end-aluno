@@ -24,6 +24,7 @@ import ConfigScreen from "../ui/screens/config/ConfigScreen";
 
 
 import PublicPresenceGateway from '../ui/screens/attendance/PublicPresenceGateway';
+import PresencaConfirmacaoScreen from '../ui/screens/attendance/PresencaConfirmacaoScreen';
 import PublicEventsScreen from '../ui/screens/events/PublicEventsScreen';
 import ProjectCreditsScreen from '../ui/screens/credits/ProjectCreditsScreen';
 
@@ -71,6 +72,7 @@ export default function AppRoutes() {
         <Route path="/visitantes" element={<PublicEventsScreen />} />
         <Route path="/eventos/:id/avaliacao" element={<EventFeedbackScreen />} />
         <Route element={<StudentRoute />}>
+          <Route path="/p/:reference/aluno" element={<PresencaConfirmacaoScreen />} />
           <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<AlunoScannerScreen />} />
           <Route path="/certificados" element={<AlunoCertificadosScreen />} />
