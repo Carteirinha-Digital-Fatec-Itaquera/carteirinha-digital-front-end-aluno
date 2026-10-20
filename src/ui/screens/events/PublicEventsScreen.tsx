@@ -112,124 +112,6 @@ export default function PublicEventsScreen({
     }
   }, []);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    void (async () => {
-      try {
-        const rows = await visitorRequest<Series[]>(
-          "public/events/series",
-          undefined,
-          controller.signal,
-        );
-        setSeries(rows);
-
-        let qr: PublicQr | null = null;
-        if (activeReferenceParam) {
-          try {
-            qr = await visitorRequest<PublicQr>(
-              `public/events/qr/${encodeURIComponent(activeReferenceParam)}`,
-              undefined,
-              controller.signal,
-            );
-            setPreview(qr);
-            setActiveReference(activeReferenceParam);
-          } catch (error) {
-            if (controller.signal.aborted) throw error;
-            setFailure(
-              error instanceof Error
-                ? error.message
-                : "QR Code expirado ou inválido. Faça uma nova leitura no telão.",
-            );
-          }
-        } else if (eventIdParam) {
-          try {
-            const ev = await visitorRequest<{
-              event: {
-                id: string;
-                title: string;
-                description?: string | null;
-                speaker: string;
-                location: string;
-                startsAt?: string;
-                endsAt?: string;
-                workloadMinutes?: number;
-              };
-              seriesId: string | null;
-              visitorsAllowed: boolean;
-              locationRequired: boolean;
-              serverTime: string;
-            }>(
-              `public/events/${encodeURIComponent(eventIdParam)}`,
-              undefined,
-              controller.signal,
-            );
-            qr = {
-              checkpoint: { type: "CHECK_IN" },
-              event: ev.event,
-              seriesId: ev.seriesId,
-              visitorsAllowed: ev.visitorsAllowed,
-              locationRequired: ev.locationRequired,
-              expiresAt: "",
-              serverTime: ev.serverTime,
-            };
-            setPreview(qr);
-          } catch (error) {
-            if (controller.signal.aborted) throw error;
-            setFailure(
-              error instanceof Error
-                ? error.message
-                : "Evento não encontrado ou indisponível.",
-            );
-          }
-        }
-
-        setSelected((previous) => qr?.seriesId || previous || rows[0]?.id || "");
-
-        try {
-          const visitor = await visitorRequest<Visitor>(
-            "visitor/session",
-            undefined,
-            controller.signal,
-          );
-          setSession(visitor);
-          await Promise.all([loadCertificates(), loadAttendances()]);
-        } catch (error) {
-          if (!(error instanceof VisitorApiError && error.status === 401)) {
-            throw error;
-          }
-        }
-      } catch (error) {
-        if (!controller.signal.aborted) {
-          setFailure(
-            error instanceof Error ? error.message : "Falha de conexão com o servidor.",
-          );
-        }
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
-    return () => controller.abort();
-  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances]);
-
-  useEffect(() => {
-    if (!session) return;
-    const id = window.setInterval(() => {
-      if (!document.hidden) {
-        void visitorRequest<Visitor>("visitor/session")
-          .then(setSession)
-          .catch((error) => {
-            if (error instanceof VisitorApiError && error.status === 401) {
-              setSession(null);
-              setCertificates([]);
-              setAttendances([]);
-              setMessage("Seu acesso temporário expirou. Identifique-se novamente.");
-            }
-          });
-      }
-    }, 30000);
-    return () => window.clearInterval(id);
-  }, [session]);
-
   const handleError = useCallback((error: unknown) => {
     setCameraActive(false);
     if (error instanceof VisitorApiError) {
@@ -238,7 +120,7 @@ export default function PublicEventsScreen({
           visible: true,
           tone: 'warning',
           title: 'QR Code Expirado ou Inválido',
-          message: 'Este QR Code já expirou. Por favor, aponte a câmera novamente para o telão para fazer uma nova leitura.',
+          message: error.message || 'QR Code expirado ou inválido. Faça uma nova leitura.',
           confirmText: 'Ler QR atual',
           onConfirm: () => {
             setModalState(null);
@@ -317,6 +199,21 @@ export default function PublicEventsScreen({
         return;
       }
     }
+    const errObj = error as { code?: string; message?: string };
+    if (errObj?.code === 'EXPIRED_OR_INVALID_QR') {
+      setModalState({
+        visible: true,
+        tone: 'warning',
+        title: 'QR Code Expirado ou Inválido',
+        message: errObj.message || 'QR Code expirado ou inválido. Faça uma nova leitura.',
+        confirmText: 'Ler QR atual',
+        onConfirm: () => {
+          setModalState(null);
+          setCameraActive(true);
+        },
+      });
+      return;
+    }
     const msg = error instanceof Error ? error.message : 'Falha de conexão com o servidor.';
     setModalState({
       visible: true,
@@ -327,6 +224,122 @@ export default function PublicEventsScreen({
       onConfirm: () => setModalState(null),
     });
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const rows = await visitorRequest<Series[]>(
+          "public/events/series",
+          undefined,
+          controller.signal,
+        );
+        setSeries(rows);
+
+        let qr: PublicQr | null = null;
+        if (activeReferenceParam) {
+          try {
+            qr = await visitorRequest<PublicQr>(
+              `public/events/qr/${encodeURIComponent(activeReferenceParam)}`,
+              undefined,
+              controller.signal,
+            );
+            setPreview(qr);
+            setActiveReference(activeReferenceParam);
+          } catch (error) {
+            if (controller.signal.aborted) throw error;
+            handleError(error);
+          }
+        } else if (eventIdParam) {
+          try {
+            const ev = await visitorRequest<{
+              event: {
+                id: string;
+                title: string;
+                description?: string | null;
+                speaker: string;
+                location: string;
+                startsAt?: string;
+                endsAt?: string;
+                workloadMinutes?: number;
+              };
+              seriesId: string | null;
+              visitorsAllowed: boolean;
+              locationRequired: boolean;
+              serverTime: string;
+            }>(
+              `public/events/${encodeURIComponent(eventIdParam)}`,
+              undefined,
+              controller.signal,
+            );
+            qr = {
+              checkpoint: { type: "CHECK_IN" },
+              event: ev.event,
+              seriesId: ev.seriesId,
+              visitorsAllowed: ev.visitorsAllowed,
+              locationRequired: ev.locationRequired,
+              expiresAt: "",
+              serverTime: ev.serverTime,
+            };
+            setPreview(qr);
+          } catch (error) {
+            if (controller.signal.aborted) throw error;
+            setFailure(
+              error instanceof Error
+                ? error.message
+                : "Evento não encontrado ou indisponível.",
+            );
+          }
+        }
+
+        setSelected((previous) => qr?.seriesId || previous || rows[0]?.id || "");
+
+        try {
+          const visitor = await visitorRequest<Visitor>(
+            "visitor/session",
+            undefined,
+            controller.signal,
+          );
+          setSession(visitor);
+          await Promise.all([loadCertificates(), loadAttendances()]);
+        } catch (error) {
+          if (!(error instanceof VisitorApiError && error.status === 401)) {
+            throw error;
+          }
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setFailure(
+            error instanceof Error ? error.message : "Falha de conexão com o servidor.",
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    })();
+    return () => controller.abort();
+  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances, handleError]);
+
+  useEffect(() => {
+    if (!session) return;
+    const id = window.setInterval(() => {
+      if (!document.hidden) {
+        void visitorRequest<Visitor>("visitor/session")
+          .then(setSession)
+          .catch((error) => {
+            if (error instanceof VisitorApiError && error.status === 401) {
+              setSession(null);
+              setCertificates([]);
+              setAttendances([]);
+              setMessage("Seu acesso temporário expirou. Identifique-se novamente.");
+            }
+          });
+      }
+    }, 30000);
+    return () => window.clearInterval(id);
+  }, [session]);
+
+
 
   async function act(action: () => Promise<void>) {
     if (busy) return;
@@ -417,8 +430,18 @@ export default function PublicEventsScreen({
       const scannedRef = parsed?.type === "reference" ? parsed.reference : rawToken.trim();
 
       if (!scannedRef || !/^[A-Za-z0-9_-]{10,64}$/.test(scannedRef)) {
-        setFailure("QR Code não reconhecido. Certifique-se de escanear o QR Code exibido no telão.");
         setBusy(false);
+        setModalState({
+          visible: true,
+          tone: 'warning',
+          title: 'QR Code Inválido',
+          message: 'QR Code não reconhecido. Certifique-se de escanear o QR Code exibido no telão.',
+          confirmText: 'Escanear novamente',
+          onConfirm: () => {
+            setModalState(null);
+            setCameraActive(true);
+          },
+        });
         return;
       }
 
@@ -464,7 +487,7 @@ export default function PublicEventsScreen({
         setBusy(false);
       }
     },
-    [session, loadCertificates, loadAttendances],
+    [session, loadCertificates, loadAttendances, handleError],
   );
 
   const selectEventAndScan = (event: { id: string; title: string; speaker: string; location: string; startsAt: string; description?: string | null }) => {

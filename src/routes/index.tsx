@@ -41,7 +41,7 @@ const getAuthState = () => {
   const mustChange = localStorage.getItem('mustChangePassword') === 'false';
   
   return {
-    isAuthenticated: !!token || !!profile,
+    isAuthenticated: Boolean(token && profile),
     mustChange: mustChange
   };
 };

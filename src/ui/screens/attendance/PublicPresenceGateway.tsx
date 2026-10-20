@@ -44,21 +44,25 @@ export default function PublicPresenceGateway() {
   const { reference } = useParams<{ reference: string }>();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(Boolean(reference));
+  const isInvalidRef = !reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference);
+  const [loading, setLoading] = useState(() => Boolean(reference && !isInvalidRef));
   const [preview, setPreview] = useState<PublicQr | null>(null);
-  const [modalState, setModalState] = useState<ModalState | null>(null);
-
-  useEffect(() => {
-    if (!reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference)) {
-      setLoading(false);
-      setModalState({
+  const [modalState, setModalState] = useState<ModalState | null>(() => {
+    if (isInvalidRef) {
+      return {
         visible: true,
         tone: 'error',
         title: 'QR Code Inválido',
         message: 'O link ou código de presença informado é inválido.',
         confirmText: 'Voltar ao início',
         onConfirm: () => navigate('/visitantes', { replace: true }),
-      });
+      };
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (!reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference)) {
       return;
     }
 

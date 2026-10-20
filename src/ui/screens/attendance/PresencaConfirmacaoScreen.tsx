@@ -36,11 +36,8 @@ export default function PresencaConfirmacaoScreen() {
     const token = localStorage.getItem('token');
     const profile = localStorage.getItem('@Carteirinha:profile');
     if (!token || !profile) {
-      if (reference) {
-        navigate(`/visitantes?ref=${encodeURIComponent(reference)}`, { replace: true });
-        return;
-      }
-      sessionStorage.setItem('returnUrl', window.location.pathname);
+      const returnTarget = reference ? `/p/${reference}/aluno` : '/eventos';
+      sessionStorage.setItem('returnUrl', returnTarget);
       navigate('/login', { replace: true });
       return;
     }
@@ -74,12 +71,10 @@ export default function PresencaConfirmacaoScreen() {
         } else if (errObj.status === '401') {
           localStorage.removeItem('token');
           localStorage.removeItem('@Carteirinha:profile');
-          if (reference) {
-            navigate(`/visitantes?ref=${encodeURIComponent(reference)}`, { replace: true });
-          } else {
-            sessionStorage.setItem('returnUrl', window.location.pathname);
-            navigate('/login', { replace: true });
-          }
+          const returnTarget = reference ? `/p/${reference}/aluno` : '/eventos';
+          sessionStorage.setItem('returnUrl', returnTarget);
+          navigate('/login', { replace: true });
+          return;
         } else {
           setErrorMessage(
             errObj.message || 'Não foi possível carregar os dados deste evento.',
@@ -234,6 +229,15 @@ export default function PresencaConfirmacaoScreen() {
               <Link to="/eventos" className={styles.secondaryButton}>
                 Cancelar
               </Link>
+
+              {reference && (
+                <Link
+                  to={`/visitantes?ref=${encodeURIComponent(reference)}`}
+                  className={styles.secondaryButton}
+                >
+                  Sou visitante, não estudante
+                </Link>
+              )}
             </div>
           </div>
         )}
