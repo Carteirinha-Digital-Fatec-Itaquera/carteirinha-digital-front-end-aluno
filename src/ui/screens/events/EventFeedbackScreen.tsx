@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   Star,
@@ -10,6 +10,7 @@ import {
   MessageSquareHeart,
 } from 'lucide-react';
 import { submitEventFeedback } from '../../../api/events/feedback';
+import { visitorRequest } from '../../../api/events/visitor';
 import styles from './EventFeedbackScreen.module.css';
 
 const RATING_LABELS: Record<number, string> = {
@@ -24,6 +25,18 @@ export default function EventFeedbackScreen() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const profile = new URLSearchParams(location.search).get('perfil');
+  const [visitorContext, setVisitorContext] = useState(false);
+  const isVisitor = profile === 'visitante' || visitorContext || typeof window === 'undefined' || !localStorage.getItem('token');
+
+  useEffect(() => {
+    if (profile) return;
+    const controller = new AbortController();
+    void visitorRequest('visitor/session', undefined, controller.signal).then(() => {
+      if (!controller.signal.aborted) setVisitorContext(true);
+    }).catch(() => {});
+    return () => controller.abort();
+  }, [profile]);
 
   const eventTitle =
     (location.state as { eventTitle?: string } | null)?.eventTitle ||
@@ -70,8 +83,7 @@ export default function EventFeedbackScreen() {
   };
 
   const handleSkip = () => {
-    const isVisitor = location.pathname.includes('/visitante') || !localStorage.getItem('token');
-    navigate(isVisitor ? '/visitantes' : '/eventos');
+    navigate(isVisitor ? '/visitantes/certificados' : '/eventos');
   };
 
   return (
@@ -95,13 +107,13 @@ export default function EventFeedbackScreen() {
               Sua resposta foi registrada de forma totalmente anônima. Seu feedback é essencial para aprimorarmos os próximos encontros da Fatec Itaquera.
             </p>
             <div className={styles.btnGroup} style={{ width: '100%', marginTop: '1rem' }}>
-              <Link to="/certificados" className={styles.submitBtn}>
+              <Link to={isVisitor ? '/visitantes/certificados' : '/certificados'} className={styles.submitBtn}>
                 Ver Meus Certificados <ArrowRight size={18} />
               </Link>
               <button
                 type="button"
                 className={styles.skipBtn}
-                onClick={() => navigate(localStorage.getItem('token') ? '/eventos' : '/visitantes')}
+                onClick={() => navigate(isVisitor ? '/visitantes' : '/eventos')}
               >
                 Voltar à página inicial
               </button>
@@ -152,8 +164,8 @@ export default function EventFeedbackScreen() {
                       >
                         <Star
                           size={36}
-                          fill={isFilled ? '#eab308' : 'none'}
-                          stroke={isFilled ? '#eab308' : '#94a3b8'}
+                          fill={isFilled ? 'currentColor' : 'none'}
+                          stroke="currentColor"
                           strokeWidth={2}
                         />
                       </button>

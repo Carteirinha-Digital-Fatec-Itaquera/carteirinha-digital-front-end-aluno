@@ -38,6 +38,7 @@ try {
   await page.goto(`${origin}/visitantes?ref=${reference}`);
   await page.getByLabel('Nome completo', { exact: true }).fill('Visitante teste');
   await page.getByLabel('E-mail', { exact: true }).fill('visitante@example.invalid');
+  await page.getByLabel('CPF', { exact: true }).fill('52998224725');
   assert.equal(await page.getByRole('heading', { name: 'Atividade B', exact: true }).count(), 0);
   assert.equal(await page.getByText('Atividade cancelada', { exact: true }).count(), 0);
   await page.clock.fastForward(21000);

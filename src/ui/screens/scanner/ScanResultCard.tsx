@@ -28,8 +28,7 @@ export default function ScanResultCard({ result, onRetry }: { result: ScanFeedba
       {result.eventId && (result.checkOutAt || result.certificates) && (
         <Link
           className={styles.primary}
-          style={{ background: '#005c6d', color: '#ffffff' }}
-          to={`/eventos/${encodeURIComponent(result.eventId)}/avaliacao?title=${encodeURIComponent(result.eventTitle || '')}`}
+          to={`/eventos/${encodeURIComponent(result.eventId)}/avaliacao?perfil=aluno&title=${encodeURIComponent(result.eventTitle || '')}`}
           state={{ eventTitle: result.eventTitle }}
         >
           Avaliar palestra (Pesquisa de Satisfação)

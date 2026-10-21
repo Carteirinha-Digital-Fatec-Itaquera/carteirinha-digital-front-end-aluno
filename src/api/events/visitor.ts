@@ -23,6 +23,18 @@ export interface Visitor {
   course: string | null;
   seriesId: string;
   retentionAt: string;
+  hasCpf?: boolean;
+}
+export function validVisitorCpf(value: string) {
+  if (!/^(?:\d{11}|\d{3}\.\d{3}\.\d{3}-\d{2})$/.test(value)) return false;
+  const cpf = value.replace(/\D/g, '');
+  if (/^(\d)\1{10}$/.test(cpf)) return false;
+  for (let digit = 9; digit <= 10; digit++) {
+    let sum = 0;
+    for (let i = 0; i < digit; i++) sum += Number(cpf[i]) * (digit + 1 - i);
+    if (((sum * 10) % 11) % 10 !== Number(cpf[digit])) return false;
+  }
+  return true;
 }
 export interface PublicQr {
   event: {

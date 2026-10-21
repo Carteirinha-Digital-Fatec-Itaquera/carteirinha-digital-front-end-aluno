@@ -4,8 +4,13 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import PublicEventsScreen from '../src/ui/screens/events/PublicEventsScreen.tsx';
-import { visitorRequest, VisitorApiError } from '../src/api/events/visitor.ts';
+import { visitorRequest, VisitorApiError, validVisitorCpf } from '../src/api/events/visitor.ts';
 import { availableVisitorSeries } from '../src/api/events/eventAvailability.ts';
+
+test('CPF aceita máscara e números e rejeita dígitos inválidos ou repetidos', () => {
+  for (const cpf of ['52998224725', '529.982.247-25']) assert.equal(validVisitorCpf(cpf), true);
+  for (const cpf of ['', '11111111111', '52998224724', 'abc52998224725', '529-98224725']) assert.equal(validVisitorCpf(cpf), false);
+});
 
 test('programação não oferece atividades canceladas nem contextos vazios', () => {
   const rows = availableVisitorSeries([
