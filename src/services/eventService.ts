@@ -19,16 +19,19 @@ export const eventService = {
       return structuredClone(eventsMock.filter(event => event.status === 'IN_PROGRESS' ||
         (event.status === 'SCHEDULED' && Date.parse(event.startsAt) > Date.now())));
     }
-    return get<Event[]>('/events', signal);
+    const events = await get<Event[]>('/events', signal);
+    return events.filter(event => event.status !== 'CANCELLED');
   },
   async getEventById(id: string, signal?: AbortSignal): Promise<Event> {
     if (useMockEvents) {
       const { eventsMock } = await import('../mocks/events.mock');
       const event = eventsMock.find(item => item.id === id);
-      if (!event) throw { status: '404', message: 'Evento não encontrado' };
+      if (!event || event.status === 'CANCELLED') throw { status: '404', message: 'Evento não encontrado' };
       return structuredClone(event);
     }
-    return get<Event>('/events/' + encodeURIComponent(id), signal);
+    const event = await get<Event>('/events/' + encodeURIComponent(id), signal);
+    if (event.status === 'CANCELLED') throw { status: '404', message: 'Evento não encontrado' };
+    return event;
   },
   async getMyAttendances(signal?: AbortSignal): Promise<Attendance[]> {
     if (useMockEvents) {

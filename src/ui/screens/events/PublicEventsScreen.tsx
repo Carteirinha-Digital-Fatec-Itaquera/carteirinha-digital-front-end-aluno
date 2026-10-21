@@ -29,6 +29,7 @@ import {
 } from "../../../api/events/visitor";
 import { parsePresenceUrlOrToken } from "../../../api/attendance/scanAttendance";
 import CameraReader from "../scanner/CameraReader";
+import { availableVisitorSeries } from '../../../api/events/eventAvailability';
 import MessageModal from "../../components/MessageModal/MessageModal";
 import styles from "./PublicEventsScreen.module.css";
 
@@ -81,6 +82,7 @@ export default function PublicEventsScreen({
   const [attendances, setAttendances] = useState<VisitorAttendance[]>([]);
   const [certificates, setCertificates] = useState<VisitorCertificate[]>([]);
   const [preview, setPreview] = useState<PublicQr | null>(null);
+  const [contextUnavailable, setContextUnavailable] = useState(false);
 
   const [selected, setSelected] = useState(search.get("edicao") || "");
   const [modalState, setModalState] = useState<ModalState | null>(null);
@@ -89,10 +91,55 @@ export default function PublicEventsScreen({
   const [failure, setFailure] = useState("");
   const [loading, setLoading] = useState(true);
   const [cameraActive, setCameraActive] = useState(false);
+  const [visitorName, setVisitorName] = useState('');
+  const [visitorEmail, setVisitorEmail] = useState('');
+  const [visitorCourse, setVisitorCourse] = useState('');
+  const [visitorCpf, setVisitorCpf] = useState('');
 
   const eventCardRef = useRef<HTMLDivElement | null>(null);
+  const seriesRequestRef = useRef<{ request: Promise<Series[]>; signal?: AbortSignal } | null>(null);
 
   const current = series.find((s) => s.id === (preview?.seriesId || selected));
+  const visibleSeries = contextUnavailable ? [] : (activeReference || eventIdParam) && preview
+    ? series.map(item => ({ ...item, events: item.events.filter(event => event.id === preview.event.id) })).filter(item => item.events.length > 0)
+    : series;
+
+  const refreshSeries = useCallback(async (signal?: AbortSignal) => {
+    if (seriesRequestRef.current && !seriesRequestRef.current.signal?.aborted) return seriesRequestRef.current.request;
+    const request = visitorRequest<Series[]>('public/events/series', undefined, signal)
+      .then(data => {
+        const rows = availableVisitorSeries(data);
+        setSeries(rows);
+        return rows;
+      })
+      .finally(() => {
+        if (seriesRequestRef.current?.request === request) seriesRequestRef.current = null;
+      });
+    seriesRequestRef.current = { request, signal };
+    return request;
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const refresh = () => {
+      if (document.hidden) return;
+      void refreshSeries(controller.signal).then(rows => {
+        if (preview?.visitorsAllowed && !rows.some(item => item.events.some(event => event.id === preview.event.id))) {
+          setContextUnavailable(true);
+          setActiveReference('');
+        }
+      }).catch(() => {
+        // A API valida o estado novamente antes de qualquer registro de presença.
+      });
+    };
+    const timer = window.setInterval(refresh, 15000);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      controller.abort();
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [refreshSeries, preview?.event.id, preview?.visitorsAllowed]);
 
   const loadCertificates = useCallback(async () => {
     try {
@@ -229,12 +276,7 @@ export default function PublicEventsScreen({
     const controller = new AbortController();
     void (async () => {
       try {
-        const rows = await visitorRequest<Series[]>(
-          "public/events/series",
-          undefined,
-          controller.signal,
-        );
-        setSeries(rows);
+        const rows = await refreshSeries(controller.signal);
 
         let qr: PublicQr | null = null;
         if (activeReferenceParam) {
@@ -246,8 +288,10 @@ export default function PublicEventsScreen({
             );
             setPreview(qr);
             setActiveReference(activeReferenceParam);
+            setContextUnavailable(false);
           } catch (error) {
             if (controller.signal.aborted) throw error;
+            setContextUnavailable(true);
             handleError(error);
           }
         } else if (eventIdParam) {
@@ -282,17 +326,15 @@ export default function PublicEventsScreen({
               serverTime: ev.serverTime,
             };
             setPreview(qr);
+            setContextUnavailable(false);
           } catch (error) {
             if (controller.signal.aborted) throw error;
-            setFailure(
-              error instanceof Error
-                ? error.message
-                : "Evento não encontrado ou indisponível.",
-            );
+            setContextUnavailable(true);
+            handleError(error);
           }
         }
 
-        setSelected((previous) => qr?.seriesId || previous || rows[0]?.id || "");
+        setSelected((previous) => qr?.seriesId || (activeReferenceParam || eventIdParam ? '' : rows.some(item => item.id === previous) ? previous : rows[0]?.id || ''));
 
         try {
           const visitor = await visitorRequest<Visitor>(
@@ -316,7 +358,7 @@ export default function PublicEventsScreen({
       }
     })();
     return () => controller.abort();
-  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances, handleError]);
+  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances, handleError, refreshSeries]);
 
   useEffect(() => {
     if (!session) return;
@@ -387,24 +429,28 @@ export default function PublicEventsScreen({
 
   const confirmPresence = (refToConfirm: string) =>
     act(async () => {
+      if (contextUnavailable) throw new Error('Este evento não está disponível para participação.');
       const targetRef = refToConfirm || activeReference;
       if (!targetRef) return;
 
       const latestQr = await visitorRequest<PublicQr>(`public/events/qr/${encodeURIComponent(targetRef)}`);
+      if (preview && latestQr.event.id !== preview.event.id) {
+        throw new VisitorApiError('O QR Code pertence a outro evento. Leia o QR da atividade selecionada.', 400, 'EVENT_MISMATCH');
+      }
       setPreview(latestQr);
 
       let position;
       if (latestQr.locationRequired) {
         const challenge = await visitorRequest<{ challengeId: string }>(
           "visitor/challenge",
-          { reference: targetRef },
+          { reference: targetRef, eventId: latestQr.event.id },
         );
         position = { ...(await locate()), challengeId: challenge.challengeId };
       }
 
       const result = await visitorRequest<{ message: string; type?: string }>(
         "visitor/attendance",
-        { reference: targetRef, position },
+        { reference: targetRef, eventId: latestQr.event.id, position },
       );
 
       setConfirmedReference(targetRef);
@@ -445,7 +491,11 @@ export default function PublicEventsScreen({
 
       try {
         const qr = await visitorRequest<PublicQr>(`public/events/qr/${encodeURIComponent(scannedRef)}`);
+        if (preview && qr.event.id !== preview.event.id) {
+          throw new VisitorApiError('O QR Code pertence a outro evento. Leia o QR da atividade selecionada.', 400, 'EVENT_MISMATCH');
+        }
         setPreview(qr);
+        setContextUnavailable(false);
         setActiveReference(scannedRef);
         setConfirmedReference(null);
 
@@ -455,14 +505,14 @@ export default function PublicEventsScreen({
           if (qr.locationRequired) {
             const challenge = await visitorRequest<{ challengeId: string }>(
               "visitor/challenge",
-              { reference: scannedRef },
+              { reference: scannedRef, eventId: qr.event.id },
             );
             position = { ...(await locate()), challengeId: challenge.challengeId };
           }
 
           const result = await visitorRequest<{ message: string }>(
             "visitor/attendance",
-            { reference: scannedRef, position },
+            { reference: scannedRef, eventId: qr.event.id, position },
           );
 
           setConfirmedReference(scannedRef);
@@ -485,10 +535,13 @@ export default function PublicEventsScreen({
         setBusy(false);
       }
     },
-    [session, loadCertificates, loadAttendances, handleError],
+    [session, loadCertificates, loadAttendances, handleError, preview],
   );
 
-  const selectEventAndScan = (event: { id: string; title: string; speaker: string; location: string; startsAt: string; description?: string | null }) => {
+  const selectEventAndScan = (event: Series['events'][number]) => {
+    setActiveReference('');
+    setConfirmedReference(null);
+    setContextUnavailable(false);
     setPreview({
       checkpoint: { type: "CHECK_IN" },
       event: {
@@ -579,7 +632,8 @@ export default function PublicEventsScreen({
         )}
 
         {/* Detalhes completos do Evento & Fluxo de Check-in/Check-out */}
-        {preview && (
+        {contextUnavailable && <p role="alert">Este evento não está disponível para participação. Leia o QR de uma atividade disponível.</p>}
+        {preview && !contextUnavailable && (
           <section className={styles.eventDetailCard} ref={eventCardRef}>
             <div className={styles.eventHeaderRow}>
               <div>
@@ -786,7 +840,7 @@ export default function PublicEventsScreen({
         )}
 
         {/* Cadastro rápido e Identificação do visitante */}
-        {(!session || (preview && session.seriesId !== preview.seriesId)) && (!preview || preview.visitorsAllowed) && (
+        {!contextUnavailable && (!session || (preview && session.seriesId !== preview.seriesId)) && (!preview || preview.visitorsAllowed) && (
           <section className={styles.card}>
             <div className={styles.cardHeader}>
               <div>
@@ -831,6 +885,8 @@ export default function PublicEventsScreen({
                   Nome completo
                   <input
                     name="name"
+                    value={visitorName}
+                    onChange={event => setVisitorName(event.target.value)}
                     required
                     minLength={3}
                     maxLength={160}
@@ -843,6 +899,8 @@ export default function PublicEventsScreen({
                   E-mail
                   <input
                     name="email"
+                    value={visitorEmail}
+                    onChange={event => setVisitorEmail(event.target.value)}
                     type="email"
                     required
                     maxLength={254}
@@ -853,7 +911,7 @@ export default function PublicEventsScreen({
 
                 <label>
                   Vínculo ou curso
-                  <select name="course">
+                  <select name="course" value={visitorCourse} onChange={event => setVisitorCourse(event.target.value)}>
                     <option value="">Visitante — Participante/ouvinte externo</option>
                     {current?.courses.map((course) => (
                       <option key={course} value={course}>
@@ -868,6 +926,8 @@ export default function PublicEventsScreen({
                     CPF (solicitado pela organização desta edição)
                     <input
                       name="cpf"
+                      value={visitorCpf}
+                      onChange={event => setVisitorCpf(event.target.value)}
                       required
                       inputMode="numeric"
                       minLength={11}
@@ -920,6 +980,10 @@ export default function PublicEventsScreen({
                   onClick={() =>
                     void act(async () => {
                       await visitorRequest("visitor/logout", {});
+                      setVisitorName('');
+                      setVisitorEmail('');
+                      setVisitorCourse('');
+                      setVisitorCpf('');
                       setSession(null);
                       setCertificates([]);
                       setAttendances([]);
@@ -974,11 +1038,11 @@ export default function PublicEventsScreen({
             </div>
           </div>
 
-          {!series.length && !loading && (
+          {!visibleSeries.length && !loading && (
             <p>Nenhuma edição aberta no momento.</p>
           )}
 
-          {series.map((s) => (
+          {visibleSeries.map((s) => (
             <div key={s.id} style={{ marginBottom: 24 }}>
               <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "16px 0 12px", color: "var(--app-color-primary, #ba1a1a)" }}>
                 {s.title}
