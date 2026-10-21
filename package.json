@@ -16,7 +16,8 @@
     "test:qr-projection:browser": "node tests/qr-projection.browser.mjs",
     "test:credits": "node --import ./tests/register.mjs --test tests/project-credits.test.mjs",
     "test:visitor": "node --import ./tests/register.mjs --test tests/visitor.test.mjs",
-    "test:feedback": "node --import ./tests/register.mjs --test tests/feedback.test.mjs"
+    "test:feedback": "node --import ./tests/register.mjs --test tests/feedback.test.mjs",
+    "test:auth:browser": "node tests/auth-flow.browser.mjs"
   },
   "dependencies": {
     "html5-qrcode": "^2.3.8",

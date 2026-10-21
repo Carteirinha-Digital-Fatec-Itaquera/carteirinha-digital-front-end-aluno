@@ -80,24 +80,44 @@ test('PublicEventsScreen renderiza cabeçalho arredondado e badge de visitantes 
   assert.ok(html.includes('Identificação rápida do visitante'));
 });
 
-test('PublicPresenceGateway renderiza tela pública de visitantes quando não há perfil de aluno', async () => {
+test('PublicPresenceGateway renderiza seletor explícito de perfil (estudante e visitante)', async () => {
   const { default: PublicPresenceGateway } = await import('../src/ui/screens/attendance/PublicPresenceGateway.tsx');
-  // Simula ausência de sessão de aluno
-  const originalGetItem = globalThis.localStorage?.getItem;
+  const html = renderToStaticMarkup(
+    h(MemoryRouter, { initialEntries: ['/p/test-ref-12345'] }, h(PublicPresenceGateway, {}))
+  );
+  assert.ok(html.includes('Como deseja registrar sua presença?'));
+  assert.ok(html.includes('Sou estudante da Fatec Itaquera'));
+  assert.ok(html.includes('Sou visitante'));
+});
+
+
+test('visitorRequest propaga HTTP 503 com mensagem do servidor', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ message: 'Falha simulada 503 ao carregar eventos.' }), { status: 503 });
+
   try {
-    globalThis.localStorage = {
-      getItem: (key) => (key === 'token' ? 'stale-token' : null),
-      setItem: () => {},
-      removeItem: () => {},
-    };
-    const html = renderToStaticMarkup(
-      h(MemoryRouter, { initialEntries: ['/p/test-ref-12345'] }, h(PublicPresenceGateway, {}))
+    await assert.rejects(
+      visitorRequest('public/events/series'),
+      (err) => err instanceof VisitorApiError && err.status === 503 && err.message === 'Falha simulada 503 ao carregar eventos.'
     );
-    // Não redireciona para login nem quebra: renderiza a tela pública
-    assert.ok(html.includes('Eventos e certificados'));
-    assert.ok(html.includes('Participe como visitante'));
   } finally {
-    if (originalGetItem) globalThis.localStorage.getItem = originalGetItem;
+    globalThis.fetch = originalFetch;
   }
 });
 
+test('visitorRequest propaga erro de rede quando a conexão falha', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    throw new Error('Falha de conexão com o servidor.');
+  };
+
+  try {
+    await assert.rejects(
+      visitorRequest('public/events/series'),
+      (err) => err instanceof Error && err.message.includes('conexão')
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

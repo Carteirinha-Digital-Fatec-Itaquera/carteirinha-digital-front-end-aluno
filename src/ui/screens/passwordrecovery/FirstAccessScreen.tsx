@@ -122,9 +122,10 @@ export default function FirstAccessScreen() {
           onConfirm={() => {
             setSuccessVisible(false);
             const returnUrl = sessionStorage.getItem("returnUrl");
-            if (returnUrl && returnUrl.startsWith("/p/")) {
+            const safeReturn = returnUrl && /^\/p\/[A-Za-z0-9_-]{10,64}(\/aluno)?$/.test(returnUrl) ? returnUrl : null;
+            if (safeReturn) {
               sessionStorage.removeItem("returnUrl");
-              window.location.href = returnUrl;
+              window.location.href = safeReturn;
             } else {
               window.location.href = "/MainMenu";
             }

@@ -24,6 +24,7 @@ import ConfigScreen from "../ui/screens/config/ConfigScreen";
 
 
 import PublicPresenceGateway from '../ui/screens/attendance/PublicPresenceGateway';
+import PresencaConfirmacaoScreen from '../ui/screens/attendance/PresencaConfirmacaoScreen';
 import PublicEventsScreen from '../ui/screens/events/PublicEventsScreen';
 import ProjectCreditsScreen from '../ui/screens/credits/ProjectCreditsScreen';
 
@@ -37,11 +38,18 @@ const SignUp = () => <div style={{ padding: 20 }}>Tela SignUp</div>;
 const getAuthState = () => {
   const token = localStorage.getItem('token');
   const profile = localStorage.getItem('@Carteirinha:profile');
+  if (!token) {
+    if (profile) localStorage.removeItem('@Carteirinha:profile');
+    return {
+      isAuthenticated: false,
+      mustChange: false,
+    };
+  }
   const mustChange = localStorage.getItem('mustChangePassword') === 'false';
-  
+
   return {
-    isAuthenticated: !!token || !!profile,
-    mustChange: mustChange
+    isAuthenticated: true,
+    mustChange: mustChange,
   };
 };
 
@@ -71,6 +79,7 @@ export default function AppRoutes() {
         <Route path="/visitantes" element={<PublicEventsScreen />} />
         <Route path="/eventos/:id/avaliacao" element={<EventFeedbackScreen />} />
         <Route element={<StudentRoute />}>
+          <Route path="/p/:reference/aluno" element={<PresencaConfirmacaoScreen />} />
           <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<AlunoScannerScreen />} />
           <Route path="/certificados" element={<AlunoCertificadosScreen />} />

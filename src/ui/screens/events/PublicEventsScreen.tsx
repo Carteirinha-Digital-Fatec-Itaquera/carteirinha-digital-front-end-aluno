@@ -29,6 +29,7 @@ import {
 } from "../../../api/events/visitor";
 import { parsePresenceUrlOrToken } from "../../../api/attendance/scanAttendance";
 import CameraReader from "../scanner/CameraReader";
+import MessageModal from "../../components/MessageModal/MessageModal";
 import styles from "./PublicEventsScreen.module.css";
 
 function formatEventTime(startsAt?: string | null, endsAt?: string | null) {
@@ -48,6 +49,15 @@ function formatEventTime(startsAt?: string | null, endsAt?: string | null) {
   });
   return `${startStr} às ${endStr}`;
 }
+
+type ModalState = {
+  visible: boolean;
+  tone?: 'success' | 'info' | 'warning' | 'error';
+  title: string;
+  message: string;
+  confirmText?: string;
+  onConfirm: () => void;
+};
 
 function formatWorkload(minutes?: number | null) {
   if (!minutes || minutes <= 0) return null;
@@ -73,7 +83,7 @@ export default function PublicEventsScreen({
   const [preview, setPreview] = useState<PublicQr | null>(null);
 
   const [selected, setSelected] = useState(search.get("edicao") || "");
-  const [registration, setRegistration] = useState("");
+  const [modalState, setModalState] = useState<ModalState | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [failure, setFailure] = useState("");
@@ -102,6 +112,119 @@ export default function PublicEventsScreen({
     }
   }, []);
 
+  const handleError = useCallback((error: unknown) => {
+    setCameraActive(false);
+    if (error instanceof VisitorApiError) {
+      if (error.code === 'EXPIRED_OR_INVALID_QR') {
+        setModalState({
+          visible: true,
+          tone: 'warning',
+          title: 'QR Code Expirado ou Inválido',
+          message: error.message || 'QR Code expirado ou inválido. Faça uma nova leitura.',
+          confirmText: 'Ler QR atual',
+          onConfirm: () => {
+            setModalState(null);
+            setCameraActive(true);
+          },
+        });
+        return;
+      }
+      if (error.code === 'LOCATION_INCONCLUSIVE') {
+        setModalState({
+          visible: true,
+          tone: 'warning',
+          title: 'Localização Inconclusiva',
+          message: 'Não foi possível validar sua localização na área do evento ou a precisão do GPS foi insuficiente. Se o problema persistir, procure a Secretaria presencialmente.',
+          confirmText: 'Tentar novamente',
+          onConfirm: () => setModalState(null),
+        });
+        return;
+      }
+      if (['PERMISSION_DENIED', 'POSITION_UNAVAILABLE', 'TIMEOUT'].includes(error.code || '')) {
+        setModalState({
+          visible: true,
+          tone: 'error',
+          title: 'Acesso à Localização',
+          message: 'Acesso à localização negado ou indisponível. Para confirmar a presença por geolocalização, habilite a permissão de GPS no seu navegador ou procure a Secretaria.',
+          confirmText: 'Entendi',
+          onConfirm: () => setModalState(null),
+        });
+        return;
+      }
+      if (error.code === 'CHECKPOINT_CLOSED') {
+        setModalState({
+          visible: true,
+          tone: 'warning',
+          title: 'Checkpoint Encerrado',
+          message: 'O checkpoint de presença para este evento foi encerrado ou alterado.',
+          confirmText: 'OK',
+          onConfirm: () => setModalState(null),
+        });
+        return;
+      }
+      if (error.code === 'ALREADY_REGISTERED' || (error.message && /já foi registrada/i.test(error.message))) {
+        setModalState({
+          visible: true,
+          tone: 'info',
+          title: 'Presença já Registrada',
+          message: error.message || 'Sua presença já foi registrada nesta atividade.',
+          confirmText: 'OK',
+          onConfirm: () => setModalState(null),
+        });
+        return;
+      }
+      if (error.status === 401) {
+        setSession(null);
+        setCertificates([]);
+        setAttendances([]);
+        setModalState({
+          visible: true,
+          tone: 'info',
+          title: 'Sessão Expirada',
+          message: 'Seu acesso temporário expirou. Identifique-se novamente.',
+          confirmText: 'OK',
+          onConfirm: () => setModalState(null),
+        });
+        return;
+      }
+      if (error.status === 409) {
+        setModalState({
+          visible: true,
+          tone: 'warning',
+          title: 'Cadastro já Existente',
+          message: 'Este e-mail ou CPF já foi informado nesta edição. Para preservar seu histórico com segurança, procure o atendimento da Secretaria para emitir seus certificados.',
+          confirmText: 'Entendi',
+          onConfirm: () => setModalState(null),
+        });
+        return;
+      }
+    }
+    const errObj = error as { code?: string; message?: string };
+    if (errObj?.code === 'EXPIRED_OR_INVALID_QR') {
+      setModalState({
+        visible: true,
+        tone: 'warning',
+        title: 'QR Code Expirado ou Inválido',
+        message: errObj.message || 'QR Code expirado ou inválido. Faça uma nova leitura.',
+        confirmText: 'Ler QR atual',
+        onConfirm: () => {
+          setModalState(null);
+          setCameraActive(true);
+        },
+      });
+      return;
+    }
+    const msg = error instanceof Error ? error.message : 'Falha de conexão com o servidor.';
+    setModalState({
+      visible: true,
+      tone: 'error',
+      title: 'Atenção',
+      message: msg,
+      confirmText: 'Fechar',
+      onConfirm: () => setModalState(null),
+    });
+  }, []);
+
   useEffect(() => {
     const controller = new AbortController();
     void (async () => {
@@ -125,11 +248,7 @@ export default function PublicEventsScreen({
             setActiveReference(activeReferenceParam);
           } catch (error) {
             if (controller.signal.aborted) throw error;
-            setFailure(
-              error instanceof Error
-                ? error.message
-                : "QR Code expirado ou inválido. Faça uma nova leitura no telão.",
-            );
+            handleError(error);
           }
         } else if (eventIdParam) {
           try {
@@ -190,16 +309,14 @@ export default function PublicEventsScreen({
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          setFailure(
-            error instanceof Error ? error.message : "Falha de conexão com o servidor.",
-          );
+          handleError(error);
         }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances]);
+  }, [activeReferenceParam, eventIdParam, loadCertificates, loadAttendances, handleError]);
 
   useEffect(() => {
     if (!session) return;
@@ -220,6 +337,8 @@ export default function PublicEventsScreen({
     return () => window.clearInterval(id);
   }, [session]);
 
+
+
   async function act(action: () => Promise<void>) {
     if (busy) return;
     setBusy(true);
@@ -228,12 +347,7 @@ export default function PublicEventsScreen({
     try {
       await action();
     } catch (error) {
-      setFailure(error instanceof Error ? error.message : "Falha de conexão.");
-      if (error instanceof VisitorApiError && error.status === 401) {
-        setSession(null);
-        setCertificates([]);
-        setAttendances([]);
-      }
+      handleError(error);
     } finally {
       setBusy(false);
     }
@@ -247,30 +361,23 @@ export default function PublicEventsScreen({
         setFailure("Selecione uma edição para continuar.");
         return;
       }
-      const result = await visitorRequest<{ registrationId: string }>(
-        "visitor/registration",
-        {
-          seriesId: targetSeriesId,
-          name: String(data.get("name")),
-          email: String(data.get("email")),
-          course: String(data.get("course") || "") || undefined,
-          cpf: String(data.get("cpf") || "") || undefined,
-        },
-      );
-      setRegistration(result.registrationId);
-      setMessage("Código de 6 dígitos enviado ao seu e-mail. Verifique também o spam.");
-    });
-
-  const verify = (form: HTMLFormElement) =>
-    act(async () => {
-      await visitorRequest("visitor/verify", {
-        registrationId: registration,
-        code: String(new FormData(form).get("code")),
+      await visitorRequest<{
+        visitorId: string;
+        name: string;
+        email: string;
+        seriesId: string;
+        isSelfDeclared?: boolean;
+      }>("visitor/registration", {
+        seriesId: targetSeriesId,
+        name: String(data.get("name")),
+        email: String(data.get("email")),
+        course: String(data.get("course") || "") || undefined,
+        cpf: String(data.get("cpf") || "") || undefined,
       });
+
       const currentVisitor = await visitorRequest<Visitor>("visitor/session");
       setSession(currentVisitor);
       await Promise.all([loadCertificates(), loadAttendances()]);
-      setRegistration("");
       setMessage(
         activeReference
           ? "Identificação concluída! Clique em Confirmar presença abaixo ou faça nova leitura."
@@ -321,8 +428,18 @@ export default function PublicEventsScreen({
       const scannedRef = parsed?.type === "reference" ? parsed.reference : rawToken.trim();
 
       if (!scannedRef || !/^[A-Za-z0-9_-]{10,64}$/.test(scannedRef)) {
-        setFailure("QR Code não reconhecido. Certifique-se de escanear o QR Code exibido no telão.");
         setBusy(false);
+        setModalState({
+          visible: true,
+          tone: 'warning',
+          title: 'QR Code Inválido',
+          message: 'QR Code não reconhecido. Certifique-se de escanear o QR Code exibido no telão.',
+          confirmText: 'Escanear novamente',
+          onConfirm: () => {
+            setModalState(null);
+            setCameraActive(true);
+          },
+        });
         return;
       }
 
@@ -363,12 +480,12 @@ export default function PublicEventsScreen({
           if (qr.seriesId) setSelected(qr.seriesId);
         }
       } catch (error) {
-        setFailure(error instanceof Error ? error.message : "Erro ao processar QR Code.");
+        handleError(error);
       } finally {
         setBusy(false);
       }
     },
-    [session, loadCertificates, loadAttendances],
+    [session, loadCertificates, loadAttendances, handleError],
   );
 
   const selectEventAndScan = (event: { id: string; title: string; speaker: string; location: string; startsAt: string; description?: string | null }) => {
@@ -650,7 +767,7 @@ export default function PublicEventsScreen({
                   disabled={busy}
                   onClick={() => {
                     setSession(null);
-                    setRegistration("");
+                    
                     if (preview.seriesId) setSelected(preview.seriesId);
                     setMessage("Informe seus dados para participar desta atividade.");
                   }}
@@ -678,41 +795,7 @@ export default function PublicEventsScreen({
               </div>
             </div>
 
-            {registration ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  void verify(e.currentTarget);
-                }}
-              >
-                <label>
-                  Código de 6 dígitos recebido por e-mail
-                  <input
-                    name="code"
-                    required
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    pattern="[0-9]{6}"
-                    maxLength={6}
-                    placeholder="Ex: 123456"
-                  />
-                </label>
-                <div className={styles.btnActionGroup}>
-                  <button className={styles.btnPrimary} disabled={busy}>
-                    <CheckCircle2 size={18} />
-                    Confirmar e-mail e entrar
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    className={styles.btnSecondary}
-                    onClick={() => setRegistration("")}
-                  >
-                    Solicitar outro código
-                  </button>
-                </div>
-              </form>
-            ) : (
+            (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -800,11 +883,10 @@ export default function PublicEventsScreen({
                     className={styles.btnPrimary}
                     disabled={busy || !(preview?.seriesId || selected)}
                   >
-                    {busy ? "Enviando..." : "Receber código de acesso por e-mail"}
+                    {busy ? "Identificando..." : "Continuar como visitante"}
                   </button>
                 </div>
               </form>
-            )}
           </section>
         )}
 
@@ -949,6 +1031,16 @@ export default function PublicEventsScreen({
           ))}
         </section>
       </div>
+          {modalState && (
+        <MessageModal
+          visible={modalState.visible}
+          tone={modalState.tone}
+          title={modalState.title}
+          message={modalState.message}
+          confirmText={modalState.confirmText}
+          onConfirm={modalState.onConfirm}
+        />
+      )}
     </main>
   );
 }
