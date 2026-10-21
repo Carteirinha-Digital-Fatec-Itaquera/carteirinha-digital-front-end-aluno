@@ -19,6 +19,7 @@ import {
 const logoFatec = "/fatec_itaquera_logo.png";
 import {
   visitorRequest,
+  validVisitorCpf,
   VisitorApiError,
   locate,
   type Series,
@@ -398,6 +399,7 @@ export default function PublicEventsScreen({
   const register = (form: HTMLFormElement) =>
     act(async () => {
       const data = new FormData(form);
+      if (!validVisitorCpf(String(data.get('cpf') || ''))) throw new Error('Informe um CPF válido.');
       const targetSeriesId = preview?.seriesId || selected;
       if (!targetSeriesId) {
         setFailure("Selecione uma edição para continuar.");
@@ -795,7 +797,7 @@ export default function PublicEventsScreen({
                           <span>Sua presença foi 100% concluída neste evento! O certificado está liberado para download abaixo.</span>
                         </div>
                         <Link
-                          to={`/eventos/${preview.event.id}/avaliacao?title=${encodeURIComponent(preview.event.title)}`}
+                          to={`/eventos/${preview.event.id}/avaliacao?perfil=visitante&title=${encodeURIComponent(preview.event.title)}`}
                           state={{ eventTitle: preview.event.title }}
                           className={styles.btnPrimary}
                           style={{ width: "100%", textAlign: "center", textDecoration: "none", boxSizing: "border-box" }}
@@ -849,7 +851,6 @@ export default function PublicEventsScreen({
               </div>
             </div>
 
-            (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -921,9 +922,8 @@ export default function PublicEventsScreen({
                   </select>
                 </label>
 
-                {current?.cpfRequired && (
                   <label>
-                    CPF (solicitado pela organização desta edição)
+                    CPF
                     <input
                       name="cpf"
                       value={visitorCpf}
@@ -936,8 +936,6 @@ export default function PublicEventsScreen({
                       placeholder="Somente números"
                     />
                   </label>
-                )}
-
                 <div className={styles.btnActionGroup}>
                   <button
                     className={styles.btnPrimary}
@@ -956,6 +954,7 @@ export default function PublicEventsScreen({
             <div className={styles.cardHeader}>
               <div>
                 <h2>Olá, {session.name}</h2>
+                <Link to="/visitantes/certificados">Meus certificados e acesso por CPF</Link>
                 <p>
                   Seus certificados ficam disponíveis até{" "}
                   {new Date(session.retentionAt).toLocaleString("pt-BR", {

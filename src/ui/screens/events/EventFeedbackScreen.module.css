@@ -6,11 +6,11 @@
 }
 
 .topBar {
-  background: linear-gradient(135deg, #005c6d 0%, #003640 100%);
+  background: var(--app-color-primary);
   color: #ffffff;
   padding: 2.25rem 1.5rem 2rem;
   border-radius: 0 0 28px 28px;
-  box-shadow: 0 4px 20px rgba(0, 92, 109, 0.15);
+  box-shadow: 0 4px 20px rgba(186, 26, 26, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,6 +19,8 @@
 }
 
 .topBadge {
+  color: inherit;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -32,6 +34,11 @@
   text-transform: uppercase;
 }
 
+.textLink {
+  color: var(--app-color-primary);
+  text-underline-offset: 3px;
+}
+
 .title {
   margin: 0;
   font-size: 1.5rem;
@@ -42,14 +49,14 @@
 .eventSubtitle {
   margin: 0;
   font-size: 0.95rem;
-  color: #e0f2fe;
+  color: #ffffff;
   max-width: 480px;
 }
 
 .container {
   max-width: 520px;
   width: 100%;
-  margin: -1rem auto 2.5rem;
+  margin: 1.5rem auto 2.5rem;
   padding: 0 1rem;
   box-sizing: border-box;
 }
@@ -113,7 +120,7 @@
 
 .starGroup {
   display: flex;
-  gap: 0.75rem;
+  gap: clamp(0.25rem, 2vw, 0.75rem);
   justify-content: center;
 }
 
@@ -127,7 +134,7 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.15s ease;
-  color: #cbd5e1;
+  color: #64748b;
 }
 
 .starButton:hover {
@@ -135,7 +142,14 @@
 }
 
 .starButtonActive {
-  color: #eab308;
+  color: var(--app-color-primary);
+}
+
+.starButton:focus-visible,
+.submitBtn:focus-visible,
+.skipBtn:focus-visible {
+  outline: 3px solid var(--app-color-primary);
+  outline-offset: 3px;
 }
 
 .ratingLabel {
@@ -161,8 +175,8 @@
 
 .textarea:focus {
   outline: none;
-  border-color: #005c6d;
-  box-shadow: 0 0 0 3px rgba(0, 92, 109, 0.15);
+  border-color: var(--app-color-primary);
+  box-shadow: 0 0 0 3px rgba(186, 26, 26, 0.15);
 }
 
 .btnGroup {
@@ -173,7 +187,7 @@
 }
 
 .submitBtn {
-  background: #005c6d;
+  background: var(--app-color-primary);
   color: #ffffff;
   border: none;
   border-radius: 0.75rem;
@@ -189,7 +203,7 @@
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: #004c5a;
+  background: var(--app-color-primary-hover);
 }
 
 .submitBtn:disabled {
