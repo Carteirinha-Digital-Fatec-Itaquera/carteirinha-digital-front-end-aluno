@@ -12,7 +12,7 @@ import { errorMessage, openCheckpoint } from './eventPresentation';
 import styles from './style.module.css';
 
 export default function AlunoEventosScreen() {
-  const events = useEventResource(eventService.getEvents);
+  const events = useEventResource(eventService.getEvents, 15000);
   const attendances = useEventResource(eventService.getMyAttendances);
   const [params, setParams] = useSearchParams();
   const activeTab = params.get('aba') === 'participacoes' ? 'participacoes' : 'agenda';

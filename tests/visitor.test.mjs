@@ -5,6 +5,16 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import PublicEventsScreen from '../src/ui/screens/events/PublicEventsScreen.tsx';
 import { visitorRequest, VisitorApiError } from '../src/api/events/visitor.ts';
+import { availableVisitorSeries } from '../src/api/events/eventAvailability.ts';
+
+test('programação não oferece atividades canceladas nem contextos vazios', () => {
+  const rows = availableVisitorSeries([
+    { id: 'only-cancelled', events: [{ id: 'c1', status: 'CANCELLED' }] },
+    { id: 'mixed', events: [{ id: 'c2', status: 'CANCELLED' }, { id: 'active', status: 'IN_PROGRESS' }] },
+    { id: 'empty', events: [] },
+  ]);
+  assert.deepEqual(rows.map(row => [row.id, row.events.map(event => event.id)]), [['mixed', ['active']]]);
+});
 
 test('VisitorApiError preserva mensagem e status HTTP', () => {
   const err = new VisitorApiError('Sessão expirada', 401);

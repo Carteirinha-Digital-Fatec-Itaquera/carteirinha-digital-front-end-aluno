@@ -14,6 +14,7 @@ export interface Series {
     startsAt: string;
     endsAt?: string | null;
     workloadMinutes?: number | null;
+    status?: string;
   }[];
 }
 export interface Visitor {
@@ -33,6 +34,7 @@ export interface PublicQr {
     startsAt?: string;
     endsAt?: string;
     workloadMinutes?: number;
+    status?: string;
   };
   checkpoint: { type: string };
   seriesId: string | null;
