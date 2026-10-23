@@ -111,7 +111,7 @@ export default function LoginScreen() {
 
         <div className={styles.firstAccessNotice}>
           <span>Este é o seu primeiro acesso?</span>
-          <Link to="/first-access" className={styles.firstAccessLink}>
+          <Link to="/signup" className={styles.firstAccessLink}>
             Clique aqui
           </Link>
         </div>
