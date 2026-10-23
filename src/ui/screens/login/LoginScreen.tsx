@@ -110,10 +110,7 @@ export default function LoginScreen() {
         </div>
 
         <div className={styles.firstAccessNotice}>
-          <span>Este é o seu primeiro acesso?</span>
-          <Link to="/first-access" className={styles.firstAccessLink}>
-            Clique aqui
-          </Link>
+          <span>Primeiro acesso: use seu e-mail institucional como usuário e seu RA como senha.</span>
         </div>
         <Link to="/creditos" className={styles.projectCreditsLink}>
           Conheça quem constrói este projeto
