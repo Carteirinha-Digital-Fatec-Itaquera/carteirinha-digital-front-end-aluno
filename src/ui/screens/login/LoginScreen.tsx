@@ -111,14 +111,9 @@ export default function LoginScreen() {
 
         <div className={styles.firstAccessNotice}>
           <span>Este é o seu primeiro acesso?</span>
-          <a
-            href="https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.firstAccessLink}
-          >
+          <Link to="/first-access" className={styles.firstAccessLink}>
             Clique aqui
-          </a>
+          </Link>
         </div>
         <Link to="/creditos" className={styles.projectCreditsLink}>
           Conheça quem constrói este projeto
