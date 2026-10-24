@@ -1,0 +1,14 @@
+.card { display: flex; align-items: flex-start; gap: 12px; margin: 0 0 24px; padding: 16px; border: 1px solid var(--app-color-border); border-left: 4px solid currentColor; border-radius: 14px; background: var(--app-color-surface); }
+.card h2 { margin: 0 0 6px; font-size: .9375rem; line-height: 1.4; }
+.card p { margin: 0; color: var(--app-color-text); font-size: .875rem; line-height: 1.5; overflow-wrap: anywhere; }
+.icon { flex-shrink: 0; margin-top: 1px; }
+.pending { color: #805400; }
+.approved { color: #21623c; }
+.rejected { color: #a32121; }
+.neutral { color: var(--app-color-muted); }
+.action { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; color: var(--app-color-primary); font-size: .875rem; font-weight: 700; text-underline-offset: 3px; }
+.action:focus-visible { outline: 3px solid #966100; outline-offset: 3px; border-radius: 4px; }
+.dismissible { position: relative; padding-right: 56px; }
+.dismiss { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: inherit; cursor: pointer; }
+.dismiss:hover { background: #21623c12; }
+.dismiss:focus-visible { outline: 3px solid #966100; outline-offset: 2px; }

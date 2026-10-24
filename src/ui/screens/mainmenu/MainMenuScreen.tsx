@@ -3,12 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 import MessageModal from '../../components/MessageModal/MessageModal';
+import StudentPhoto from '../../components/studentPhoto/StudentPhoto';
+import PhotoStatus, { type PhotoStatusAvailability } from '../../components/photoStatus/PhotoStatus';
 
 // import logoFatec from "../../../assets/images/fatec_itaquera_logo.png";
 const logoFatec = '/fatec_itaquera_logo.png'
-
-// import perfilDefault from "../../../assets/images/perfil_default.png";
-const perfilDefault = "/perfil_default.png"
 
 import { findProfile } from '../../../api/student/findProfile';
 import type { Student } from '../../../domains/Student';
@@ -22,30 +21,53 @@ export default function MainMenuScreen() {
   const [student, setStudent] = useState<Student | null>(null);
   const [messageDialog, setMessageDialog] = useState<'logout' | 'photo' | null>(null);
 
+  const [profileAvailability, setProfileAvailability] = useState<PhotoStatusAvailability>('loading');
+  const [online, setOnline] = useState(() => navigator.onLine);
+
   useEffect(() => {
+    const updateConnection = () => setOnline(navigator.onLine);
+    window.addEventListener('online', updateConnection);
+    window.addEventListener('offline', updateConnection);
+    return () => {
+      window.removeEventListener('online', updateConnection);
+      window.removeEventListener('offline', updateConnection);
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
     const loadProfile = async () => {
       const cachedData = localStorage.getItem('@Carteirinha:profile');
       if (cachedData) {
-        setStudent(JSON.parse(cachedData));
+        try { setStudent(JSON.parse(cachedData)); } catch { /* Cache inválido não impede a consulta. */ }
       }
-
-      if (navigator.onLine && !useMockEvents) {
+      // Mantém o cache para a identificação, mas só confirma status com a consulta atual.
+      setProfileAvailability('loading');
+      if (!online || useMockEvents) {
+        setProfileAvailability('unavailable');
+        return;
+      }
+      try {
         const result = await findProfile();
+        if (!active) return;
         if (result && !('code' in result)) {
-          const freshData = result as Student;
-          setStudent(freshData);
-          localStorage.setItem('@Carteirinha:profile', JSON.stringify(freshData));
+          setStudent(result);
+          setProfileAvailability('ready');
+          localStorage.setItem('@Carteirinha:profile', JSON.stringify(result));
+        } else {
+          setProfileAvailability('unavailable');
         }
+      } catch {
+        if (active) setProfileAvailability('unavailable');
       }
     };
+    void loadProfile();
+    return () => { active = false; };
+  }, [online]);
 
-    //   const result = await findProfile();
-    //   if (result && !('code' in result)) {
-    //     setStudent(result as Student);
-    //   }
-    // };
-    loadProfile();
-  }, []);
+  const photoSrc = online
+    ? (student?.photo && student.photoStatus === 'APPROVED' ? student.photo : '')
+    : (localStorage.getItem('@Carteirinha:photoOffline') || '');
 
   // const handleLogout = () => {
   //   const confirm = window.confirm("Tem certeza que deseja sair?");
@@ -74,29 +96,17 @@ export default function MainMenuScreen() {
         
         <div className={styles.subcontainer}>
           <div className={styles.avatarWrapper}>
-            <img 
-              src={
-                navigator.onLine 
-                  ? (student?.photo && student?.photoStatus === 'APPROVED' ? student.photo : perfilDefault)
-                  : (localStorage.getItem('@Carteirinha:photoOffline') || perfilDefault)
-              }
-              // src={
-              //   student?.photo && student?.photoStatus === 'APPROVED' 
-              //     ?student.photo
-              //     : perfilDefault
-              // } 
-              className={styles.avatar} 
-              alt="Perfil" 
-              onError={(e) => {
-                e.currentTarget.src = perfilDefault; 
-              }}
-            />
+            <StudentPhoto src={photoSrc} />
           </div>
 
           <h1 className={styles.welcomeText}>
             Bem-vindo(a), {student?.name ? student.name.split(' ')[0] : "Aluno"}
           </h1>
           <p className={styles.intro}>Acesse sua identificação, acompanhe eventos e consulte suas conquistas.</p>
+
+          <PhotoStatus key={`${student?.id || student?.ra || 'unknown'}:${student?.photoStatus || 'unknown'}`}
+            status={student?.photoStatus} availability={online ? profileAvailability : 'unavailable'}
+            studentKey={student?.id ? `id:${student.id}` : student?.ra ? `ra:${student.ra}` : undefined} />
 
           <div className={styles.gridContainer}>
 

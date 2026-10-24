@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test:photo": "node --import ./tests/register.mjs --test tests/photo-ux.test.mjs",
+    "test:photo:browser": "node tests/photo-ux.browser.mjs",
     "test:events": "node --import ./tests/register.mjs --test tests/events.test.mjs",
     "test:scanner": "node --import ./tests/register.mjs --test tests/scanner.test.mjs",
     "test:scanner:browser": "node tests/scanner.browser.mjs",
