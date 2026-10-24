@@ -125,3 +125,11 @@
     font-size: 0.9rem;
   }
 }
+.loadingDots { display: inline-flex; }
+.loadingDots > span { animation: loginDotPulse 1.2s ease-in-out infinite; }
+.loadingDots > span:nth-child(2) { animation-delay: .2s; }
+.loadingDots > span:nth-child(3) { animation-delay: .4s; }
+@keyframes loginDotPulse { 0%, 60%, 100% { opacity: .35; } 30% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .loadingDots > span { animation: none; opacity: 1; }
+}
