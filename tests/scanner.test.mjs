@@ -184,3 +184,49 @@ test('apiClient não vaza caminhos ou referências sensíveis no console', async
   delete manual.manual;
   assert.equal(presenceEventId(token(manual)), null);
 });
+
+
+test('aviso de localização antecede desafio e GPS; cancelamento interrompe registro', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalStorage = globalThis.localStorage;
+  const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  const calls = [];
+  let geoCalls = 0;
+  globalThis.localStorage = { getItem: () => 'student-jwt' };
+  Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { geolocation: { getCurrentPosition(ok) {
+    geoCalls++;
+    ok({ coords: { latitude: -23.545, longitude: -46.468, accuracy: 10 }, timestamp: Date.now() });
+  } } } });
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, body: options.body && JSON.parse(options.body) });
+    if (url.endsWith('/location-challenge')) return Response.json({ challengeId: 'challenge' });
+    if (url.endsWith('/scan') && !JSON.parse(options.body).position) return Response.json({ code: 'LOCATION_REQUIRED' }, { status: 400 });
+    return Response.json(success);
+  };
+  try {
+    let accept;
+    const notice = new Promise(resolve => { accept = resolve; });
+    const attempt = confirmAttendanceReference('reference-test-123', undefined, true, () => notice);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(calls.length, 0);
+    assert.equal(geoCalls, 0);
+    accept();
+    assert.deepEqual(await attempt, success);
+    assert.equal(geoCalls, 1);
+    assert.equal(calls.length, 2);
+    assert.equal(calls[1].body.position.challengeId, 'challenge');
+    calls.length = 0;
+    const decline = async () => { throw { code: 'LOCATION_CANCELLED' }; };
+    await assert.rejects(confirmAttendanceReference('reference-test-123', undefined, true, decline), error => error.code === 'LOCATION_CANCELLED');
+    assert.equal(calls.length, 0);
+    await assert.rejects(scanAttendance(valid, undefined, decline), error => error.code === 'LOCATION_CANCELLED');
+    assert.equal(calls.length, 1); // Somente verificação inicial recusada por LOCATION_REQUIRED.
+    assert.equal(geoCalls, 1);
+    assert.equal(errorFeedback({ code: 'PERMISSION_DENIED' }).title, 'Localização não confirmada');
+  } finally {
+    globalThis.fetch = originalFetch;
+    globalThis.localStorage = originalStorage;
+    if (descriptor) Object.defineProperty(globalThis, 'navigator', descriptor);
+    else delete globalThis.navigator;
+  }
+});

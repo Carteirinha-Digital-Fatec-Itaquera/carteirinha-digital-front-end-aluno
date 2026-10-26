@@ -1,3 +1,4 @@
+import { useLocationNotice } from '../../hooks/useLocationNotice';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, LoaderCircle, ScanLine, ShieldCheck } from 'lucide-react';
@@ -17,6 +18,7 @@ import styles from './style.module.css';
 
 export default function AlunoScannerScreen() {
   const navigate = useNavigate();
+  const { confirmLocation, locationNotice } = useLocationNotice();
   const [camera, setCamera] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -58,10 +60,15 @@ export default function AlunoScannerScreen() {
     const controller = new AbortController();
     request.current = controller;
     const isCurrent = () => alive.current && request.current === controller;
-    const timer = window.setTimeout(() => controller.abort(), 12000);
+    let timer = window.setTimeout(() => controller.abort(), 12000);
     void (async () => {
       try {
-        const data = await scanAttendance(qrToken, controller.signal);
+        const data = await scanAttendance(qrToken, controller.signal, async () => {
+          window.clearTimeout(timer);
+          await confirmLocation();
+          if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+          timer = window.setTimeout(() => controller.abort(), 12000);
+        });
         if (!isCurrent()) return;
         if (controller.signal.aborted) throw new Error("Timeout");
         const feedback = responseFeedback(data);
@@ -83,7 +90,7 @@ export default function AlunoScannerScreen() {
         if (isCurrent()) setBusy(false);
       }
     })();
-  }, [navigate]);
+  }, [navigate, confirmLocation]);
 
   function retry() {
     request.current?.abort();
@@ -112,5 +119,6 @@ export default function AlunoScannerScreen() {
       </>}
       <div className={styles.hint}><ShieldCheck size={20} aria-hidden="true" /><p>Use o QR de presença exibido no evento. Registre a entrada e lembre-se de registrar a saída ao final.</p></div>
     </section>}
+    {locationNotice}
   </EventsPageLayout>;
 }

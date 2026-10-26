@@ -108,9 +108,10 @@ export async function confirmAttendanceReference(
   qrReference: string,
   signal?: AbortSignal,
   locationRequired = false,
+  beforeLocation?: () => Promise<void>,
 ): Promise<ScanResponse> {
   if (!localStorage.getItem('token')) throw { status: '401' };
-  const position = locationRequired ? await studentPosition({ reference: qrReference }) : undefined;
+  const position = locationRequired ? await studentPosition({ reference: qrReference }, beforeLocation) : undefined;
   const response = await apiClient('/attendances/scan-reference', {
     method: 'POST',
     authenticated: true,
@@ -142,14 +143,15 @@ export async function confirmAttendanceReference(
   return data;
 }
 
-async function studentPosition(qr: { reference?: string; qrToken?: string }) {
+async function studentPosition(qr: { reference?: string; qrToken?: string }, beforeLocation?: () => Promise<void>) {
+  await beforeLocation?.();
   const challenge = await apiClient('/attendances/location-challenge', { method: 'POST', authenticated: true, body: qr });
   if (!challenge.ok) throw await buildApiError(challenge, '/attendances/location-challenge');
   const { challengeId } = await challenge.json();
   return { ...await locate(), challengeId };
 }
 
-export async function scanAttendance(qrToken: string, signal?: AbortSignal): Promise<ScanResponse> {
+export async function scanAttendance(qrToken: string, signal?: AbortSignal, beforeLocation?: () => Promise<void>): Promise<ScanResponse> {
   if (!presenceEventId(qrToken)) throw { code: 'INVALID_QR_TOKEN' };
   if (!localStorage.getItem('token')) throw { status: '401' };
   let response = await apiClient('/attendances/scan', {
@@ -158,7 +160,7 @@ export async function scanAttendance(qrToken: string, signal?: AbortSignal): Pro
   if (!response.ok) {
     const error = await buildApiError(response, '/attendances/scan');
     if (error.code !== 'LOCATION_REQUIRED') throw { ...error, status: String(response.status) };
-    const position = await studentPosition({ qrToken });
+    const position = await studentPosition({ qrToken }, beforeLocation);
     response = await apiClient('/attendances/scan', { method: 'POST', authenticated: true, body: { qrToken, position }, signal });
     if (!response.ok) throw { ...await buildApiError(response, '/attendances/scan'), status: String(response.status) };
   }

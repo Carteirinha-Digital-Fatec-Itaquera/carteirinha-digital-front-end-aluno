@@ -1,3 +1,4 @@
+import { useLocationNotice } from '../../hooks/useLocationNotice';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -73,6 +74,7 @@ export default function PublicEventsScreen({
   reference?: string;
 }) {
   const [search] = useSearchParams();
+  const { confirmLocation, locationNotice } = useLocationNotice();
   const activeReferenceParam = reference || search.get("ref") || search.get("reference") || "";
   const eventIdParam = search.get("evento") || search.get("id");
 
@@ -162,6 +164,10 @@ export default function PublicEventsScreen({
 
   const handleError = useCallback((error: unknown) => {
     setCameraActive(false);
+    if ((error as { code?: string })?.code === 'LOCATION_CANCELLED') {
+      setMessage('Registro cancelado. Nenhuma presença foi registrada.');
+      return;
+    }
     if (error instanceof VisitorApiError) {
       if (error.code === 'EXPIRED_OR_INVALID_QR') {
         setModalState({
@@ -188,7 +194,7 @@ export default function PublicEventsScreen({
         });
         return;
       }
-      if (['PERMISSION_DENIED', 'POSITION_UNAVAILABLE', 'TIMEOUT'].includes(error.code || '')) {
+      if (['PERMISSION_DENIED', 'POSITION_UNAVAILABLE', 'LOCATION_UNAVAILABLE', 'TIMEOUT'].includes(error.code || '')) {
         setModalState({
           visible: true,
           tone: 'error',
@@ -443,6 +449,7 @@ export default function PublicEventsScreen({
 
       let position;
       if (latestQr.locationRequired) {
+        await confirmLocation();
         const challenge = await visitorRequest<{ challengeId: string }>(
           "visitor/challenge",
           { reference: targetRef, eventId: latestQr.event.id },
@@ -505,6 +512,7 @@ export default function PublicEventsScreen({
         if (session && qr.seriesId === session.seriesId) {
           let position;
           if (qr.locationRequired) {
+            await confirmLocation();
             const challenge = await visitorRequest<{ challengeId: string }>(
               "visitor/challenge",
               { reference: scannedRef, eventId: qr.event.id },
@@ -537,7 +545,7 @@ export default function PublicEventsScreen({
         setBusy(false);
       }
     },
-    [session, loadCertificates, loadAttendances, handleError, preview],
+    [session, loadCertificates, loadAttendances, handleError, preview, confirmLocation],
   );
 
   const selectEventAndScan = (event: Series['events'][number]) => {
@@ -1104,6 +1112,7 @@ export default function PublicEventsScreen({
           onConfirm={modalState.onConfirm}
         />
       )}
+      {locationNotice}
     </main>
   );
 }

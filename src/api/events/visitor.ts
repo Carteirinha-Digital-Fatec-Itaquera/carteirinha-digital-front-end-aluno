@@ -115,12 +115,7 @@ export async function visitorRequest<T>(
 }
 export async function locate() {
   if (!navigator.geolocation)
-    throw Object.assign(
-      new Error(
-        "Localização indisponível. Procure a Secretaria presencialmente.",
-      ),
-      { code: "LOCATION_UNAVAILABLE" },
-    );
+    throw new VisitorApiError("Localização indisponível. Procure a Secretaria presencialmente.", 400, "LOCATION_UNAVAILABLE");
   const position = await new Promise<GeolocationPosition>((resolve, reject) =>
     navigator.geolocation.getCurrentPosition(
       resolve,
@@ -134,7 +129,7 @@ export async function locate() {
           code = 'TIMEOUT';
           msg = 'Não conseguimos obter sua localização agora. Confira o GPS e a conexão.';
         }
-        reject(Object.assign(new Error(msg), { code }));
+        reject(new VisitorApiError(msg, 400, code));
       },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     ),
