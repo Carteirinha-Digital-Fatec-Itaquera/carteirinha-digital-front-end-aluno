@@ -1,3 +1,4 @@
+import { useLocationNotice } from '../../hooks/useLocationNotice';
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
@@ -22,6 +23,7 @@ import styles from './PresencaConfirmacaoScreen.module.css';
 export default function PresencaConfirmacaoScreen() {
   const { reference } = useParams<{ reference: string }>();
   const navigate = useNavigate();
+  const { confirmLocation, locationNotice } = useLocationNotice();
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -96,13 +98,14 @@ export default function PresencaConfirmacaoScreen() {
 
     try {
       setSubmitting(true);
-      const data = await confirmAttendanceReference(reference, undefined, preview.locationRequired);
+      const data = await confirmAttendanceReference(reference, undefined, preview.locationRequired, confirmLocation);
       const feedback = responseFeedback(data);
       if (preview.event?.id) {
         feedback.eventId = preview.event.id;
       }
       setResult(feedback);
     } catch (err: unknown) {
+      if ((err as { code?: string })?.code === 'LOCATION_CANCELLED') return;
       setResult(errorFeedback(err));
     } finally {
       setSubmitting(false);
@@ -241,6 +244,7 @@ export default function PresencaConfirmacaoScreen() {
           </div>
         )}
       </div>
+      {locationNotice}
     </EventsPageLayout>
   );
 }
