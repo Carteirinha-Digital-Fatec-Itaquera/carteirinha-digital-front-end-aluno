@@ -175,3 +175,12 @@ test('apiClient não vaza caminhos ou referências sensíveis no console', async
     globalThis.fetch = originalFetch;
   }
 });
+
+ test('aceita QR manual sem expiração e rejeita token sem marcador manual', () => {
+  const manual = { ...claims, manual: true };
+  delete manual.exp;
+  assert.equal(presenceEventId(token(manual)), id);
+  assert.deepEqual(parsePresenceUrlOrToken(token(manual)), { type: 'jwt', token: token(manual) });
+  delete manual.manual;
+  assert.equal(presenceEventId(token(manual)), null);
+});
