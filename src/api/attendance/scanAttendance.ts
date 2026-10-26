@@ -27,7 +27,7 @@ export function presenceEventId(token: string): string | null {
       ['CHECK_IN', 'CHECK_OUT'].includes(claims.checkpoint) &&
       Number.isInteger(claims.checkpointVersion) && claims.checkpointVersion > 0 &&
       typeof claims.jti === 'string' && claims.jti.length > 0 &&
-      Number.isFinite(claims.iat) && Number.isFinite(claims.exp) ? claims.eventId : null;
+      Number.isFinite(claims.iat) && (claims.manual === true ? claims.exp === undefined : Number.isFinite(claims.exp)) ? claims.eventId : null;
   } catch { return null; }
 }
 
@@ -42,7 +42,7 @@ export interface QrPreviewResponse {
   checkpoint: {
     type: 'CHECK_IN' | 'CHECK_OUT';
   };
-  expiresAt: string;
+  expiresAt: string | null;
   serverTime: string;
 }
 
