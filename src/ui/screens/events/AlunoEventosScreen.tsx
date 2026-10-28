@@ -20,7 +20,7 @@ export default function AlunoEventosScreen() {
   const listedEvents = [...(events.data ?? [])].sort((a, b) =>
     Number(!!openCheckpoint(b)) - Number(!!openCheckpoint(a)) || Date.parse(a.startsAt) - Date.parse(b.startsAt));
   const history = [...(attendances.data ?? [])].sort((a, b) =>
-    Date.parse(b.checkInAt ?? '') - Date.parse(a.checkInAt ?? ''));
+    Date.parse(b.checkOutAt ?? b.checkInAt ?? '') - Date.parse(a.checkOutAt ?? a.checkInAt ?? ''));
   const attendanceByEvent = new Map((attendances.data ?? []).map(item => [item.eventId, item]));
 
   function selectTab(tab: string) {

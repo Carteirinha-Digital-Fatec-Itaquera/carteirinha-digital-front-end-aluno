@@ -174,7 +174,7 @@ export default function PresencaConfirmacaoScreen() {
                 <Clock size={14} />
                 {preview.checkpoint.type === 'CHECK_IN'
                   ? 'Entrada no Evento'
-                  : 'Saída e Certificado'}
+                  : 'Presença e certificado'}
               </span>
             </div>
 
@@ -223,7 +223,7 @@ export default function PresencaConfirmacaoScreen() {
                     <CheckCircle2 size={20} />
                     {preview.checkpoint.type === 'CHECK_IN'
                       ? 'Confirmar Entrada'
-                      : 'Confirmar Saída'}
+                      : 'Confirmar presença'}
                   </>
                 )}
               </button>

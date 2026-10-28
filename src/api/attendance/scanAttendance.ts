@@ -34,6 +34,7 @@ export function presenceEventId(token: string): string | null {
 export interface QrPreviewResponse {
   locationRequired?: boolean;
   event: {
+    attendanceMode?: string;
     id: string;
     title: string;
     speaker: string;

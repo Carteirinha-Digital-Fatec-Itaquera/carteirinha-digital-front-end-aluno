@@ -38,6 +38,7 @@ export function validVisitorCpf(value: string) {
 }
 export interface PublicQr {
   event: {
+    attendanceMode?: string;
     id: string;
     title: string;
     description?: string | null;
