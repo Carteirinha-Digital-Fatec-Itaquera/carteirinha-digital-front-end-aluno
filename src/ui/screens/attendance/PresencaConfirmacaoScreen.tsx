@@ -98,7 +98,9 @@ export default function PresencaConfirmacaoScreen() {
 
     try {
       setSubmitting(true);
-      const data = await confirmAttendanceReference(reference, undefined, preview.locationRequired, confirmLocation);
+      const currentPreview = await getAttendanceQrPreview(reference);
+      setPreview(currentPreview);
+      const data = await confirmAttendanceReference(reference, undefined, currentPreview.locationRequired, confirmLocation);
       const feedback = responseFeedback(data);
       if (preview.event?.id) {
         feedback.eventId = preview.event.id;
