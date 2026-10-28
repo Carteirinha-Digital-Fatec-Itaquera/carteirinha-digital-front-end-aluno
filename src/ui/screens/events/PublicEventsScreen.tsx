@@ -594,6 +594,7 @@ export default function PublicEventsScreen({
   // Identifica a presença atual para o evento selecionado
   const currentEventId = preview?.event.id;
   const currentAttendance = attendances.find((a) => a.eventId === currentEventId);
+  const finalOnly = preview?.event.attendanceMode === "FINAL_ONLY";
   const hasCheckIn = Boolean(currentAttendance?.checkInAt);
   const hasCheckOut = Boolean(currentAttendance?.checkOutAt);
 
@@ -648,7 +649,7 @@ export default function PublicEventsScreen({
             <div className={styles.eventHeaderRow}>
               <div>
                 <span className={`${styles.badge} ${hasCheckOut ? styles.badgeSuccess : hasCheckIn ? styles.badgeWarning : styles.badgeInfo}`}>
-                  {hasCheckOut ? "Presença Concluída" : hasCheckIn ? "Check-in Realizado" : "Check-in Disponível"}
+                  {hasCheckOut ? "Presença Concluída" : finalOnly ? "Confirmação final disponível" : hasCheckIn ? "Check-in Realizado" : "Check-in Disponível"}
                 </span>
                 <h2 className={styles.eventTitle}>{preview.event.title}</h2>
               </div>
@@ -713,7 +714,7 @@ export default function PublicEventsScreen({
 
                   <div className={styles.processSteps}>
                     {/* Passo 1: Check-in */}
-                    <div className={`${styles.stepBox} ${hasCheckIn ? styles.stepBoxCompleted : styles.stepBoxActive}`}>
+                    {!finalOnly && <div className={`${styles.stepBox} ${hasCheckIn ? styles.stepBoxCompleted : styles.stepBoxActive}`}>
                       <span className={styles.stepLabel}>Passo 1: Entrada</span>
                       <span className={styles.stepStatus}>
                         {hasCheckIn ? (
@@ -727,16 +728,17 @@ export default function PublicEventsScreen({
                       </span>
                     </div>
 
+                    }
                     {/* Passo 2: Check-out */}
                     <div className={`${styles.stepBox} ${hasCheckOut ? styles.stepBoxCompleted : hasCheckIn ? styles.stepBoxActive : ""}`}>
-                      <span className={styles.stepLabel}>Passo 2: Saída</span>
+                      <span className={styles.stepLabel}>{finalOnly ? "Confirmação ao final da palestra" : "Passo 2: Saída"}</span>
                       <span className={styles.stepStatus}>
                         {hasCheckOut ? (
                           <>
                             <CheckCircle2 size={16} color="#2e7d32" />
                             Confirmado {currentAttendance?.checkOutAt ? `às ${new Date(currentAttendance.checkOutAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : ""}
                           </>
-                        ) : hasCheckIn ? (
+                        ) : (finalOnly || hasCheckIn) ? (
                           "Aguardando término da atividade"
                         ) : (
                           "Disponível após check-in"
@@ -780,7 +782,7 @@ export default function PublicEventsScreen({
                             ? "Presença confirmada ✓"
                             : preview.checkpoint.type === "CHECK_IN"
                               ? "Confirmar Entrada (Check-in)"
-                              : "Confirmar Saída (Check-out)"}
+                              : "Confirmar presença ao final"}
                       </button>
                     )}
 
@@ -792,9 +794,9 @@ export default function PublicEventsScreen({
                         onClick={() => setCameraActive(true)}
                       >
                         <Camera size={18} />
-                        {!hasCheckIn
+                        {!(finalOnly || hasCheckIn)
                           ? "Escanear QR Code de Check-in no telão"
-                          : "Escanear QR Code de Check-out no telão"}
+                          : "Escanear QR de confirmação de presença no telão"}
                       </button>
                     )}
 
@@ -1003,7 +1005,7 @@ export default function PublicEventsScreen({
             </div>
 
             {!certificates.length ? (
-              <p>Seus certificados aparecerão aqui após a confirmação de saída (Check-out) das atividades.</p>
+              <p>Seus certificados aparecerão aqui após a confirmação de presença nas atividades.</p>
             ) : (
               certificates.map((cert) => (
                 <article className={styles.activity} key={cert.id}>

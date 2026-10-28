@@ -23,7 +23,7 @@ export function responseFeedback(data: ScanResponse): ScanFeedback {
     message: 'Lembre-se de registrar sua saída ao final da palestra.', checkInAt: data.timestamp,
   } : {
     tone: 'success', title: 'Presença confirmada!', eventTitle: data.eventTitle,
-    message: 'Entrada e saída confirmadas. Consulte seus certificados para acompanhar a emissão.',
+    message: 'Presença confirmada. Consulte seus certificados para acompanhar a emissão.',
     checkOutAt: data.timestamp, certificates: true,
   };
 }
