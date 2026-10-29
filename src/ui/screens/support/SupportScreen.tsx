@@ -1,3 +1,4 @@
+import MessageModal from '../../components/MessageModal/MessageModal';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../../components/page/PageLayout';
@@ -7,7 +8,7 @@ import { eventService } from '../../../services/eventService';
 
 const categories: Record<string, string> = { DATA: 'Dados cadastrais', PHOTO_CARD: 'Foto ou carteirinha', EVENT: 'Presença em evento', CERTIFICATE: 'Certificado', ACCESS: 'Acesso à conta', OTHER: 'Outro problema' };
 const statuses: Record<string, string> = { OPEN: 'Aberto', IN_PROGRESS: 'Em atendimento', WAITING_STUDENT: 'Aguardando você', RESOLVED: 'Resolvido', CLOSED: 'Encerrado' };
-type Ticket = { id: string; protocol: string; subject: string; category: string; status: string; version: number; unread: boolean; createdAt: string; assignedSecretaryId: number | null; eventId: string | null; certificateId: string | null; requestedField?: string; proposedValue?: string };
+type Ticket = { closeReason?: string | null; id: string; protocol: string; subject: string; category: string; status: string; version: number; unread: boolean; createdAt: string; assignedSecretaryId: number | null; eventId: string | null; certificateId: string | null; requestedField?: string; proposedValue?: string };
 type Message = { id: string; authorRole: string; body: string; createdAt: string };
 type Detail = { ticket: Ticket; messages: Message[]; messageNextCursor: string | null };
 type Page = { items: Ticket[]; nextCursor: string | null };
@@ -25,6 +26,8 @@ export default function SupportScreen() {
   const [detail, setDetail] = useState<Detail | null>(null);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+  const [dangerAction, setDangerAction] = useState<'cancel' | 'delete' | null>(null);
+  const [actionReason, setActionReason] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [form, setForm] = useState({ category: 'DATA', subject: '', description: '', requestedField: '', proposedValue: '', eventId: '', certificateId: '' });
@@ -75,14 +78,14 @@ export default function SupportScreen() {
       createKey.current = crypto.randomUUID(); setShowNew(false); navigate('/suporte/' + value.id);
     } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao abrir solicitação.'); } finally { setBusy(false); }
   }
-  async function act(action: string) {
+  async function act(action: string, extra?: object) {
     if (!detail || !id) return;
     setBusy(true); setError('');
-    const payload = JSON.stringify({ action, message: message.trim(), expectedVersion: detail.ticket.version });
+    const payload = JSON.stringify({ action, message: message.trim(), extra, expectedVersion: detail.ticket.version });
     if (!actionKey.current || actionKey.current.payload !== payload) actionKey.current = { payload, id: crypto.randomUUID() };
     try {
-      await request('/' + id + '/' + action, { requestId: actionKey.current.id, expectedVersion: detail.ticket.version, message: message.trim() });
-      actionKey.current = null; setMessage(''); await load();
+      await request('/' + id + '/' + action, { requestId: actionKey.current.id, expectedVersion: detail.ticket.version, ...(extra ?? { message: message.trim() }) });
+      actionKey.current = null; setMessage(''); setActionReason(''); if (action === 'delete') { navigate('/suporte', { replace: true }); return; } await load();
     } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao enviar.'); } finally { setBusy(false); }
   }
   async function moreMessages() {
@@ -112,24 +115,27 @@ export default function SupportScreen() {
           <button disabled={busy} type="submit">Enviar solicitação</button>
         </form>}
         {!error && !page.items.length && <p>Nenhuma solicitação encontrada.</p>}
-        <ul>{page.items.map(ticket => <li key={ticket.id}><Link to={'/suporte/' + ticket.id}><strong>{ticket.protocol} — {ticket.subject}</strong></Link><p>{statuses[ticket.status]} · {categories[ticket.category]} · {date(ticket.createdAt)}{ticket.unread && ' · Nova atualização'}</p></li>)}</ul>
+        <ul>{page.items.map(ticket => <li key={ticket.id}><Link to={'/suporte/' + ticket.id}><strong>{ticket.protocol} — {ticket.subject}</strong></Link><p>{ticket.closeReason?.startsWith('CANCELLED_') ? 'Cancelado' : statuses[ticket.status]} · {categories[ticket.category]} · {date(ticket.createdAt)}{ticket.unread && ' · Nova atualização'}</p></li>)}</ul>
         {page.nextCursor && <button disabled={busy} onClick={() => void moreTickets()}>Carregar mais solicitações</button>}
       </>}
       {id && !detail && !error && <p role="status">Carregando atendimento…</p>}
       {detail && <>
-        <h2>{detail.ticket.protocol}</h2><h3>{detail.ticket.subject}</h3><p>{categories[detail.ticket.category]} · {statuses[detail.ticket.status]}</p>
+        <h2>{detail.ticket.protocol}</h2><h3>{detail.ticket.subject}</h3><p>{categories[detail.ticket.category]} · {detail.ticket.closeReason?.startsWith('CANCELLED_') ? 'Cancelado' : statuses[detail.ticket.status]}</p>
         {detail.ticket.proposedValue && <p>Informação proposta: {detail.ticket.proposedValue}</p>}
         {detail.ticket.eventId && <Link to="/eventos">Consultar eventos</Link>}{detail.ticket.certificateId && <Link to="/certificados">Consultar certificados</Link>}
         <h3>Conversa com a Secretaria</h3>
         {detail.messageNextCursor && <button disabled={busy} onClick={() => void moreMessages()}>Mensagens anteriores</button>}
         <ol className="support-conversation">{detail.messages.map(item => <li key={item.id}><strong>{item.authorRole === 'STUDENT' ? 'Você' : 'Secretaria'}</strong><time>{date(item.createdAt)}</time><p>{item.body}</p></li>)}</ol>
         <label>{terminal ? 'Motivo para reabrir ou confirmação de encerramento' : 'Sua mensagem'}<textarea minLength={terminal ? 3 : 1} maxLength={3000} value={message} onChange={e => setMessage(e.target.value)} /></label>
+        <label>Motivo para cancelar ou excluir<input maxLength={1000} minLength={3} value={actionReason} onChange={e => setActionReason(e.target.value)} /></label>
+        <div className="support-tools">{!terminal && <button disabled={busy || actionReason.trim().length < 3} onClick={() => setDangerAction('cancel')}>Cancelar solicitação</button>}<button disabled={busy || actionReason.trim().length < 3} onClick={() => setDangerAction('delete')}>Excluir solicitação</button></div>
         <div className="support-tools">
           {!terminal && <button disabled={busy || !message.trim()} onClick={() => void act('messages')}>Enviar mensagem</button>}
-          {((detail.ticket.status === 'OPEN' && !detail.ticket.assignedSecretaryId) || detail.ticket.status === 'RESOLVED') && <button disabled={busy || message.trim().length < 3} onClick={() => void act('close')}>{detail.ticket.status === 'RESOLVED' ? 'Confirmar solução e encerrar' : 'Cancelar solicitação'}</button>}
+          {detail.ticket.status === 'RESOLVED' && <button disabled={busy || message.trim().length < 3} onClick={() => void act('close')}>{detail.ticket.status === 'RESOLVED' ? 'Confirmar solução e encerrar' : 'Cancelar solicitação'}</button>}
           {terminal && <><p>Reabertura disponível por até sete dias após a resolução ou o encerramento.</p><button disabled={busy || message.trim().length < 3} onClick={() => void act('reopen')}>Reabrir solicitação</button></>}
         </div>
       </>}
+      <MessageModal visible={dangerAction !== null} tone="warning" title={dangerAction === 'delete' ? 'Excluir solicitação?' : 'Cancelar solicitação?'} message={dangerAction === 'delete' ? 'A solicitação será retirada das listas do aluno e da Secretaria. O histórico será preservado para auditoria.' : 'O atendimento será encerrado como cancelado. Você poderá reabri-lo dentro do prazo de sete dias.'} confirmText={dangerAction === 'delete' ? 'Confirmar exclusão' : 'Confirmar cancelamento'} cancelText="Voltar" onCancel={() => setDangerAction(null)} onConfirm={() => { const action = dangerAction; setDangerAction(null); if (action && !busy) void act(action, { reason: actionReason.trim(), confirmed: true }); }} />
     </section>
   </PageLayout>;
 }
