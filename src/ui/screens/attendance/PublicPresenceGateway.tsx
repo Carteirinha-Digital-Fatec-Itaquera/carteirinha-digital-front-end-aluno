@@ -7,11 +7,11 @@ import {
   Clock,
   MapPin,
   User,
-  LoaderCircle,
   Sparkles,
 } from 'lucide-react';
 import { visitorRequest, VisitorApiError, type PublicQr } from '../../../api/events/visitor';
 import MessageModal from '../../components/MessageModal/MessageModal';
+import QrReadingFeedback from '../scanner/QrReadingFeedback';
 import styles from './PublicPresenceGateway.module.css';
 
 function formatEventTime(startsAt?: string | null, endsAt?: string | null) {
@@ -151,12 +151,7 @@ export default function PublicPresenceGateway() {
 
       {connectionNotice && <p role="status" aria-live="polite" className={styles.loadingBox}>{connectionNotice}</p>}
 
-      {loading && (
-        <div role="status" className={styles.loadingBox}>
-          <LoaderCircle size={40} className={styles.spin} />
-          <p>Carregando dados do evento...</p>
-        </div>
-      )}
+      {loading && <QrReadingFeedback />}
 
       {!loading && preview && (
         <section className={styles.eventCard} aria-labelledby="event-title">
