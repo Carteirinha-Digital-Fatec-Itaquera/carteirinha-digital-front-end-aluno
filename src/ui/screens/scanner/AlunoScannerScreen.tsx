@@ -1,6 +1,6 @@
 import { useLocationNotice } from '../../hooks/useLocationNotice';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Camera, LoaderCircle, ScanLine, ShieldCheck } from 'lucide-react';
 import {
   scanAttendance,
@@ -19,7 +19,8 @@ import styles from './style.module.css';
 export default function AlunoScannerScreen() {
   const navigate = useNavigate();
   const { confirmLocation, locationNotice } = useLocationNotice();
-  const [camera, setCamera] = useState(false);
+  const location = useLocation();
+  const [camera, setCamera] = useState(() => location.state?.openCamera === true);
   const [attempt, setAttempt] = useState(0);
   const [busy, setBusy] = useState(false);
   const [token, setToken] = useState('');
@@ -117,7 +118,7 @@ export default function AlunoScannerScreen() {
           </form>
         </details>}
       </>}
-      <div className={styles.hint}><ShieldCheck size={20} aria-hidden="true" /><p>Use o QR de presença exibido no evento. Registre a entrada e lembre-se de registrar a saída ao final.</p></div>
+      <div className={styles.hint}><ShieldCheck size={20} aria-hidden="true" /><p>Use o QR de presença exibido pela organização ao final da palestra. Aguarde a confirmação do servidor.</p></div>
     </section>}
     {locationNotice}
   </EventsPageLayout>;
