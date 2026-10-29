@@ -31,7 +31,7 @@ export default function PresencaConfirmacaoScreen() {
       const failure = e as { code?: string; message?: string; status?: string };
       if (failure.code === 'LOCATION_CANCELLED') return;
       const rejected = Number(failure.status) >= 400 && !['LOCATION_REQUIRED','PERMISSION_DENIED','LOCATION_UNAVAILABLE','TIMEOUT'].includes(failure.code || '');
-      await presenceQueue.put({ ...item, state: rejected ? 'rejected' : 'gps', message: failure.message });
+      await presenceQueue.put({ ...item, state: failure.status === '401' ? 'login' : rejected ? 'rejected' : 'gps', message: failure.message });
       setError(failure.message || 'Não conseguimos confirmar. Volte com conexão e localização disponíveis.');
     } finally { setBusy(false); }
   };
