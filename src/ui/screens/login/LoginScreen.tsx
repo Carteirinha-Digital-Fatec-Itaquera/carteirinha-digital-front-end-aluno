@@ -1,3 +1,4 @@
+import { stopOfflineSession } from '../../../api/attendance/offlinePresence';
 import AuthLayout from '../../components/page/AuthLayout';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -73,6 +74,7 @@ export default function LoginScreen() {
                   const result = await login(auth);
 
                   if ('token' in result) {
+                    await stopOfflineSession();
                     localStorage.setItem("token", result.token);
 
                     const returnUrl = sessionStorage.getItem("returnUrl");

@@ -1,252 +1,49 @@
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { useLocationNotice } from '../../hooks/useLocationNotice';
-import { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-  AlertCircle,
-  CheckCircle2,
-  Clock,
-  LoaderCircle,
-  MapPin,
-  QrCode,
-  User,
-} from 'lucide-react';
-import {
-  getAttendanceQrPreview,
-  confirmAttendanceReference,
-  type QrPreviewResponse,
-} from '../../../api/attendance/scanAttendance';
-import { responseFeedback, errorFeedback, type ScanFeedback } from '../scanner/scanFeedback';
+import { captureReference, currentAccount, presenceMessage, resumePresence, type PendingPresence } from '../../../api/attendance/offlinePresence';
+import { confirmAttendanceReference, getAttendanceQrPreview } from '../../../api/attendance/scanAttendance';
+import { responseFeedback } from '../scanner/scanFeedback';
 import ScanResultCard from '../scanner/ScanResultCard';
 import EventsPageLayout from '../events/EventsPageLayout';
 import styles from './PresencaConfirmacaoScreen.module.css';
-
 export default function PresencaConfirmacaoScreen() {
   const { reference } = useParams<{ reference: string }>();
-  const navigate = useNavigate();
   const { confirmLocation, locationNotice } = useLocationNotice();
-
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [preview, setPreview] = useState<QrPreviewResponse | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [result, setResult] = useState<ScanFeedback | null>(null);
-
-  const requestRef = useRef<AbortController | null>(null);
-
+  const [item, setItem] = useState<PendingPresence | null>(null);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
   useEffect(() => {
-    // 1. Verificação de autenticação de aluno
-    const token = localStorage.getItem('token');
-    if (!token) {
-      const returnTarget = reference ? `/p/${reference}/aluno` : '/eventos';
-      sessionStorage.setItem('returnUrl', returnTarget);
-      navigate('/login', { replace: true });
-      return;
-    }
-
-    const controller = new AbortController();
-    requestRef.current = controller;
-
-    void (async () => {
-      if (!reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference)) {
-        setLoading(false);
-        setErrorMessage('Link de presença inválido ou incompleto.');
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setErrorMessage(null);
-        const data = await getAttendanceQrPreview(reference, controller.signal);
-        setPreview(data);
-      } catch (err: unknown) {
-        if (controller.signal.aborted) return;
-        const errObj = err as { code?: string; message?: string; status?: string };
-        if (errObj.code === 'EXPIRED_OR_INVALID_QR') {
-          setErrorMessage(
-            'Este QR Code já expirou. Por favor, aponte a câmera novamente para o telão para fazer uma nova leitura.',
-          );
-        } else if (errObj.code === 'CHECKPOINT_CLOSED') {
-          setErrorMessage(
-            'O checkpoint de presença para este evento foi encerrado ou alterado.',
-          );
-        } else if (errObj.status === '401') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('@Carteirinha:profile');
-          const returnTarget = reference ? `/p/${reference}/aluno` : '/eventos';
-          sessionStorage.setItem('returnUrl', returnTarget);
-          navigate('/login', { replace: true });
-          return;
-        } else {
-          setErrorMessage(
-            errObj.message || 'Não foi possível carregar os dados deste evento.',
-          );
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
-      }
-    })();
-
-    return () => {
-      controller.abort();
-    };
-  }, [reference, navigate]);
-
-  const handleConfirm = async () => {
-    if (!reference || submitting || !preview) return;
-
+    let alive = true;
+    const refresh = async () => { try { const value = (await presenceQueue.list()).find(i => i.accountId === currentAccount() && i.reference === reference); if (alive && value) setItem(value); } catch { /* Initial capture displays failure. */ } };
+    void (async () => { try { if (!reference) throw new Error('Link inválido.'); const value = await captureReference(reference); if (alive) setItem(value); await resumePresence(); await refresh(); } catch (e) { if (alive) setError(e instanceof Error ? e.message : 'Não foi possível salvar neste aparelho. Mantenha a tela aberta e procure a organização.'); } })();
+    const timer = setInterval(refresh, 1000); return () => { alive = false; clearInterval(timer); };
+  }, [reference]);
+  const finishGps = async () => {
+    if (!item || busy || document.hidden) return;
+    setBusy(true); setError('');
     try {
-      setSubmitting(true);
-      const currentPreview = await getAttendanceQrPreview(reference);
-      setPreview(currentPreview);
-      const data = await confirmAttendanceReference(reference, undefined, currentPreview.locationRequired, confirmLocation);
-      const feedback = responseFeedback(data);
-      if (preview.event?.id) {
-        feedback.eventId = preview.event.id;
-      }
-      setResult(feedback);
-    } catch (err: unknown) {
-      if ((err as { code?: string })?.code === 'LOCATION_CANCELLED') return;
-      setResult(errorFeedback(err));
-    } finally {
-      setSubmitting(false);
-    }
+      const preview = await getAttendanceQrPreview(item.reference);
+      const result = await confirmAttendanceReference(item.reference, undefined, preview.locationRequired !== false, confirmLocation);
+      await presenceQueue.put({ ...item, state: 'confirmed', result, eventId: preview.event.id });
+    } catch (e) {
+      const failure = e as { code?: string; message?: string; status?: string };
+      if (failure.code === 'LOCATION_CANCELLED') return;
+      const rejected = Number(failure.status) >= 400 && !['LOCATION_REQUIRED','PERMISSION_DENIED','LOCATION_UNAVAILABLE','TIMEOUT'].includes(failure.code || '');
+      await presenceQueue.put({ ...item, state: rejected ? 'rejected' : 'gps', message: failure.message });
+      setError(failure.message || 'Não conseguimos confirmar. Volte com conexão e localização disponíveis.');
+    } finally { setBusy(false); }
   };
-
-  const handleRetry = () => {
-    navigate('/eventos/scanner');
-  };
-
-  if (result) {
-    return (
-      <EventsPageLayout
-        title="Presença em evento"
-        backTo="/eventos"
-        backLabel="Voltar aos eventos"
-      >
-        <div className={styles.container}>
-          <ScanResultCard result={result} onRetry={handleRetry} />
-        </div>
-      </EventsPageLayout>
-    );
-  }
-
-  return (
-    <EventsPageLayout
-      title="Confirmar presença"
-      backTo="/eventos"
-      backLabel="Voltar aos eventos"
-    >
-      <div className={styles.container}>
-        {loading && (
-          <div role="status" className={`${styles.card} ${styles.loadingState}`}>
-            <LoaderCircle size={44} className={styles.spin} />
-            <p>Carregando informações do evento...</p>
-          </div>
-        )}
-
-        {!loading && errorMessage && (
-          <div role="alert" className={`${styles.card} ${styles.errorState}`}>
-            <AlertCircle size={48} color="#BA1A1A" />
-            <h2 className={styles.errorTitle}>QR Code Inválido ou Expirado</h2>
-            <p className={styles.errorMessage}>{errorMessage}</p>
-            <div className={styles.actions} style={{ width: '100%' }}>
-              <Link to="/eventos/scanner" className={styles.confirmButton}>
-                <QrCode size={18} />
-                Escanear novamente no telão
-              </Link>
-              <Link to="/eventos" className={styles.secondaryButton}>
-                Voltar para eventos
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {!loading && !errorMessage && preview && (
-          <div className={styles.card}>
-            <div className={styles.header}>
-              <span
-                className={`${styles.badge} ${
-                  preview.checkpoint.type === 'CHECK_IN'
-                    ? styles.badgeCheckIn
-                    : styles.badgeCheckOut
-                }`}
-              >
-                <Clock size={14} />
-                {preview.checkpoint.type === 'CHECK_IN'
-                  ? 'Entrada no Evento'
-                  : 'Presença e certificado'}
-              </span>
-            </div>
-
-            <div className={styles.eventInfo}>
-              <h2 className={styles.title}>{preview.event.title}</h2>
-
-              <div className={styles.metaList}>
-                {preview.event.speaker && (
-                  <div className={styles.metaItem}>
-                    <User size={18} />
-                    <span>Palestrante: <strong>{preview.event.speaker}</strong></span>
-                  </div>
-                )}
-                {preview.event.location && (
-                  <div className={styles.metaItem}>
-                    <MapPin size={18} />
-                    <span>Local: <strong>{preview.event.location}</strong></span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className={styles.alertBox}>
-              <AlertCircle size={20} />
-              <span>
-                Para registrar sua presença com segurança, clique no botão abaixo para confirmar sua participação.
-              </span>
-            </div>
-            {preview.locationRequired && <p>Sua localização será solicitada para confirmar a proximidade. Se não funcionar, procure a Secretaria presencialmente.</p>}
-
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={styles.confirmButton}
-                onClick={handleConfirm}
-                disabled={submitting}
-                aria-busy={submitting}
-              >
-                {submitting ? (
-                  <>
-                    <LoaderCircle size={20} className={styles.spin} />
-                    Registrando presença...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 size={20} />
-                    {preview.checkpoint.type === 'CHECK_IN'
-                      ? 'Confirmar Entrada'
-                      : 'Confirmar presença'}
-                  </>
-                )}
-              </button>
-
-              <Link to="/eventos" className={styles.secondaryButton}>
-                Cancelar
-              </Link>
-
-              {reference && (
-                <Link
-                  to={`/visitantes?ref=${encodeURIComponent(reference)}`}
-                  className={styles.secondaryButton}
-                >
-                  Sou visitante, não estudante
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-      {locationNotice}
-    </EventsPageLayout>
-  );
+  const feedback = item?.result ? { ...responseFeedback(item.result), eventId: item.eventId } : null;
+  return <EventsPageLayout title="Presença em evento" backTo="/eventos" backLabel="Voltar aos eventos"><div className={styles.container}>
+    {feedback ? <ScanResultCard result={feedback} onRetry={() => window.location.assign('/eventos/scanner')} /> : <section className={styles.card}>
+      <h2>{item?.title || 'Seu registro de presença'}</h2>
+      <p role="status" aria-live="polite">{item ? presenceMessage(item) : error ? 'Tentativa não salva neste aparelho.' : 'Salvando sua tentativa de presença…'}</p>
+      {error && <p role="alert">{error}</p>}
+      <p>Mantenha o aplicativo aberto até aparecer a confirmação do servidor. Se sair, volte assim que conseguir conexão. O horário da leitura não garante aceitação após o encerramento.</p>
+      {item?.state === 'gps' && <button className={styles.confirmButton} disabled={busy} onClick={finishGps}>{busy ? 'Obtendo localização e enviando…' : 'Concluir com localização atual'}</button>}
+      {item?.state === 'login' && <Link to="/login" onClick={() => sessionStorage.setItem('returnUrl', `/p/${reference}/aluno`)}>Entrar novamente</Link>}
+      <Link to="/eventos" className={styles.secondaryButton}>Voltar aos eventos</Link>
+    </section>}
+  </div>{locationNotice}</EventsPageLayout>;
 }
