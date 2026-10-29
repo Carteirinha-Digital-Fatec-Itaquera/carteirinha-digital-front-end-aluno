@@ -40,9 +40,24 @@
     const run = async () => {
       const active = await queue.control(); if (!active || active.expiresAt <= Date.now()) return;
       for (const item of await queue.list()) {
-        if (item.accountId !== active.accountId || item.locationRequired !== false || ['confirmed','rejected','login','gps','choice'].includes(item.state) || item.nextAt > Date.now()) continue;
+        if (item.accountId !== active.accountId || item.locationRequired === true || ['confirmed','rejected','login','gps','choice'].includes(item.state) || item.nextAt > Date.now()) continue;
         const current = await queue.control(); if (!current || current.generation !== active.generation) return;
         try {
+          if (item.locationRequired === undefined) {
+            // Policy lookup is public and sends no attendance. Unknown never authorizes a submit.
+            const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), 15000);
+            let preview;
+            try {
+              const response = await fetch('/api/public/events/qr/' + encodeURIComponent(item.reference), { credentials: 'same-origin', cache: 'no-store', signal: controller.signal });
+              preview = await response.json();
+              if (!response.ok) throw Object.assign(new Error(preview.message || 'Não foi possível consultar o evento.'), { status: response.status, code: preview.code });
+            } finally { clearTimeout(timer); }
+            if (typeof preview.locationRequired !== 'boolean') throw new Error('Política de localização não confirmada.');
+            item.locationRequired = preview.locationRequired;
+            item.title = preview.event?.title; item.eventId = preview.event?.id;
+            if (preview.locationRequired) { item.state = 'gps'; await queue.put(item); continue; }
+            await queue.put(item);
+          }
           // Always check committed receipts before submitting, including after a lost response.
           item.state = 'checking'; await queue.put(item);
           const status = await request('status', { accountId: item.accountId, requestIds: [item.requestId] });
@@ -68,6 +83,6 @@
   }
   scope.presenceQueue = { ...queue, flush, request, disableGeneration };
   if (typeof scope.skipWaiting === 'function') {
-    scope.addEventListener('sync', event => { if (event.tag === 'student-presence') event.waitUntil(flush().then(async () => { const items = await queue.list(); const active = await queue.control(); if (active && active.expiresAt > Date.now() && items.some(i => i.accountId === active.accountId && ['unknown','waiting','checking','submitting'].includes(i.state) && i.locationRequired === false)) throw new Error('Retry pending'); })); });
+    scope.addEventListener('sync', event => { if (event.tag === 'student-presence') event.waitUntil(flush().then(async () => { const items = await queue.list(); const active = await queue.control(); if (active && active.expiresAt > Date.now() && items.some(i => i.accountId === active.accountId && ['unknown','waiting','checking','submitting'].includes(i.state) && i.locationRequired !== true)) throw new Error('Retry pending'); })); });
   }
 })(globalThis);

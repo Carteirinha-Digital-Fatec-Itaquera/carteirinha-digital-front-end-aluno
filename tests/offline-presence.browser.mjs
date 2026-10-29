@@ -6,7 +6,7 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
  const browser = await chromium.launch({ channel: 'msedge', headless: true });
  try {
  const context = await browser.newContext();
- let sends = 0; let loseResponse = true; const receipts = new Map();
+ const submittedReferences = []; let sends = 0; let loseResponse = true; const receipts = new Map();
  await context.route('**/*', async route => {
   const url = new URL(route.request().url());
   if (url.origin !== 'http://localhost:4173') return route.abort();
@@ -14,7 +14,7 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
   const body = route.request().postDataJSON(); const path = url.pathname.split('/').at(-1);
   if (path === 'status') return route.fulfill({ json: { receipts: body.requestIds.flatMap(id => receipts.has(id) ? [receipts.get(id)] : []), missingRequestIds: body.requestIds.filter(id => !receipts.has(id)) } });
   if (path === 'submit') {
-   sends++;
+   sends++; submittedReferences.push(body.reference);
    const receipt = { ...body, status: 'confirmed', message: 'Presença confirmada.', result: { success: true, type: 'CHECK_OUT', status: 'CONFIRMED', timestamp: new Date().toISOString(), eventTitle: 'Evento fictício', message: 'Presença confirmada.' } };
    receipts.set(body.requestId, receipt);
    if (loseResponse) { loseResponse = false; return route.abort(); }
@@ -51,6 +51,27 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
    Object.defineProperties(sync, { tag: { value: 'student-presence' }, waitUntil: { value: promise => { completion = promise; } } });
    dispatchEvent(sync); await completion;
    if ((await q.list()).find(i => i.requestId === '55555555-5555-4555-8555-555555555555').state !== 'confirmed') throw new Error('Worker sync handler did not confirm');
+   let policySubmits = 0;
+   globalThis.fetch = async (url, options) => {
+     const path = String(url);
+     if (path.includes('/public/events/qr/')) {
+       if (path.endsWith('unknown_policy_reference')) throw new TypeError('Offline policy');
+       return new Response(JSON.stringify({ locationRequired: path.split('/').at(-1) === 'gps_policy_reference', event: { id: 'event-fixture', title: 'Fixture' } }), { status: 200 });
+     }
+     const body = JSON.parse(options.body);
+     if (path.endsWith('/submit')) policySubmits++;
+     return new Response(JSON.stringify(path.endsWith('/status') ? { receipts: [] } : { ...body, status: 'confirmed', result: { success: true, type: 'CHECK_IN', status: 'CHECKED_IN', message: 'Entrada', timestamp: new Date().toISOString(), eventTitle: 'Fixture' } }), { status: 200 });
+   };
+   for (const [digit, reference, state] of [['9','no_gps_policy_reference','waiting'], ['a','gps_policy_reference','waiting'], ['b','unknown_policy_reference','waiting'], ['c','choice_policy_reference','choice']]) {
+     await q.put({ ...item, requestId: digit.repeat(8) + '-' + digit.repeat(4) + '-4' + digit.repeat(3) + '-8' + digit.repeat(3) + '-' + digit.repeat(12), reference, state, locationRequired: undefined });
+   }
+   await q.flush();
+   const policyRows = await q.list();
+   if (policySubmits !== 1) throw new Error('Only explicit no-GPS policy may submit');
+   if (policyRows.find(i => i.reference === 'no_gps_policy_reference').state !== 'confirmed') throw new Error('Worker failed no-GPS policy recovery');
+   if (policyRows.find(i => i.reference === 'gps_policy_reference').state !== 'gps') throw new Error('Worker must defer fresh GPS');
+   if (policyRows.find(i => i.reference === 'unknown_policy_reference').state !== 'unknown') throw new Error('Unknown policy must remain pending');
+   if (policyRows.find(i => i.reference === 'choice_policy_reference').state !== 'choice') throw new Error('Worker must not resolve awaiting choice');
    await q.authorize(null);
  }, { accountId, item });
  const token = 'header.' + Buffer.from(JSON.stringify({ accountId, role: 'student' })).toString('base64url') + '.signature';
@@ -83,9 +104,9 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
  await page.getByRole('button', { name: /Sou visitante/ }).waitFor();
  await page.waitForFunction(async () => (await presenceQueue.list()).some(i => i.reference === 'policy_true_reference'));
  await page.evaluate(async ({ accountId }) => { const item = (await presenceQueue.list()).find(i => i.reference === 'policy_true_reference'); if (item.state !== 'choice') throw new Error('Gateway must await student choice'); await presenceQueue.put({ ...item, locationRequired: false }); await presenceQueue.authorize({ accountId, expiresAt: Date.now() + 600000, generation: 'choice-test' }); await presenceQueue.flush(); }, { accountId });
- assert.equal(sends, 1, 'gateway must not submit student presence before identity choice');
+ assert.equal(submittedReferences.includes('policy_true_reference'), false, 'gateway must not submit student presence before identity choice');
  await page.getByRole('button', { name: /Sou visitante/ }).click();
  await page.waitForURL('**/visitantes?ref=policy_true_reference');
- assert.equal(sends, 1, 'visitor branch must not submit student presence');
+ assert.equal(submittedReferences.includes('policy_true_reference'), false, 'visitor branch must not submit student presence');
  } finally { await browser.close(); }
 });

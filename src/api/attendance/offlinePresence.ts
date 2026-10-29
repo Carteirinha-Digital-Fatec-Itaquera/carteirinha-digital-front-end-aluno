@@ -60,7 +60,7 @@ export async function resumePresence() {
     }
   }
   await presenceQueue.flush();
-  if ('serviceWorker' in navigator && (await presenceQueue.list()).some(i => i.accountId === accountId && i.locationRequired === false && ['waiting','unknown'].includes(i.state))) {
+  if ('serviceWorker' in navigator && (await presenceQueue.list()).some(i => i.accountId === accountId && i.locationRequired !== true && ['waiting','unknown','checking','submitting'].includes(i.state))) {
     const registration = await navigator.serviceWorker.ready;
     const sync = (registration as ServiceWorkerRegistration & { sync?: { register(tag: string): Promise<void> } }).sync;
     await sync?.register('student-presence').catch(() => undefined);
