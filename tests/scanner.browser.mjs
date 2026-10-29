@@ -1,16 +1,19 @@
 // Execute com o servidor Vite já aberto. Câmera e HTTP são controlados neste teste.
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
-const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || 'chrome', headless: true });
+const browser = await chromium.launch({ ...(process.env.BROWSER_PATH ? { executablePath: process.env.BROWSER_PATH } : { channel: process.env.BROWSER_CHANNEL || 'chrome' }), headless: true });
 const context = await browser.newContext({ viewport: {width:390,height:844}, serviceWorkers:'block' });
 await context.addInitScript(() => {
   localStorage.setItem('token','test-student');
   localStorage.removeItem('mustChangePassword');
 });
 const page = await context.newPage();
+page.setDefaultTimeout(15000);
 const errors=[];
 page.on('pageerror',error=>errors.push(error.message));
 let calls=0;
+let releaseScan;
+const pendingScan = new Promise(resolve => { releaseScan = resolve; });
 let response={success:true,type:'CHECK_IN',status:'CHECKED_IN',eventTitle:'Arquitetura de Software',timestamp:'2026-09-29T15:00:00Z',message:'ok'};
 let http=200;
 const id='11111111-1111-4111-8111-111111111111';
@@ -20,7 +23,7 @@ await page.route('**/attendances/scan',async route=>{
   calls++;
   assert.deepEqual(route.request().postDataJSON(),{qrToken:token});
   assert.equal(route.request().headers().authorization,'Bearer test-student');
-  await new Promise(resolve=>setTimeout(resolve,250));
+  await pendingScan;
   await route.fulfill({status:http,json:response});
 });
 await page.route('**/attendances/me',route=>route.fulfill({json:[{eventId:id,checkInAt:'2026-09-29T13:00:00Z',checkOutAt:'2026-09-29T15:00:00Z'}]}));
@@ -46,7 +49,14 @@ try {
   await page.getByText('Câmera ativa', {exact:false}).waitFor();
   assert.equal(await page.evaluate(()=>window.__cameraConfig.facingMode),'environment');
   await page.evaluate(token=>{window.__read(token);window.__read(token);window.__read(token);},token);
+  await page.getByText('Lendo QR Code...', {exact:true}).waitFor();
+  await page.getByText(/A conexão pode estar lenta/).waitFor();
+  assert.equal(calls,1);
+  assert.equal(await page.getByRole('button',{name:'Abrir câmera',exact:true}).count(),0);
+  if(process.env.SCREENSHOT_DIR) await page.screenshot({path:process.env.SCREENSHOT_DIR+'/scanner-processing.png',fullPage:true});
+  releaseScan();
   await page.getByRole('heading',{name:'Entrada registrada!',exact:true}).waitFor();
+  assert.equal(await page.getByText('Lendo QR Code...', {exact:true}).count(),0);
   assert.equal(calls,1);
   await page.waitForFunction(()=>window.__stops>=1);
   await page.getByRole('button',{name:'Ler outro QR / Tentar novamente'}).click();
@@ -87,6 +97,18 @@ try {
   await page.setViewportSize({width:1280,height:900});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   if(process.env.SCREENSHOT_DIR) await page.screenshot({path:process.env.SCREENSHOT_DIR+'/scanner-desktop.png',fullPage:true});
+  let releasePreview;
+  const pendingPreview = new Promise(resolve => { releasePreview = resolve; });
+  await page.route('**/public/events/qr/test-reference-123', async route => {
+    await pendingPreview;
+    await route.fulfill({json:{event:{id,title:'Evento de teste'},checkpoint:{type:'CHECK_IN'},visitorsAllowed:true,available:true}});
+  });
+  await page.goto((process.env.TEST_URL || 'http://127.0.0.1:5173/eventos/scanner').replace('/eventos/scanner','/p/test-reference-123'));
+  await page.getByText('Lendo QR Code...', {exact:true}).waitFor();
+  await page.getByText(/A conexão pode estar lenta/).waitFor();
+  releasePreview();
+  await page.getByRole('heading',{name:'Evento de teste',exact:true}).waitFor();
+  assert.equal(await page.getByText('Lendo QR Code...', {exact:true}).count(),0);
   assert.deepEqual(errors,[]);
   console.log('Browser OK: mobile/desktop, entrada, saída, duplicidade, erros, Bearer, envio único e cleanup tardio.');
 } finally { await browser.close(); }

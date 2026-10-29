@@ -41,7 +41,7 @@ export default function CameraReader({ onRead }: Props) {
         }, () => { /* Frames sem QR são esperados. */ });
         if (!cancelled) {
           setReady(true);
-          setStatus('Câmera ativa · posicione o QR na mira');
+          setStatus('Câmera ativa · procurando QR Code. Posicione o código na mira.');
 
           try {
             const video = element.querySelector('video');

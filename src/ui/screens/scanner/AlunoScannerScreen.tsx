@@ -1,7 +1,7 @@
 import { useLocationNotice } from '../../hooks/useLocationNotice';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Camera, LoaderCircle, ScanLine, ShieldCheck } from 'lucide-react';
+import { Camera, ScanLine, ShieldCheck } from 'lucide-react';
 import {
   scanAttendance,
   getScanAttendance,
@@ -11,6 +11,7 @@ import {
 import EventsPageLayout from '../events/EventsPageLayout';
 import eventStyles from '../events/style.module.css';
 import CameraReader from './CameraReader';
+import QrReadingFeedback from './QrReadingFeedback';
 import ScanResultCard from './ScanResultCard';
 import { errorFeedback, responseFeedback } from './scanFeedback';
 import type { ScanFeedback } from './scanFeedback';
@@ -104,7 +105,7 @@ export default function AlunoScannerScreen() {
     icon={<ScanLine size={22} aria-hidden="true" />} className={eventStyles.eventsPage}>
     {result ? <ScanResultCard result={result} onRetry={retry} /> : <section className={styles.card} aria-busy={busy}>
       <div className={styles.cardHeading}><div><span className={styles.eyebrow}>Eventos & Palestras</span><h2>Escanear presença</h2></div><ScanLine size={24} aria-hidden="true" /></div>
-      {busy ? <div className={styles.processing} role="status"><LoaderCircle size={40} className={styles.spin} aria-hidden="true" /><h3>Registrando presença...</h3><p>Aguarde a confirmação do servidor.</p></div> : <>
+      {busy ? <QrReadingFeedback /> : <>
         {camera ? <CameraReader key={attempt} onRead={read} /> : <div className={styles.intro}><div className={styles.introIcon}><Camera size={36} aria-hidden="true" /></div><h3>Pronto para participar?</h3><p>Permita o acesso à câmera e enquadre o QR Code de presença da palestra.</p></div>}
         <button type="button" className={styles.primary} onClick={() => { setAttempt(value => value + 1); setCamera(true); }}><Camera size={18} aria-hidden="true" />{camera ? 'Reiniciar câmera' : 'Abrir câmera'}</button>
         {camera && <button type="button" className={styles.secondary} onClick={() => setCamera(false)}>Desligar câmera</button>}

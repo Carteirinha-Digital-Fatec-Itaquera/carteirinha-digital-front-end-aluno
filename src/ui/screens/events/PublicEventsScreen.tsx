@@ -1,4 +1,5 @@
 import { useLocationNotice } from '../../hooks/useLocationNotice';
+import QrReadingFeedback from '../scanner/QrReadingFeedback';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -90,6 +91,7 @@ export default function PublicEventsScreen({
   const [selected, setSelected] = useState(search.get("edicao") || "");
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const [busy, setBusy] = useState(false);
+  const [readingQr, setReadingQr] = useState(false);
   const [message, setMessage] = useState("");
   const [failure, setFailure] = useState("");
   const [loading, setLoading] = useState(true);
@@ -477,6 +479,7 @@ export default function PublicEventsScreen({
     async (rawToken: string) => {
       setCameraActive(false);
       setBusy(true);
+      setReadingQr(true);
       setMessage("");
       setFailure("");
 
@@ -485,6 +488,7 @@ export default function PublicEventsScreen({
 
       if (!scannedRef || !/^[A-Za-z0-9_-]{10,64}$/.test(scannedRef)) {
         setBusy(false);
+        setReadingQr(false);
         setModalState({
           visible: true,
           tone: 'warning',
@@ -544,6 +548,7 @@ export default function PublicEventsScreen({
         handleError(error);
       } finally {
         setBusy(false);
+        setReadingQr(false);
       }
     },
     [session, loadCertificates, loadAttendances, handleError, preview, confirmLocation],
@@ -748,6 +753,7 @@ export default function PublicEventsScreen({
                     </div>
                   </div>
 
+                  {readingQr && <QrReadingFeedback />}
                   {/* Leitor de Câmera Inline */}
                   {cameraActive && (
                     <div className={styles.scannerWrapper}>
