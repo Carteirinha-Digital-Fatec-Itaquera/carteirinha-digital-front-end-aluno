@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PageLayout from '../../components/page/PageLayout';
 // import { ArrowLeft, Phone, MessageCircle, Mail, WheatIcon } from 'lucide-react';
 
@@ -18,7 +19,7 @@ export default function HelpScreen() {
     <PageLayout title="Como podemos ajudar?" subtitle="Encontre os canais de atendimento da sua instituição." backTo="/MainMenu" roundedHeader>
       {/* Conteúdo que sobrepõe o fundo vermelho */}
       <div className={styles.contentWrapper}>
-        <div className={styles.contactContainer}>
+        <div className={styles.contactContainer}><h2>Suporte da carteirinha</h2><p>Problemas com dados, foto, presença ou certificado? Abra uma solicitação e acompanhe a resposta da Secretaria.</p><Link to="/suporte" style={{display:"inline-flex",alignItems:"center",minHeight:44,color:"#a81717",fontWeight:700}}>Abrir ou acompanhar solicitação</Link>
           <p className={styles.faleConoscoLabel}>FALE CONOSCO</p>
           <h2 className={styles.mainTitle}>Contatos</h2>
 

@@ -1,3 +1,4 @@
+import SupportScreen from '../ui/screens/support/SupportScreen';
 import AlunoScannerScreen from '../ui/screens/scanner/AlunoScannerScreen';
 import AlunoEventosScreen from '../ui/screens/events/AlunoEventosScreen';
 import AlunoCertificadosScreen from '../ui/screens/certificates/AlunoCertificadosScreen';
@@ -74,6 +75,9 @@ export default function AppRoutes() {
     
     <BrowserRouter>
       <Routes>
+        <Route path="/ajuda-acesso" element={<main style={{padding:24,maxWidth:640,margin:'auto'}}><h1>Ajuda para acessar a carteirinha</h1><p>Se você não consegue entrar, tente a recuperação de senha. Se o problema continuar, procure a Secretaria Acadêmica da Fatec Itaquera para atendimento assistido.</p><p>Nunca envie sua senha ou códigos de acesso.</p><a href="/PasswordRecovery">Recuperar senha</a><p><a href="/login">Voltar ao login</a></p></main>} />
+        <Route path="/suporte" element={isAuthenticated ? <SupportScreen /> : <Navigate to="/login" replace />} />
+        <Route path="/suporte/:id" element={isAuthenticated ? <SupportScreen /> : <Navigate to="/login" replace />} />
         <Route path="/certificado/verificar/:code" element={<CertificadoVerificarScreen />} />
         <Route path="/creditos" element={<ProjectCreditsScreen />} />
         <Route path="/p/:reference" element={<PublicPresenceGateway />} />
