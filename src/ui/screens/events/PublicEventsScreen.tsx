@@ -295,7 +295,7 @@ export default function PublicEventsScreen({
             );
             setPreview(qr);
             setActiveReference(activeReferenceParam);
-            setContextUnavailable(false);
+            setContextUnavailable(qr.available === false);
           } catch (error) {
             if (controller.signal.aborted) throw error;
             setContextUnavailable(true);
@@ -445,6 +445,7 @@ export default function PublicEventsScreen({
       if (preview && latestQr.event.id !== preview.event.id) {
         throw new VisitorApiError('O QR Code pertence a outro evento. Leia o QR da atividade selecionada.', 400, 'EVENT_MISMATCH');
       }
+      if (latestQr.available === false) throw new VisitorApiError('O registro de presença está fechado. Aguarde a organização liberar.', 400, 'CHECKPOINT_CLOSED');
       setPreview(latestQr);
 
       let position;

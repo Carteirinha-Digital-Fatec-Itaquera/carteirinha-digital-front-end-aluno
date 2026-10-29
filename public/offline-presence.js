@@ -54,6 +54,7 @@
               preview = await response.json();
               if (!response.ok) throw Object.assign(new Error(preview.message || 'Não foi possível consultar o evento.'), { status: response.status, code: preview.code });
             } finally { clearTimeout(timer); }
+            if (preview.available === false) throw Object.assign(new Error('O registro de presença está fechado. Aguarde a liberação e leia o QR novamente.'), { status: 400, code: 'CHECKPOINT_CLOSED' });
             if (typeof preview.locationRequired !== 'boolean') throw new Error('Política de localização não confirmada.');
             item.locationRequired = preview.locationRequired;
             item.title = preview.event?.title; item.eventId = preview.event?.id;
