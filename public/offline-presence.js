@@ -50,9 +50,9 @@
             try {
               const response = await fetch('/api/public/events/qr/' + encodeURIComponent(item.reference), { credentials: 'same-origin', cache: 'no-store', signal: controller.signal });
               preview = await response.json();
-              if (!response.ok) throw Object.assign(new Error(preview.message || 'N„o foi possÌvel consultar o evento.'), { status: response.status, code: preview.code });
+              if (!response.ok) throw Object.assign(new Error(preview.message || 'N√£o foi poss√≠vel consultar o evento.'), { status: response.status, code: preview.code });
             } finally { clearTimeout(timer); }
-            if (typeof preview.locationRequired !== 'boolean') throw new Error('PolÌtica de localizaÁ„o n„o confirmada.');
+            if (typeof preview.locationRequired !== 'boolean') throw new Error('Pol√≠tica de localiza√ß√£o n√£o confirmada.');
             item.locationRequired = preview.locationRequired;
             item.title = preview.event?.title; item.eventId = preview.event?.id;
             if (preview.locationRequired) { item.state = 'gps'; await queue.put(item); continue; }

@@ -44,7 +44,7 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
    await q.put({ ...item, requestId: '55555555-5555-4555-8555-555555555555' });
    globalThis.fetch = async (url, options) => {
      const body = JSON.parse(options.body);
-     return new Response(JSON.stringify(String(url).endsWith('/status') ? { receipts: [] } : { ...body, status: 'confirmed', result: { success: true, type: 'CHECK_IN', status: 'CHECKED_IN', message: 'Entrada', timestamp: new Date().toISOString(), eventTitle: 'Evento fictício' } }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+     return new Response(JSON.stringify(String(url).endsWith('/status') ? { receipts: [] } : { ...body, status: 'confirmed', result: { success: true, type: 'CHECK_IN', status: 'CHECKED_IN', message: 'Entrada', timestamp: new Date().toISOString(), eventTitle: 'Evento fictÃ­cio' } }), { status: 200, headers: { 'Content-Type': 'application/json' } });
    };
    let completion;
    const sync = new Event('sync');

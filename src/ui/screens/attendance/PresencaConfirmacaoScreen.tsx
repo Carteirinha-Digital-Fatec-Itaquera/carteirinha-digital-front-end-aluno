@@ -36,7 +36,7 @@ export default function PresencaConfirmacaoScreen() {
     } finally { setBusy(false); }
   };
   const feedback = item?.result ? { ...responseFeedback(item.result), eventId: item.eventId } : null;
-  if (feedback?.certificates) feedback.message = 'Presença confirmada. Acompanhe a preparação e a disponibilidade do certificado em Meus certificados.';
+  if (feedback?.certificates) feedback.message = 'PresenÃ§a confirmada. Acompanhe a preparaÃ§Ã£o e a disponibilidade do certificado em Meus certificados.';
   const processing = !error && (!item || ['submitting','checking'].includes(item.state) || busy);
   const Indicator = processing ? LoaderCircle : item?.state === 'gps' ? MapPin : item?.state === 'login' ? LogIn : item?.state === 'rejected' || error ? CircleAlert : Clock;
   return <EventsPageLayout title="PresenÃ§a em evento" backTo="/eventos" backLabel="Voltar aos eventos"><div className={styles.container}>

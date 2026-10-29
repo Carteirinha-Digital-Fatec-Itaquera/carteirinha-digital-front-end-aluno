@@ -75,7 +75,7 @@ export default function PublicPresenceGateway() {
       try {
         setLoading(true);
         if (localStorage.getItem('token')) {
-          try { await captureReference(reference, true); saved = true; } catch { setConnectionNotice('N„o foi possÌvel salvar neste aparelho. Mantenha a tela aberta e procure a organizaÁ„o.'); }
+          try { await captureReference(reference, true); saved = true; } catch { setConnectionNotice('N√£o foi poss√≠vel salvar neste aparelho. Mantenha a tela aberta e procure a organiza√ß√£o.'); }
         }
         const data = await visitorRequest<PublicQr>(
           `public/events/qr/${encodeURIComponent(reference)}`,
@@ -88,7 +88,7 @@ export default function PublicPresenceGateway() {
         if (controller.signal.aborted) return;
         const errObj = err instanceof VisitorApiError ? err : (err as { code?: string; message?: string; status?: number });
         if (!errObj.status || Number(errObj.status) >= 500) {
-          setConnectionNotice(saved ? 'Sua tentativa foi salva neste aparelho. Aguardando conex„o. Escolha estudante para autorizar o envio e acompanhe atÈ a confirmaÁ„o do servidor.' : 'Sem conex„o para consultar o evento. Se este È seu primeiro acesso sem rede, procure a organizaÁ„o para registro manual.');
+          setConnectionNotice(saved ? 'Sua tentativa foi salva neste aparelho. Aguardando conex√£o. Escolha estudante para autorizar o envio e acompanhe at√© a confirma√ß√£o do servidor.' : 'Sem conex√£o para consultar o evento. Se este √© seu primeiro acesso sem rede, procure a organiza√ß√£o para registro manual.');
           return;
         }
         if (errObj.code === 'EXPIRED_OR_INVALID_QR') {
