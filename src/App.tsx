@@ -1,3 +1,4 @@
+import OfflinePresencePanel from './ui/screens/attendance/OfflinePresencePanel';
 // import { useState } from 'react'
 
 import AppRoutes from './routes';
@@ -25,6 +26,7 @@ function App() {
   }, []);
   return (
     <>
+    <OfflinePresencePanel />
     <AppRoutes />
     <InstallPWAButton/>
     </>

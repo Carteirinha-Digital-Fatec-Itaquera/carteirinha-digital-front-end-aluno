@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/api/attendances/offline/:path*", "destination": "https://carteirinha-digital-backend-d6k1.onrender.com/attendances/offline/:path*" },
     { "source": "/api/visitor/:path*", "destination": "https://carteirinha-digital-backend-d6k1.onrender.com/visitor/:path*" },
     { "source": "/api/public/events/:path*", "destination": "https://carteirinha-digital-backend-d6k1.onrender.com/public/events/:path*" },
     { "source": "/(.*)", "destination": "/" }

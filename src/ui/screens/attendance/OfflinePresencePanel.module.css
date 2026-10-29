@@ -1,0 +1,7 @@
+.panel { margin: 12px auto; padding: 16px; max-width: 680px; border: 1px solid #e6caca; border-left: 4px solid #ba1a1a; border-radius: 14px; background: #fff8f8; color: #352020; animation: appear 180ms ease-out; }
+.panel summary { cursor: pointer; min-height: 44px; font-weight: 700; display: flex; align-items: center; }
+.panel a { color: #931313; display: inline-block; min-height: 44px; padding-top: 12px; }
+.panel p { line-height: 1.5; text-wrap: pretty; }
+.panel a:focus-visible, .panel summary:focus-visible { outline: 3px solid #ba1a1a; outline-offset: 3px; }
+@keyframes appear { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .panel { animation: none; } }

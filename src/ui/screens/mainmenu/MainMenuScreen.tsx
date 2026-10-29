@@ -1,3 +1,4 @@
+import { stopOfflineSession } from '../../../api/attendance/offlinePresence';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -76,7 +77,8 @@ export default function MainMenuScreen() {
   //     navigate("/login");
   //   }
   // };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await stopOfflineSession();
     setMessageDialog(null);
     localStorage.removeItem('token');
     localStorage.removeItem('@Carteirinha:profile');

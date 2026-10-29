@@ -199,3 +199,7 @@
 .card { border-radius: var(--app-radius-card); border-color: var(--app-color-border); box-shadow: var(--app-shadow); }
 .confirmButton { text-decoration: none; }
 @media(max-width:540px) { .card { padding: 24px 16px; } }
+
+.queueStatus { display: flex; align-items: center; gap: 12px; line-height: 1.5; color: #7f1717; }
+.queueStatus svg { flex: 0 0 auto; }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }

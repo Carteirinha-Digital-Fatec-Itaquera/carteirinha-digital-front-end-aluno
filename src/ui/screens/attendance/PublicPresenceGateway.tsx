@@ -1,3 +1,4 @@
+import { captureReference } from '../../../api/attendance/offlinePresence';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -47,6 +48,7 @@ export default function PublicPresenceGateway() {
   const isInvalidRef = !reference || !/^[A-Za-z0-9_-]{10,64}$/.test(reference);
   const [loading, setLoading] = useState(() => Boolean(reference && !isInvalidRef));
   const [preview, setPreview] = useState<PublicQr | null>(null);
+  const [connectionNotice, setConnectionNotice] = useState('');
   const [modalState, setModalState] = useState<ModalState | null>(() => {
     if (isInvalidRef) {
       return {
@@ -67,19 +69,28 @@ export default function PublicPresenceGateway() {
     }
 
     const controller = new AbortController();
+    let saved = false;
 
     void (async () => {
       try {
         setLoading(true);
+        if (localStorage.getItem('token')) {
+          try { await captureReference(reference, true); saved = true; } catch { setConnectionNotice('Não foi possível salvar neste aparelho. Mantenha a tela aberta e procure a organização.'); }
+        }
         const data = await visitorRequest<PublicQr>(
           `public/events/qr/${encodeURIComponent(reference)}`,
           undefined,
           controller.signal,
         );
         setPreview(data);
+        if (data.visitorsAllowed === false) navigate(`/p/${reference}/aluno`, { replace: true });
       } catch (err: unknown) {
         if (controller.signal.aborted) return;
         const errObj = err instanceof VisitorApiError ? err : (err as { code?: string; message?: string; status?: number });
+        if (!errObj.status || Number(errObj.status) >= 500) {
+          setConnectionNotice(saved ? 'Sua tentativa foi salva neste aparelho. Aguardando conexão. Escolha estudante para autorizar o envio e acompanhe até a confirmação do servidor.' : 'Sem conexão para consultar o evento. Se este é seu primeiro acesso sem rede, procure a organização para registro manual.');
+          return;
+        }
         if (errObj.code === 'EXPIRED_OR_INVALID_QR') {
           setModalState({
             visible: true,
@@ -122,7 +133,7 @@ export default function PublicPresenceGateway() {
     navigate(`/visitantes?ref=${encodeURIComponent(reference)}`);
   };
 
-  const visitorsAllowed = preview ? preview.visitorsAllowed : true;
+  const visitorsAllowed = preview?.visitorsAllowed === true;
 
   return (
     <main className={styles.container}>
@@ -136,6 +147,8 @@ export default function PublicPresenceGateway() {
           Identifique-se para registrar sua participação no evento
         </p>
       </header>
+
+      {connectionNotice && <p role="status" aria-live="polite" className={styles.loadingBox}>{connectionNotice}</p>}
 
       {loading && (
         <div role="status" className={styles.loadingBox}>
