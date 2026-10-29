@@ -1,3 +1,4 @@
+import { stopOfflineSession } from '../../../api/attendance/offlinePresence';
 import PageLayout from '../../components/page/PageLayout';
 import Modal from '../../components/modal/Modal';
 import MessageModal, { type MessageTone } from '../../components/MessageModal/MessageModal';
@@ -96,7 +97,8 @@ export default function ConfigScreen() {
             title: 'Sessão expirada',
             message: 'Sua sessão expirou. Faça login novamente para continuar.',
             confirmText: 'Ir para o login',
-            onConfirm: () => {
+            onConfirm: async () => {
+              await stopOfflineSession();
               localStorage.clear();
               navigate('/login');
             },

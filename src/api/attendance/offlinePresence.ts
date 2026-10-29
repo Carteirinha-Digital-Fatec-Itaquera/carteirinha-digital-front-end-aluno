@@ -6,6 +6,7 @@ export function currentAccount(): string | null {
   try { const token = localStorage.getItem('token'); if (!token) return null; const claims = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof claims.accountId === 'string' && claims.role === 'student' ? claims.accountId : null; } catch { return null; }
 }
 let sessionStopped = false;
+let sessionEpoch = 0;
 let preparation: Promise<void> | undefined;
 export function prepareOfflineSession(): Promise<void> {
   if (!preparation) preparation = prepareSession().finally(() => { preparation = undefined; });
@@ -13,6 +14,7 @@ export function prepareOfflineSession(): Promise<void> {
 }
 async function prepareSession() {
   if (sessionStopped) return;
+  const epoch = sessionEpoch;
   const accountId = currentAccount();
   if (!accountId) { await presenceQueue.authorize(null); return; }
   const active = await presenceQueue.control();
@@ -20,17 +22,32 @@ async function prepareSession() {
   if (!navigator.onLine) return;
   if (active?.accountId === accountId && active.expiresAt > Date.now() + 120000) return;
   const token = localStorage.getItem('token');
-  const response = await fetch('/api/attendances/offline/session', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: '{}' });
-  if (sessionStopped || localStorage.getItem('token') !== token || currentAccount() !== accountId) return;
+  const response = await fetch('/api/attendances/offline/session', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: '{}', signal: AbortSignal.timeout(15000) });
+  if (sessionStopped || epoch !== sessionEpoch || localStorage.getItem('token') !== token || currentAccount() !== accountId) return;
   if (!response.ok) { await presenceQueue.authorize(null); if ([401,403].includes(response.status)) for (const item of await presenceQueue.list()) if (item.accountId === accountId && !['confirmed','rejected','choice'].includes(item.state)) await presenceQueue.put({ ...item, state: 'login' }); return; }
   const data = await response.json();
-  if (sessionStopped || localStorage.getItem('token') !== token || currentAccount() !== accountId || data.accountId !== accountId) { await presenceQueue.authorize(null); return; }
+  if (sessionStopped || epoch !== sessionEpoch || localStorage.getItem('token') !== token || currentAccount() !== accountId || data.accountId !== accountId) { await presenceQueue.authorize(null); return; }
   await presenceQueue.authorize({ accountId, expiresAt: Date.parse(data.expiresAt), generation: crypto.randomUUID() });
+  navigator.serviceWorker?.controller?.postMessage({ type: 'presence-resume' });
   for (const item of await presenceQueue.list()) if (item.accountId === accountId && item.state === 'login') await presenceQueue.put({ ...item, state: 'waiting' });
+}
+export async function activateOfflineSession() {
+  sessionEpoch++;
+  sessionStopped = false;
+  await preparation?.catch(() => undefined);
+  await prepareOfflineSession();
 }
 export async function stopOfflineSession() {
   sessionStopped = true;
-  await presenceQueue.authorize(null); // Commit the local stop BEFORE logout/network calls.
+  sessionEpoch++;
+  try { navigator.serviceWorker?.controller?.postMessage({ type: 'presence-stop' }); } catch { /* Storage or worker access can be unavailable in private browsing. */ }
+  try { await presenceQueue.authorize(null); } catch {
+    // Stop the worker even when this document cannot write IndexedDB.
+    try {
+      const registrations = await navigator.serviceWorker?.getRegistrations() || [];
+      await Promise.allSettled(registrations.map(async registration => { registration.active?.postMessage({ type: 'presence-stop' }); await registration.unregister(); }));
+    } catch { /* Authentication cleanup must remain possible when browser storage is denied. */ }
+  }
   try { await presenceQueue.request('revoke', {}); } catch { /* Remote cookie expires; local worker authorization remains disabled. */ }
 }
 export async function captureReference(reference: string, awaitChoice = false): Promise<PendingPresence> {

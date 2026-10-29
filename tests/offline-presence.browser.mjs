@@ -110,3 +110,30 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
  assert.equal(submittedReferences.includes('policy_true_reference'), false, 'visitor branch must not submit student presence');
  } finally { await browser.close(); }
 });
+
+test('real login form prepares restricted authorization before navigating to scanned reference', { timeout: 30000 }, async () => {
+ const browser = await chromium.launch({ channel: 'msedge', headless: true });
+ try {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const accountId = '11111111-1111-4111-8111-111111111111';
+  const token = 'header.' + Buffer.from(JSON.stringify({ accountId, role: 'student' })).toString('base64url') + '.signature';
+  let sessions = 0;
+  await context.route('**/*', async route => {
+   const url = new URL(route.request().url());
+   if (url.pathname.endsWith('/autenticacao/login')) return route.fulfill({ json: { token, mustChangePassword: false } });
+   if (url.pathname.endsWith('/api/attendances/offline/session')) { sessions++; return route.fulfill({ json: { accountId, expiresAt: new Date(Date.now() + 600000).toISOString() } }); }
+   if (url.pathname.endsWith('/api/attendances/offline/revoke')) return route.fulfill({ json: { revoked: true } });
+   if (url.origin !== 'http://localhost:4173') return route.abort();
+   return route.continue();
+  });
+  const page = await context.newPage(); await page.goto('http://localhost:4173/login');
+  await page.evaluate(() => sessionStorage.setItem('returnUrl', '/p/login_test_reference/aluno'));
+  await page.getByPlaceholder(/aluno@fatec/).fill('fixture@fatec.sp.gov.br');
+  await page.locator('input[type="password"]').fill(crypto.randomUUID());
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  await page.waitForURL('**/p/login_test_reference/aluno');
+  await page.waitForFunction(async () => Boolean(await presenceQueue.control()));
+  assert.ok(sessions >= 1, 'login must prepare restricted session');
+  assert.equal(await page.evaluate(async () => (await presenceQueue.control()).accountId), accountId);
+ } finally { await browser.close(); }
+});

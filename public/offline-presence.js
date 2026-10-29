@@ -1,6 +1,7 @@
 /* Restricted attendance queue: no access token or coordinates are persisted. */
 (function (scope) {
   const DB = 'student-presence-v1';
+  let halted = false;
   async function database() {
     return new Promise((resolve, reject) => {
       const r = indexedDB.open(DB, 1);
@@ -38,10 +39,11 @@
   }
   async function flush() {
     const run = async () => {
+      if (halted) return;
       const active = await queue.control(); if (!active || active.expiresAt <= Date.now()) return;
       for (const item of await queue.list()) {
         if (item.accountId !== active.accountId || item.locationRequired === true || ['confirmed','rejected','login','gps','choice'].includes(item.state) || item.nextAt > Date.now()) continue;
-        const current = await queue.control(); if (!current || current.generation !== active.generation) return;
+        const current = await queue.control(); if (halted || !current || current.generation !== active.generation) return;
         try {
           if (item.locationRequired === undefined) {
             // Policy lookup is public and sends no attendance. Unknown never authorizes a submit.
@@ -63,7 +65,7 @@
           const status = await request('status', { accountId: item.accountId, requestIds: [item.requestId] });
           let receipt = status.receipts.find(r => r.requestId === item.requestId);
           if (!receipt) {
-            const stillActive = await queue.control(); if (!stillActive || stillActive.generation !== active.generation) return;
+            const stillActive = await queue.control(); if (halted || !stillActive || stillActive.generation !== active.generation) return;
             item.state = 'submitting'; await queue.put(item);
             receipt = await request('submit', { requestId: item.requestId, accountId: item.accountId, reference: item.reference, scannedAt: item.scannedAt });
           }
@@ -83,6 +85,11 @@
   }
   scope.presenceQueue = { ...queue, flush, request, disableGeneration };
   if (typeof scope.skipWaiting === 'function') {
+    scope.addEventListener('message', event => {
+      if (event.origin !== scope.location.origin) return;
+      if (event.data?.type === 'presence-stop') { halted = true; event.waitUntil(queue.authorize(null).catch(() => scope.registration.unregister())); }
+      if (event.data?.type === 'presence-resume') halted = false;
+    });
     scope.addEventListener('sync', event => { if (event.tag === 'student-presence') event.waitUntil(flush().then(async () => { const items = await queue.list(); const active = await queue.control(); if (active && active.expiresAt > Date.now() && items.some(i => i.accountId === active.accountId && ['unknown','waiting','checking','submitting'].includes(i.state) && i.locationRequired !== true)) throw new Error('Retry pending'); })); });
   }
 })(globalThis);
