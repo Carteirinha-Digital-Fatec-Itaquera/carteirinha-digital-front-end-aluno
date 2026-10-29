@@ -1,3 +1,4 @@
+import PresenceScannerShortcut from '../scanner/PresenceScannerShortcut';
 import { useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CalendarDays, CheckCircle2, RefreshCw } from 'lucide-react';
@@ -36,6 +37,7 @@ export default function AlunoEventosScreen() {
   return <EventsPageLayout title="Eventos & Palestras" className={styles.eventsPage}
     subtitle="Descubra as atividades da FATEC Itaquera e acompanhe suas participações acadêmicas."
     icon={<CalendarDays size={22} strokeWidth={1.8} aria-hidden="true" />}>
+    <PresenceScannerShortcut />
     <section className={styles.summaryGrid} aria-label="Resumo de atividades">
       <article className={styles.summaryCard}>
         <div className={styles.summaryIcon}><CalendarDays size={19} aria-hidden="true" /></div>

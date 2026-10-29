@@ -1,3 +1,4 @@
+import PresenceScannerShortcut from '../scanner/PresenceScannerShortcut';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from "qrcode.react";
@@ -62,7 +63,7 @@ export default function DigitalStudentQrCode() {
   }, []);
 
   if (!student) {
-    return <div role="status" className={styles.loadingContainer}>Carregando...</div>;
+    return <div className={styles.loadingContainer} style={{ flexDirection: "column", padding: 24 }}><PresenceScannerShortcut /><p role="status">Carregando sua carteirinha...</p></div>;
   }
 
   const validationUrl = `${window.location.origin}/valida/${student?.qrcode || ''}`;
@@ -93,6 +94,7 @@ export default function DigitalStudentQrCode() {
           <div className={styles.cardContainer}>
             <InternetWatcher />
             
+            <PresenceScannerShortcut />
             <h1 className={styles.mainTitle}>Validação da Carteirinha</h1>
 
             <div className={styles.qrViewportContainer}>

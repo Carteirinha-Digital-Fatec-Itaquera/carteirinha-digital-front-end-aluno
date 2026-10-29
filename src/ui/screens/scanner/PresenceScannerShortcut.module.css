@@ -1,0 +1,5 @@
+.shortcut { width: 100%; margin: 0 0 20px; text-align: left; }
+.shortcut button { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; width: 100%; padding: 14px 18px; border: 0; border-radius: 12px; background: var(--app-color-primary, #ba1a1a); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.shortcut button svg { flex-shrink: 0; }
+.shortcut button:focus-visible { outline: 3px solid #6f1212; outline-offset: 3px; }
+.shortcut p { margin: 10px 0 0; color: #525866; font-size: 0.875rem; font-weight: 400; line-height: 1.5; }
