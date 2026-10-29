@@ -40,7 +40,7 @@
     const run = async () => {
       const active = await queue.control(); if (!active || active.expiresAt <= Date.now()) return;
       for (const item of await queue.list()) {
-        if (item.accountId !== active.accountId || item.locationRequired !== false || ['confirmed','rejected','login','gps'].includes(item.state) || item.nextAt > Date.now()) continue;
+        if (item.accountId !== active.accountId || item.locationRequired !== false || ['confirmed','rejected','login','gps','choice'].includes(item.state) || item.nextAt > Date.now()) continue;
         const current = await queue.control(); if (!current || current.generation !== active.generation) return;
         try {
           // Always check committed receipts before submitting, including after a lost response.

@@ -75,7 +75,7 @@ export default function PublicPresenceGateway() {
       try {
         setLoading(true);
         if (localStorage.getItem('token')) {
-          try { await captureReference(reference); saved = true; } catch { setConnectionNotice('Não foi possível salvar neste aparelho. Mantenha a tela aberta e procure a organização.'); }
+          try { await captureReference(reference, true); saved = true; } catch { setConnectionNotice('Não foi possível salvar neste aparelho. Mantenha a tela aberta e procure a organização.'); }
         }
         const data = await visitorRequest<PublicQr>(
           `public/events/qr/${encodeURIComponent(reference)}`,
@@ -88,7 +88,7 @@ export default function PublicPresenceGateway() {
         if (controller.signal.aborted) return;
         const errObj = err instanceof VisitorApiError ? err : (err as { code?: string; message?: string; status?: number });
         if (!errObj.status || Number(errObj.status) >= 500) {
-          setConnectionNotice(saved ? 'Sua tentativa foi salva neste aparelho. Aguardando conexão para enviar. Mantenha ou volte ao aplicativo até aparecer a confirmação do servidor.' : 'Sem conexão para consultar o evento. Se este é seu primeiro acesso sem rede, procure a organização para registro manual.');
+          setConnectionNotice(saved ? 'Sua tentativa foi salva neste aparelho. Aguardando conexão. Escolha estudante para autorizar o envio e acompanhe até a confirmação do servidor.' : 'Sem conexão para consultar o evento. Se este é seu primeiro acesso sem rede, procure a organização para registro manual.');
           return;
         }
         if (errObj.code === 'EXPIRED_OR_INVALID_QR') {

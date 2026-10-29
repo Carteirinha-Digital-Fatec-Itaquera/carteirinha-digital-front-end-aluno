@@ -69,5 +69,14 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
  await context.route('**/api/public/events/qr/policy_false_reference', route => route.fulfill({ json: { visitorsAllowed: false, locationRequired: false, event: { id: 'fixture-event', title: 'Evento de teste' }, checkpoint: { type: 'CHECK_IN' } } }));
  await page.goto('http://localhost:4173/p/policy_false_reference');
  await page.waitForURL('**/p/policy_false_reference/aluno');
+ await context.route('**/api/public/events/qr/policy_true_reference', route => route.fulfill({ json: { visitorsAllowed: true, locationRequired: false, event: { id: 'fixture-event', title: 'Evento de teste' }, checkpoint: { type: 'CHECK_IN' } } }));
+ await page.goto('http://localhost:4173/p/policy_true_reference');
+ await page.getByRole('button', { name: /Sou visitante/ }).waitFor();
+ await page.waitForFunction(async () => (await presenceQueue.list()).some(i => i.reference === 'policy_true_reference'));
+ await page.evaluate(async ({ accountId }) => { const item = (await presenceQueue.list()).find(i => i.reference === 'policy_true_reference'); if (item.state !== 'choice') throw new Error('Gateway must await student choice'); await presenceQueue.put({ ...item, locationRequired: false }); await presenceQueue.authorize({ accountId, expiresAt: Date.now() + 600000, generation: 'choice-test' }); await presenceQueue.flush(); }, { accountId });
+ assert.equal(sends, 1, 'gateway must not submit student presence before identity choice');
+ await page.getByRole('button', { name: /Sou visitante/ }).click();
+ await page.waitForURL('**/visitantes?ref=policy_true_reference');
+ assert.equal(sends, 1, 'visitor branch must not submit student presence');
  } finally { await browser.close(); }
 });
