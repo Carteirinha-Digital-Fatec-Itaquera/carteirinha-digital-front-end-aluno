@@ -1,3 +1,4 @@
+import { LoaderCircle, Clock, MapPin, LogIn, CircleAlert } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLocationNotice } from '../../hooks/useLocationNotice';
@@ -35,10 +36,13 @@ export default function PresencaConfirmacaoScreen() {
     } finally { setBusy(false); }
   };
   const feedback = item?.result ? { ...responseFeedback(item.result), eventId: item.eventId } : null;
+  if (feedback?.certificates) feedback.message = 'Presen�a confirmada. Acompanhe a prepara��o e a disponibilidade do certificado em Meus certificados.';
+  const processing = !error && (!item || ['submitting','checking'].includes(item.state) || busy);
+  const Indicator = processing ? LoaderCircle : item?.state === 'gps' ? MapPin : item?.state === 'login' ? LogIn : item?.state === 'rejected' || error ? CircleAlert : Clock;
   return <EventsPageLayout title="Presença em evento" backTo="/eventos" backLabel="Voltar aos eventos"><div className={styles.container}>
     {feedback ? <ScanResultCard result={feedback} onRetry={() => window.location.assign('/eventos/scanner')} /> : <section className={styles.card}>
       <h2>{item?.title || 'Seu registro de presença'}</h2>
-      <p role="status" aria-live="polite">{item ? presenceMessage(item) : error ? 'Tentativa não salva neste aparelho.' : 'Salvando sua tentativa de presença…'}</p>
+      <p role="status" aria-live="polite" className={styles.queueStatus}><Indicator aria-hidden="true" size={24} className={processing ? styles.spin : undefined} />{item ? presenceMessage(item) : error ? 'Tentativa não salva neste aparelho.' : 'Salvando sua tentativa de presença…'}</p>
       {error && <p role="alert">{error}</p>}
       <p>Mantenha o aplicativo aberto até aparecer a confirmação do servidor. Se sair, volte assim que conseguir conexão. O horário da leitura não garante aceitação após o encerramento.</p>
       {item?.state === 'gps' && <button className={styles.confirmButton} disabled={busy} onClick={finishGps}>{busy ? 'Obtendo localização e enviando…' : 'Concluir com localização atual'}</button>}

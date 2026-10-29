@@ -65,6 +65,15 @@ test('durable account queue, receipt reconciliation, GPS exclusion, logout and o
  await page.getByRole('status').filter({ hasText: /Aguardando/ }).waitFor();
  assert.equal(await page.getByRole('button', { name: /Sou visitante/ }).isDisabled(), true);
  assert.equal(await page.getByRole('dialog').count(), 0, 'network failure with a saved attempt is a waiting state');
+ await page.evaluate(async ({ item }) => { await presenceQueue.put({ ...item, requestId: '88888888-8888-4888-8888-888888888888', reference: 'motion_test_reference', state: 'checking' }); }, { item });
+ await page.goto('http://localhost:4173/p/motion_test_reference/aluno');
+ const statusIcon = page.locator('[role="status"] svg'); await statusIcon.waitFor();
+ assert.notEqual(await statusIcon.evaluate(el => getComputedStyle(el).animationName), 'none');
+ await page.emulateMedia({ reducedMotion: 'reduce' });
+ assert.equal(await statusIcon.evaluate(el => getComputedStyle(el).animationName), 'none');
+ await page.emulateMedia({ reducedMotion: 'no-preference' });
+ await page.evaluate(async () => { const item = (await presenceQueue.list()).find(i => i.reference === 'motion_test_reference'); await presenceQueue.put({ ...item, state: 'rejected', message: 'Registro encerrado.' }); });
+ await page.waitForFunction(() => { const icon = document.querySelector('[role="status"] svg'); return icon && getComputedStyle(icon).animationName === 'none'; });
  await context.setOffline(false);
  await context.route('**/api/public/events/qr/policy_false_reference', route => route.fulfill({ json: { visitorsAllowed: false, locationRequired: false, event: { id: 'fixture-event', title: 'Evento de teste' }, checkpoint: { type: 'CHECK_IN' } } }));
  await page.goto('http://localhost:4173/p/policy_false_reference');
