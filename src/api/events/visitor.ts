@@ -37,6 +37,8 @@ export function validVisitorCpf(value: string) {
   return true;
 }
 export interface PublicQr {
+  available?: boolean;
+  permanent?: boolean;
   event: {
     attendanceMode?: string;
     id: string;

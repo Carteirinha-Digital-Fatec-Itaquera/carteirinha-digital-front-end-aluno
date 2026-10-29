@@ -83,7 +83,8 @@ export default function PublicPresenceGateway() {
           controller.signal,
         );
         setPreview(data);
-        if (data.visitorsAllowed === false) navigate(`/p/${reference}/aluno`, { replace: true });
+        if (data.available === false) setConnectionNotice('O registro de presença está fechado. Aguarde a organização liberar e leia este mesmo QR novamente.');
+        if (data.available !== false && data.visitorsAllowed === false) navigate(`/p/${reference}/aluno`, { replace: true });
       } catch (err: unknown) {
         if (controller.signal.aborted) return;
         const errObj = err instanceof VisitorApiError ? err : (err as { code?: string; message?: string; status?: number });
@@ -220,6 +221,7 @@ export default function PublicPresenceGateway() {
             type="button"
             className={styles.optionButton}
             onClick={handleSelectStudent}
+            disabled={preview?.available === false}
             autoFocus
           >
             <div className={`${styles.optionIcon} ${styles.studentIcon}`} aria-hidden="true">
@@ -237,7 +239,7 @@ export default function PublicPresenceGateway() {
             type="button"
             className={styles.optionButton}
             onClick={handleSelectVisitor}
-            disabled={!visitorsAllowed}
+            disabled={!visitorsAllowed || preview?.available === false}
           >
             <div className={`${styles.optionIcon} ${styles.visitorIcon}`} aria-hidden="true">
               <Users size={24} />

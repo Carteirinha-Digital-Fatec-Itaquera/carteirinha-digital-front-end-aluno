@@ -16,7 +16,7 @@ export default function PresencaConfirmacaoScreen() {
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     let alive = true;
-    const refresh = async () => { try { const value = (await presenceQueue.list()).find(i => i.accountId === currentAccount() && i.reference === reference); if (alive && value) setItem(value); } catch { /* Initial capture displays failure. */ } };
+    const refresh = async () => { try { const value = (await presenceQueue.list()).filter(i => i.accountId === currentAccount() && i.reference === reference).sort((a, b) => Date.parse(b.scannedAt) - Date.parse(a.scannedAt))[0]; if (alive && value) setItem(value); } catch { /* Initial capture displays failure. */ } };
     void (async () => { try { if (!reference) throw new Error('Link inválido.'); const value = await captureReference(reference); if (alive) setItem(value); await resumePresence(); await refresh(); } catch (e) { if (alive) setError(e instanceof Error ? e.message : 'Não foi possível salvar neste aparelho. Mantenha a tela aberta e procure a organização.'); } })();
     const timer = setInterval(refresh, 1000); return () => { alive = false; clearInterval(timer); };
   }, [reference]);

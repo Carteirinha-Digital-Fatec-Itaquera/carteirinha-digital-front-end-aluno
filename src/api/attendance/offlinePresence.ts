@@ -53,8 +53,8 @@ export async function stopOfflineSession() {
 export async function captureReference(reference: string, awaitChoice = false): Promise<PendingPresence> {
   const accountId = currentAccount(); if (!accountId) throw new Error('Entre novamente para guardar sua tentativa. No primeiro acesso sem rede, procure a organização.');
   if (!/^[A-Za-z0-9_-]{10,64}$/.test(reference)) throw new Error('Link de presença inválido.');
-  const existing = (await presenceQueue.list()).find(i => i.accountId === accountId && i.reference === reference);
-  if (existing) {
+  const existing = (await presenceQueue.list()).filter(i => i.accountId === accountId && i.reference === reference).sort((a, b) => Date.parse(b.scannedAt) - Date.parse(a.scannedAt))[0];
+  if (existing && !(existing.state === 'rejected' && reference.startsWith('ev_'))) {
     if (!awaitChoice && existing.state === 'choice') { const activated = { ...existing, state: 'waiting' }; await presenceQueue.put(activated); return activated; }
     return existing;
   }
@@ -70,6 +70,7 @@ export async function resumePresence() {
     if (item.accountId !== accountId || ['confirmed','rejected','choice'].includes(item.state) || item.locationRequired !== undefined) continue;
     try {
       const preview = await getAttendanceQrPreview(item.reference);
+      if (preview.available === false) { await presenceQueue.put({ ...item, state: 'rejected', message: 'O registro de presença está fechado. Aguarde a liberação e leia o QR novamente.' }); continue; }
       await presenceQueue.put({ ...item, locationRequired: preview.locationRequired === false ? false : true, title: preview.event.title, eventId: preview.event.id, state: preview.locationRequired === false ? 'waiting' : 'gps' });
     } catch (error) {
       const e = error as { status?: string; message?: string };
