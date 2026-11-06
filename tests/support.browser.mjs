@@ -150,7 +150,7 @@ const fits = async () =>
 try {
   await page.goto(base + "/MainMenu");
   await page
-    .getByRole("button", { name: "Solicitações", exact: true })
+    .getByRole("button", { name: /^Solicitações/ })
     .waitFor();
   await fits();
   await screenshot("menu-mobile");
@@ -159,7 +159,7 @@ try {
   assert.equal(await page.getByText("Suporte da carteirinha").count(), 0);
   await page.getByRole("heading", { name: "Contatos", exact: true }).waitFor();
   await page.getByRole("link", { name: "Voltar ao menu" }).click();
-  await page.getByRole("button", { name: "Solicitações", exact: true }).click();
+  await page.getByRole("button", { name: /^Solicitações/ }).click();
   await page
     .getByRole("heading", { name: "Minhas Solicitações", exact: true })
     .waitFor();

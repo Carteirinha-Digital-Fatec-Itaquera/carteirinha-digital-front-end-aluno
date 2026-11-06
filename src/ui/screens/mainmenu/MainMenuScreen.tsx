@@ -16,9 +16,11 @@ import type { Student } from '../../../domains/Student';
 import { IdCard, Settings, Info, MessageSquare, Camera, QrCode, LogOut, CalendarDays, Award } from 'lucide-react';
 
 import styles from './style.module.css';
+import useUnreadRequests from './useUnreadRequests';
 import { useMockEvents } from '../../../services/eventService';
 export default function MainMenuScreen() {
   const navigate = useNavigate();
+  const unreadRequests = useUnreadRequests();
   const [student, setStudent] = useState<Student | null>(null);
   const [messageDialog, setMessageDialog] = useState<'logout' | 'photo' | null>(null);
 
@@ -149,12 +151,13 @@ export default function MainMenuScreen() {
             
             
 
-            <button className={styles.menuCard} onClick={() => navigate('/suporte')}>
+            <button className={styles.menuCard} onClick={() => navigate('/suporte')} aria-label={unreadRequests ? `Solicitações: ${unreadRequests > 99 ? "mais de 99" : unreadRequests} com atualizações não lidas` : "Solicitações"}>
+              {!!unreadRequests && <span className={styles.notificationBadge} aria-hidden="true">{unreadRequests > 99 ? "99+" : unreadRequests}</span>}
               <MessageSquare className={styles.icon} strokeWidth={1.5} />
               <p>Solicitações</p>
             </button>
 
-            <button className={styles.menuCard} onClick={() => navigate("/Help")}>
+            <button className={`${styles.menuCard} ${styles.centeredCard}`} onClick={() => navigate("/Help")}>
               <Info className={styles.icon} strokeWidth={1.5} />
               <p>Informações da Unidade</p>
             </button>
