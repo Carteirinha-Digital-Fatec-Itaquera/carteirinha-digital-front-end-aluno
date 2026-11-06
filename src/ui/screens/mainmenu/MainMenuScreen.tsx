@@ -13,7 +13,7 @@ const logoFatec = '/fatec_itaquera_logo.png'
 import { findProfile } from '../../../api/student/findProfile';
 import type { Student } from '../../../domains/Student';
 // import { GLOBAL_VAR } from '../../../api/config/globalVar';
-import { IdCard, Settings, HelpCircle, Camera, QrCode, LogOut, CalendarDays, Award } from 'lucide-react';
+import { IdCard, Settings, Info, MessageSquare, Camera, QrCode, LogOut, CalendarDays, Award } from 'lucide-react';
 
 import styles from './style.module.css';
 import { useMockEvents } from '../../../services/eventService';
@@ -149,9 +149,14 @@ export default function MainMenuScreen() {
             
             
 
+            <button className={styles.menuCard} onClick={() => navigate('/suporte')}>
+              <MessageSquare className={styles.icon} strokeWidth={1.5} />
+              <p>Solicitações</p>
+            </button>
+
             <button className={styles.menuCard} onClick={() => navigate("/Help")}>
-              <HelpCircle className={styles.icon} strokeWidth={1.5} />
-              <p>Ajuda</p>
+              <Info className={styles.icon} strokeWidth={1.5} />
+              <p>Informações da Unidade</p>
             </button>
           </div>
 
