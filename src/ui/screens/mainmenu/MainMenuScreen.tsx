@@ -128,6 +128,14 @@ export default function MainMenuScreen() {
             </button>
 
             <button
+              className={`${styles.menuCard} ${styles.menuCard}`}
+              onClick={() => setMessageDialog('photo')}
+            >
+              <Camera className={styles.icon} strokeWidth={1.5} />
+              <p>Enviar Foto</p>
+            </button>
+
+            <button
               className={styles.menuCard}
               onClick={() => navigate('/eventos')}
             >
@@ -143,13 +151,6 @@ export default function MainMenuScreen() {
               <p>Meus Certificados</p>
             </button>
 
-            <button
-              className={`${styles.menuCard} ${styles.menuCard}`}
-              onClick={() => setMessageDialog('photo')}
-            >
-              <Camera className={styles.icon} strokeWidth={1.5} />
-              <p>Enviar Foto</p>
-            </button>
 
             <button
               className={styles.menuCard}
