@@ -80,7 +80,7 @@ async function assertFits(page) {
 }
 
 try {
-  browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || 'msedge', headless: true, timeout: 30000 });
+  browser = await chromium.launch({ ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}), headless: true, timeout: 30000 });
   {
     const { context, page, state, errors } = await setup();
     let releaseProfile;
@@ -100,7 +100,11 @@ try {
     const returned = page.waitForRequest(request => request.url().includes('/estudantes/encontrar-por-ra/'));
     await page.getByRole('link', { name: 'Voltar ao menu' }).click();
     await returned;
-    assert.equal(await card.count(), 0, 'Sem card transitório ao retornar à Home');
+    // O novo requisito mantém a decisão já confirmada desta sessão durante a atualização.
+    // O cache persistido não confirmado continua oculto na primeira consulta (asserção acima).
+    assert.equal(await card.count(), 1, 'Decisão confirmada não desaparece ao voltar à Home');
+    assert.equal(await page.getByRole('heading', { name: 'Foto em análise', exact: true }).count(), 1);
+    assert.equal(await page.getByRole('heading', { name: 'Foto aprovada', exact: true }).count(), 0);
     assert.equal(await page.getByText('Consultando situação da foto', { exact: false }).count(), 0);
     state.profileFailure = true;
     releaseProfile();
@@ -109,7 +113,7 @@ try {
     assert.deepEqual(errors, []);
     await context.close();
   }
-  console.log('PASS: consulta silenciosa inicial e no retorno, sem status antigo; falha preservada');
+  console.log('PASS: consulta inicial sem cache não confirmado; retorno mantém decisão da sessão; falha preservada');
   for (const width of [320, 1440]) {
     const { context, page, state, errors } = await setup({ width, height: 900 });
     await page.goto(`${origin}/MainMenu`);
