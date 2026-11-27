@@ -1,3 +1,4 @@
+import StudentProfileScreen from '../ui/screens/profile/StudentProfileScreen';
 import SupportScreen from '../ui/screens/support/SupportScreen';
 import AlunoScannerScreen from '../ui/screens/scanner/AlunoScannerScreen';
 import AlunoEventosScreen from '../ui/screens/events/AlunoEventosScreen';
@@ -6,24 +7,29 @@ import AlunoCertificadoViewScreen from '../ui/screens/certificates/AlunoCertific
 import CertificadoVerificarScreen from '../ui/screens/certificates/CertificadoVerificarScreen';
 import EventFeedbackScreen from '../ui/screens/events/EventFeedbackScreen';
 import VisitorCertificatesScreen from '../ui/screens/certificates/VisitorCertificatesScreen';
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+  useLocation,
+} from 'react-router-dom';
 
-import LoginScreen from "../ui/screens/login/LoginScreen";
-import MainMenuScreen from "../ui/screens/mainmenu/MainMenuScreen";
-import PasswordRecoveryScreen from "../ui/screens/passwordrecovery/PasswordRecoveryScreen";
-import FirstAccessScreen from "../ui/screens/passwordrecovery/FirstAccessScreen";
+import LoginScreen from '../ui/screens/login/LoginScreen';
+import MainMenuScreen from '../ui/screens/mainmenu/MainMenuScreen';
+import PasswordRecoveryScreen from '../ui/screens/passwordrecovery/PasswordRecoveryScreen';
+import FirstAccessScreen from '../ui/screens/passwordrecovery/FirstAccessScreen';
 // import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
 
-import DigitalStudentQrCode from "../ui/screens/digitalStudentScan/DigitalStudentQrCode";
+import DigitalStudentQrCode from '../ui/screens/digitalStudentScan/DigitalStudentQrCode';
 
-import DigitalStudentCardScreen from "../ui/screens/digitalstudent/DigitalStudentCardScreen";
-import UploadImageScreen from "../ui/screens/uploadimage/UploadImageScreen";
-import ResetPasswordScreen from "../ui/screens/passwordrecovery/ResetPasswordScreen";
-import HelpScreen from "../ui/screens/help/HelpScreen";
-import TelaQrcode from "../ui/screens/validacao/TelaQrcode";
-import ConfigScreen from "../ui/screens/config/ConfigScreen";
-
-
+import DigitalStudentCardScreen from '../ui/screens/digitalstudent/DigitalStudentCardScreen';
+import UploadImageScreen from '../ui/screens/uploadimage/UploadImageScreen';
+import ResetPasswordScreen from '../ui/screens/passwordrecovery/ResetPasswordScreen';
+import HelpScreen from '../ui/screens/help/HelpScreen';
+import TelaQrcode from '../ui/screens/validacao/TelaQrcode';
+import ConfigScreen from '../ui/screens/config/ConfigScreen';
 
 import PublicPresenceGateway from '../ui/screens/attendance/PublicPresenceGateway';
 import PresencaConfirmacaoScreen from '../ui/screens/attendance/PresencaConfirmacaoScreen';
@@ -72,97 +78,181 @@ function StudentRoute() {
 export default function AppRoutes() {
   const { isAuthenticated, mustChange } = getAuthState();
   return (
-    
     <BrowserRouter>
       <Routes>
-        <Route path="/ajuda-acesso" element={<main style={{padding:24,maxWidth:640,margin:'auto'}}><h1>Ajuda para acessar a carteirinha</h1><p>Se você não consegue entrar, tente a recuperação de senha. Se o problema continuar, procure a Secretaria Acadêmica da Fatec Itaquera para atendimento assistido.</p><p>Nunca envie sua senha ou códigos de acesso.</p><a href="/PasswordRecovery">Recuperar senha</a><p><a href="/login">Voltar ao login</a></p></main>} />
-        <Route path="/suporte" element={isAuthenticated ? <SupportScreen /> : <Navigate to="/login" replace />} />
-        <Route path="/suporte/:id" element={isAuthenticated ? <SupportScreen /> : <Navigate to="/login" replace />} />
-        <Route path="/certificado/verificar/:code" element={<CertificadoVerificarScreen />} />
+        <Route
+          path="/ajuda-acesso"
+          element={
+            <main style={{ padding: 24, maxWidth: 640, margin: 'auto' }}>
+              <h1>Ajuda para acessar a carteirinha</h1>
+              <p>
+                Se você não consegue entrar, tente a recuperação de senha. Se o
+                problema continuar, procure a Secretaria Acadêmica da Fatec
+                Itaquera para atendimento assistido.
+              </p>
+              <p>Nunca envie sua senha ou códigos de acesso.</p>
+              <a href="/PasswordRecovery">Recuperar senha</a>
+              <p>
+                <a href="/login">Voltar ao login</a>
+              </p>
+            </main>
+          }
+        />
+        <Route
+          path="/suporte"
+          element={
+            isAuthenticated ? (
+              <SupportScreen />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/suporte/:id"
+          element={
+            isAuthenticated ? (
+              <SupportScreen />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/certificado/verificar/:code"
+          element={<CertificadoVerificarScreen />}
+        />
         <Route path="/creditos" element={<ProjectCreditsScreen />} />
         <Route path="/p/:reference" element={<PublicPresenceGateway />} />
         <Route path="/visitantes" element={<PublicEventsScreen />} />
-        <Route path="/visitantes/certificados" element={<VisitorCertificatesScreen />} />
-        <Route path="/eventos/:id/avaliacao" element={<EventFeedbackScreen />} />
+        <Route
+          path="/visitantes/certificados"
+          element={<VisitorCertificatesScreen />}
+        />
+        <Route
+          path="/eventos/:id/avaliacao"
+          element={<EventFeedbackScreen />}
+        />
         <Route element={<StudentRoute />}>
-          <Route path="/p/:reference/aluno" element={<PresencaConfirmacaoScreen />} />
+          <Route path="/meu-perfil" element={<StudentProfileScreen />} />
+          <Route
+            path="/p/:reference/aluno"
+            element={<PresencaConfirmacaoScreen />}
+          />
           <Route path="/eventos" element={<AlunoEventosScreen />} />
           <Route path="/eventos/scanner" element={<AlunoScannerScreen />} />
           <Route path="/certificados" element={<AlunoCertificadosScreen />} />
-          <Route path="/certificado/:id" element={<AlunoCertificadoViewScreen />} />
+          <Route
+            path="/certificado/:id"
+            element={<AlunoCertificadoViewScreen />}
+          />
         </Route>
         {/* <Route path="/" element={<Navigate to="/login" />} /> */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
-            !isAuthenticated ? <Navigate to="/login" replace /> :
-            mustChange ? <Navigate to="/first-access" replace /> :
-            <Navigate to="/MainMenu" replace />
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : mustChange ? (
+              <Navigate to="/first-access" replace />
+            ) : (
+              <Navigate to="/MainMenu" replace />
+            )
           }
         />
         {/* <Route path="/login" element={<LoginScreen />} /> */}
-        <Route 
-          path="/login" 
-          
+        <Route
+          path="/login"
           element={
-          <LoginScreen/>
+            <LoginScreen />
             // isAuthenticated ? (
-              // mustChange ? <Navigate to="/first-access" replace /> : <Navigate to="/MainMenu" replace />
+            // mustChange ? <Navigate to="/first-access" replace /> : <Navigate to="/MainMenu" replace />
             // ) : <LoginScreen />
           }
         />
 
-
-        
         <Route path="/home" element={<Home />} />
-        <Route path="/config" element={
-          !isAuthenticated ? <Navigate to="/login" replace /> :
-          mustChange ? <Navigate to="/first-access" replace /> :
-          <ConfigScreen />} 
-          />
-        
-        <Route path="/Help" element={
-          !isAuthenticated ? <Navigate to="/login" replace /> :
-          mustChange ? <Navigate to="/first-access" replace /> :
-          <HelpScreen />} />
+        <Route
+          path="/config"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : mustChange ? (
+              <Navigate to="/first-access" replace />
+            ) : (
+              <ConfigScreen />
+            )
+          }
+        />
 
-          
+        <Route
+          path="/Help"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : mustChange ? (
+              <Navigate to="/first-access" replace />
+            ) : (
+              <HelpScreen />
+            )
+          }
+        />
+
         <Route path="/signup" element={<SignUp />} />
         <Route path="/PasswordRecovery" element={<PasswordRecoveryScreen />} />
-        <Route path="/first-access" element={
-          !isAuthenticated? <Navigate to="/MainMenu" replace/>:
-          !mustChange?<Navigate to="/MainMenu" replace/>:
-          <FirstAccessScreen />} />
-        
+        <Route
+          path="/first-access"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/MainMenu" replace />
+            ) : !mustChange ? (
+              <Navigate to="/MainMenu" replace />
+            ) : (
+              <FirstAccessScreen />
+            )
+          }
+        />
+
         {/* <Route path="/TelaQrcode" element={<TelaQrcode />} /> */}
 
         <Route path="/valida/:qrcodeToken" element={<TelaQrcode />} />
 
-        <Route 
-          path="/MainMenu" 
+        <Route
+          path="/MainMenu"
           element={
-            !isAuthenticated ? <Navigate to="/login" replace /> :
-            mustChange ? <Navigate to="/first-access" replace /> :
-            <MainMenuScreen />
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : mustChange ? (
+              <Navigate to="/first-access" replace />
+            ) : (
+              <MainMenuScreen />
+            )
           }
         />
-        <Route path="/DigitalStudentCard" 
-         element={
-            !isAuthenticated ? <Navigate to="/login" replace /> :
-            mustChange ? <Navigate to="/first-access" replace /> :
-            <DigitalStudentCardScreen />
+        <Route
+          path="/DigitalStudentCard"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : mustChange ? (
+              <Navigate to="/first-access" replace />
+            ) : (
+              <DigitalStudentCardScreen />
+            )
           }
         />
-        <Route path="/reset-password" element={
-          
-          <ResetPasswordScreen />
-          } />
+        <Route path="/reset-password" element={<ResetPasswordScreen />} />
 
-        <Route path="/UploadImage" 
-        element={
-            !isAuthenticated ? <Navigate to="/login" replace /> :
-            mustChange ? <Navigate to="/first-access" replace /> :
-            <UploadImageScreen />
+        <Route
+          path="/UploadImage"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : mustChange ? (
+              <Navigate to="/first-access" replace />
+            ) : (
+              <UploadImageScreen />
+            )
           }
         />
 

@@ -2,7 +2,9 @@ import type { Student } from '../../domains/Student';
 import type { ApiError } from '../../utils/Types';
 import { apiClient, buildApiError } from '../config/apiClient';
 
-export async function findProfile(): Promise<Student | ApiError> {
+export async function findProfile(
+  signal?: AbortSignal,
+): Promise<Student | ApiError> {
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -23,10 +25,22 @@ export async function findProfile(): Promise<Student | ApiError> {
   const response = await apiClient(`/estudantes/encontrar-por-ra/${ra}`, {
     method: 'GET',
     authenticated: true,
+    signal,
+    cache: 'no-store',
   });
 
-  if (!response.ok) return buildApiError(response, `/estudantes/encontrar-por-ra/${ra}`);
+  if (!response.ok)
+    return buildApiError(response, `/estudantes/encontrar-por-ra/${ra}`);
 
   const data = await response.json();
+  if (localStorage.getItem('token') !== token)
+    return {
+      code: 'STALE_SESSION',
+      status: '401',
+      message: 'A sessão foi alterada.',
+      timestamp: new Date().toISOString(),
+      path: '/estudantes/encontrar-por-ra',
+      errorFields: null,
+    };
   return data;
 }

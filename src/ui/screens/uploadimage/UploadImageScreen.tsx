@@ -1,37 +1,45 @@
+import { studentProfileResource } from '../../../api/student/profileResource';
 import PageLayout from '../../components/page/PageLayout';
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { TextInfoComp } from "../../components/textinfo/TextInfoComp";
-import { SpacerComp } from "../../components/spacer/SpacerComp";
-import { ErrorModalComp } from "../../components/ErrorModal/ErrorModalComp";
-import MessageModal, { type MessageTone } from "../../components/MessageModal/MessageModal";
-import { InternetWatcher } from "../../components/internetwatcher/InternetWatcher";
+import { TextInfoComp } from '../../components/textinfo/TextInfoComp';
+import { SpacerComp } from '../../components/spacer/SpacerComp';
+import { ErrorModalComp } from '../../components/ErrorModal/ErrorModalComp';
+import MessageModal, {
+  type MessageTone,
+} from '../../components/MessageModal/MessageModal';
+import { InternetWatcher } from '../../components/internetwatcher/InternetWatcher';
 
-import { uploadImage } from "../../../api/student/uploadImage";
-import { findProfile } from "../../../api/student/findProfile"; // 👈 Importamos o findProfile
-import type { ErrorField } from "../../../utils/Types";
-import type { Student } from "../../../domains/Student"; // 👈 Importamos o tipo Student
+import { uploadImage } from '../../../api/student/uploadImage';
+import { findProfile } from '../../../api/student/findProfile'; // 👈 Importamos o findProfile
+import type { ErrorField } from '../../../utils/Types';
+import type { Student } from '../../../domains/Student'; // 👈 Importamos o tipo Student
 
-import uploadAvatarPlaceholder from "../../../assets/images/upload_avatar.png";
+import uploadAvatarPlaceholder from '../../../assets/images/upload_avatar.png';
 
 import styles from './style.module.css';
 
-import { compressImage } from "../../../utils/imageProcessing";
-
+import { compressImage } from '../../../utils/imageProcessing';
 
 export default function UploadImageScreen() {
   const navigate = useNavigate();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
-  const [studentRa, setStudentRa] = useState<string>(""); 
-  
-  const [message, setMessage] = useState("");
+
+  const [studentRa, setStudentRa] = useState<string>('');
+
+  const [message, setMessage] = useState('');
   const [errorFields, setErrorFields] = useState<ErrorField[]>([]);
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
-  const [notice, setNotice] = useState<{ tone: MessageTone; title: string; message: string; confirmText?: string; onConfirm?: () => void } | null>(null);
+  const [notice, setNotice] = useState<{
+    tone: MessageTone;
+    title: string;
+    message: string;
+    confirmText?: string;
+    onConfirm?: () => void;
+  } | null>(null);
   const [onLoading, setOnLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,8 +53,6 @@ export default function UploadImageScreen() {
     };
     fetchStudentData();
   }, []);
-
-
 
   const handleOpenCamera = () => {
     if (fileInputRef.current) {
@@ -66,7 +72,7 @@ export default function UploadImageScreen() {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      setImagePreview(URL.createObjectURL(file)); 
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -84,7 +90,8 @@ export default function UploadImageScreen() {
       setNotice({
         tone: 'info',
         title: 'Carregando informações',
-        message: 'As informações do aluno ainda estão sendo carregadas. Aguarde alguns segundos e tente novamente.',
+        message:
+          'As informações do aluno ainda estão sendo carregadas. Aguarde alguns segundos e tente novamente.',
       });
       return;
     }
@@ -92,14 +99,14 @@ export default function UploadImageScreen() {
     setOnLoading(true);
 
     try {
-
       // console.log("Tamanho original:", (imageFile.size / 1024).toFixed(2), "KB");
       const compressedFile = await compressImage(imageFile);
       // console.log("Tamanho comprimido:", (compressedFile.size / 1024).toFixed(2), "KB");
 
-      const result = await uploadImage(compressedFile, studentRa); 
-      
+      const result = await uploadImage(compressedFile, studentRa);
+
       if ('ok' in result) {
+        studentProfileResource.invalidate();
         setNotice({
           tone: 'success',
           title: 'Foto enviada com sucesso',
@@ -108,100 +115,113 @@ export default function UploadImageScreen() {
           onConfirm: () => navigate('/MainMenu'),
         });
       } else {
-        setMessage(result.message || "Erro ao enviar imagem.");
+        setMessage(result.message || 'Erro ao enviar imagem.');
         setErrorFields(result.errorFields ?? []);
         setModalErrorVisible(true);
       }
     } catch {
-      setMessage("Erro na conexão com o servidor.");
+      setMessage('Erro na conexão com o servidor.');
       setModalErrorVisible(true);
     }
-    
+
     setOnLoading(false);
   };
 
   return (
-    <PageLayout title="Enviar fotografia" subtitle="Use uma foto com fundo neutro, rosto centralizado e sem óculos escuros." backTo="/MainMenu" narrow roundedHeader><div className={styles.container}>
-      <ErrorModalComp
-        visible={modalErrorVisible}
-        error={message}
-        fields={errorFields?.map((val) => val.description) ?? []}
-        onClose={() => {
-          setMessage("");
-          setErrorFields([]);
-          setModalErrorVisible(false);
-        }}
-      />
-      <InternetWatcher />
-
-      {notice && (
-        <MessageModal
-          visible
-          tone={notice.tone}
-          title={notice.title}
-          message={notice.message}
-          confirmText={notice.confirmText ?? 'OK'}
-          onConfirm={() => {
-            const action = notice.onConfirm;
-            setNotice(null);
-            action?.();
+    <PageLayout
+      title="Enviar fotografia"
+      subtitle="Use uma foto com fundo neutro, rosto centralizado e sem óculos escuros."
+      backTo="/MainMenu"
+      narrow
+      roundedHeader
+    >
+      <div className={styles.container}>
+        <ErrorModalComp
+          visible={modalErrorVisible}
+          error={message}
+          fields={errorFields?.map((val) => val.description) ?? []}
+          onClose={() => {
+            setMessage('');
+            setErrorFields([]);
+            setModalErrorVisible(false);
           }}
         />
-      )}
-      
+        <InternetWatcher />
 
-      
-      <SpacerComp vertical={10} />
+        {notice && (
+          <MessageModal
+            visible
+            tone={notice.tone}
+            title={notice.title}
+            message={notice.message}
+            confirmText={notice.confirmText ?? 'OK'}
+            onConfirm={() => {
+              const action = notice.onConfirm;
+              setNotice(null);
+              action?.();
+            }}
+          />
+        )}
 
+        <SpacerComp vertical={10} />
 
-
-    <input 
-        type="file" 
-        accept="image/*" 
-        ref={fileInputRef} 
-        onChange={handleImageChange} 
-        style={{ display: 'none' }} 
-      />
-
-      <div className={styles.box}>
-        <img 
-          src={imagePreview ? imagePreview : uploadAvatarPlaceholder} 
-          className={imagePreview ? styles.userImage : styles.placeholderImage} 
-          alt="Preview do Upload" 
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
         />
-      </div>
 
-      <SpacerComp vertical={15} />
-      <TextInfoComp>Como deseja enviar sua foto?</TextInfoComp>
-      <SpacerComp vertical={10} />
+        <div className={styles.box}>
+          <img
+            src={imagePreview ? imagePreview : uploadAvatarPlaceholder}
+            className={
+              imagePreview ? styles.userImage : styles.placeholderImage
+            }
+            alt="Preview do Upload"
+          />
+        </div>
 
-      <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center' }}>
-        <button 
-          className={styles.button} 
-          style={{ flex: 1 }} 
-          onClick={handleOpenCamera}
+        <SpacerComp vertical={15} />
+        <TextInfoComp>Como deseja enviar sua foto?</TextInfoComp>
+        <SpacerComp vertical={10} />
+
+        <div
+          style={{
+            display: 'flex',
+            gap: '10px',
+            width: '100%',
+            justifyContent: 'center',
+          }}
         >
-          Tirar Foto
-        </button>
-        <button 
-          className={styles.button} 
-          style={{ flex: 1 }} 
-          onClick={handleOpenGallery}
+          <button
+            className={styles.button}
+            style={{ flex: 1 }}
+            onClick={handleOpenCamera}
+          >
+            Tirar Foto
+          </button>
+          <button
+            className={styles.button}
+            style={{ flex: 1 }}
+            onClick={handleOpenGallery}
+          >
+            Galeria
+          </button>
+        </div>
+
+        <SpacerComp vertical={20} />
+
+        <button
+          className={styles.button}
+          onClick={handleUpload}
+          disabled={onLoading || !imageFile}
+          style={{ opacity: !imageFile || onLoading ? 0.6 : 1 }}
         >
-          Galeria
+          {onLoading ? 'Enviando...' : 'Confirmar Envio'}
         </button>
       </div>
-
-      <SpacerComp vertical={20} />
-
-      <button 
-        className={styles.button} 
-        onClick={handleUpload} 
-        disabled={onLoading || !imageFile}
-        style={{ opacity: (!imageFile || onLoading) ? 0.6 : 1 }}
-      >
-        {onLoading ? "Enviando..." : "Confirmar Envio"}
-      </button>
-    </div></PageLayout>
+    </PageLayout>
   );
 }
